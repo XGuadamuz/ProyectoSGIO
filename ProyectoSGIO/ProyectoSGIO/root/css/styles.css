@@ -1,0 +1,40 @@
+﻿body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #0056B3;
+    color: white;
+    padding: 15px;
+}
+
+    header .navbar .nav-link,
+    header .navbar .navbar-brand {
+        color: white;
+    }
+
+        header .navbar .nav-link:hover {
+            color: #FFD700; 
+        }
+
+        header .navbar .nav-link.active {
+            color: white !important;
+        }
+
+footer {
+    background-color: #0056B3;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.sidebar {
+    background-color: #17A2B8;
+    min-height: 100vh;
+}
+
+.main-content {
+    padding: 20px;
+}

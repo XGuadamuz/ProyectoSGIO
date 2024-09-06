@@ -146,6 +146,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="root\css\styles.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -172,15 +173,23 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="root\js\" />
+    <Folder Include="Views\Módulo Administrativo\" />
+    <Folder Include="Views\Módulo Comunicación y Colaboración\" />
+    <Folder Include="Views\Módulo Contabilidad\" />
+    <Folder Include="Views\Módulo Gestión de Inventario\" />
+    <Folder Include="Views\Módulo Gestión de Maquinaria\" />
+    <Folder Include="Views\Módulo Gestión de RH\" />
+    <Folder Include="Views\Módulo Planificación\" />
+    <Folder Include="Views\Módulo Proveedores\" />
+    <Folder Include="Views\Módulo Reportes y Análisis\" />
+    <Folder Include="Views\Módulo Seguimiento de Proyectos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
