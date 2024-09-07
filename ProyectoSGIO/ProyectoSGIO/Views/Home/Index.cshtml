@@ -1,3 +1,99 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<!-- Hero Section -->
+<section class="hero py-5 bg-dark text-white text-center">
+    <div class="container px-5">
+        <h1 class="display-4 fw-bolder">Bienvenido a SGIO</h1>
+        <p class="lead fw-normal text-muted">Sistema de Gestión Integral de Obras</p>
+        <a class="btn btn-primary btn-lg" href="#proyectos">Explorar Proyectos</a>
+    </div>
+</section>
+
+<!-- Section Uno-->
+<section class="py-5 bg-light" id="scroll-target">
+    <div class="container px-5 my-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6"><img class="img-fluid rounded mb-5 mb-lg-0" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..." /></div>
+            <div class="col-lg-6">
+                <h2 class="fw-bolder">Our founding</h2>
+                <p class="lead fw-normal text-muted mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto est, ut esse a labore aliquam beatae expedita. Blanditiis impedit numquam libero molestiae et fugit cupiditate, quibusdam expedita, maiores eaque quisquam.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Dos-->
+<section class="py-5">
+    <div class="container px-5 my-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6 order-first order-lg-last"><img class="img-fluid rounded mb-5 mb-lg-0" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..." /></div>
+            <div class="col-lg-6">
+                <h2 class="fw-bolder">Growth &amp; beyond</h2>
+                <p class="lead fw-normal text-muted mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto est, ut esse a labore aliquam beatae expedita. Blanditiis impedit numquam libero molestiae et fugit cupiditate, quibusdam expedita, maiores eaque quisquam.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonios -->
+<section class="py-5 bg-white">
+    <div class="container px-5">
+        <h2 class="fw-bolder text-center mb-5">Lo que dicen nuestros clientes</h2>
+        <div class="row gx-5">
+            <div class="col-lg-4">
+                <blockquote class="blockquote">
+                    <p class="lead">"El SGIO ha transformado nuestra forma de gestionar proyectos de construcción. Es intuitivo y extremadamente eficiente."</p>
+                    <footer class="blockquote-footer">Juan Pérez, <cite title="Empresa ABC">Empresa ABC</cite></footer>
+                </blockquote>
+            </div>
+            <div class="col-lg-4">
+                <blockquote class="blockquote">
+                    <p class="lead">"Nunca había sido tan fácil coordinar recursos y personal en nuestros proyectos de gran escala. ¡Increíble herramienta!"</p>
+                    <footer class="blockquote-footer">María López, <cite title="Constructora XYZ">Constructora XYZ</cite></footer>
+                </blockquote>
+            </div>
+            <div class="col-lg-4">
+                <blockquote class="blockquote">
+                    <p class="lead">"Gracias a SGIO, nuestros tiempos de entrega se han reducido drásticamente y el control de costos es impecable."</p>
+                    <footer class="blockquote-footer">Carlos Martínez, <cite title="Obras del Norte">Obras del Norte</cite></footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Proyectos Recientes -->
+<section class="py-5" id="proyectos">
+    <div class="container px-5">
+        <h2 class="fw-bolder text-center mb-5">Nuestros Proyectos Recientes</h2>
+        <div class="row gx-5">
+            <div class="col-lg-4 mb-4">
+                <img class="img-fluid rounded" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..." />
+                <h5 class="mt-3">Proyecto 1</h5>
+                <p class="text-muted">Descripción breve del proyecto.</p>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <img class="img-fluid rounded" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..." />
+                <h5 class="mt-3">Proyecto 2</h5>
+                <p class="text-muted">Descripción breve del proyecto.</p>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <img class="img-fluid rounded" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..." />
+                <h5 class="mt-3">Proyecto 3</h5>
+                <p class="text-muted">Descripción breve del proyecto.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 bg-primary text-white text-center">
+    <div class="container px-5">
+        <h2 class="fw-bolder">¿Listo para empezar?</h2>
+        <p class="lead">Regístrate ahora y empieza a gestionar tus proyectos de manera eficiente.</p>
+        <a class="btn btn-light btn-lg" href="#">Regístrate</a>
+    </div>
+</section>

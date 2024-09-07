@@ -13,17 +13,21 @@ namespace ProyectoSGIO.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Registro()
         {
-            ViewBag.Message = "Your application description page.";
-
+            return View();
+        }
+        public ActionResult Login()
+        {
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Portafolio()
         {
-            ViewBag.Message = "Your contact page.";
-
+            return View();
+        }
+        public ActionResult PortafolioItem()
+        {
             return View();
         }
     }
