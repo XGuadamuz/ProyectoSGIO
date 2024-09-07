@@ -6,18 +6,17 @@ using System.Web.Mvc;
 
 namespace ProyectoSGIO.Controllers
 {
-    public class HomeController : Controller
-    {
-        public ActionResult Index()
-        {
-            return View();
-        }        
-
-        public ActionResult Portafolio()
+    public class LoginController : Controller
+    {       
+        public ActionResult Registro()
         {
             return View();
         }
-        public ActionResult PortafolioItem()
+        public ActionResult Login()
+        {
+            return View();
+        }
+        public ActionResult OlvidoContraseña()
         {
             return View();
         }

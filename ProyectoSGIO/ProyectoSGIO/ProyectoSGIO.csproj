@@ -121,6 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -178,17 +179,17 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutExterno.cshtml" />
-    <Content Include="Views\Home\Registro.cshtml" />
-    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Login\Registro.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Home\Portafolio.cshtml" />
     <Content Include="Views\Home\PortafolioItem.cshtml" />
+    <Content Include="Views\Login\OlvidoContraseña.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="root\img\" />
     <Folder Include="root\js\" />
-    <Folder Include="Views\Login\" />
     <Folder Include="Views\Módulos\Administrativo\" />
     <Folder Include="Views\Módulos\Comunicación y Colaboración\" />
     <Folder Include="Views\Módulos\Contabilidad\" />
