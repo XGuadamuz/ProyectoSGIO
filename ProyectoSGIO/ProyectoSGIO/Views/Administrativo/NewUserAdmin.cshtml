@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "NewUserAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center mb-4">Crear Nuevo Usuario</h2>
+            <form>
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" placeholder="Ingresa el nombre" required>
+                </div>
+
+                <!-- Apellidos -->
+                <div class="mb-3">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <input type="text" class="form-control" id="apellidos" placeholder="Ingresa los apellidos" required>
+                </div>
+
+                <!-- Correo Electrónico -->
+                <div class="mb-3">
+                    <label for="correo" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="correo" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <!-- Edad -->
+                <div class="mb-3">
+                    <label for="edad" class="form-label">Edad</label>
+                    <input type="number" class="form-control" id="edad" placeholder="Ingresa la edad" required>
+                </div>
+
+                <!-- Rol -->
+                <div class="mb-3">
+                    <label for="rol" class="form-label">Rol</label>
+                    <select class="form-select" id="rol" required>
+                        <option selected disabled>Selecciona un rol</option>
+                        <option value="admin">Administrador</option>
+                        <option value="user">Usuario</option>
+                        <option value="viewer">Visualizador</option>
+                    </select>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <label for="contraseña" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="contraseña" placeholder="Ingresa la contraseña" required>
+                        <button class="btn btn-secondary" type="button" id="generar-contrasena">Generar Contraseña</button>
+                        <button class="btn btn-outline-secondary" type="button" id="toggle-password">
+                            <i class="bi bi-eye-slash" id="icon-password"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botón de Envío -->
+                <button type="submit" class="btn btn-primary w-100">Agregar Usuario</button>
+            </form>
+        </div>
+    </div>

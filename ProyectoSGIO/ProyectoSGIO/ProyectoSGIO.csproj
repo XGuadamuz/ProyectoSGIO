@@ -120,6 +120,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdministrativoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -150,6 +151,7 @@
     <Content Include="root\css\Layout_Externo.css" />
     <Content Include="root\css\diseño.css" />
     <Content Include="root\css\styles.css" />
+    <Content Include="root\js\funciones.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -184,13 +186,12 @@
     <Content Include="Views\Home\Portafolio.cshtml" />
     <Content Include="Views\Home\PortafolioItem.cshtml" />
     <Content Include="Views\Login\OlvidoContraseña.cshtml" />
+    <Content Include="Views\Administrativo\NewUserAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="root\img\" />
-    <Folder Include="root\js\" />
-    <Folder Include="Views\Módulos\Administrativo\" />
     <Folder Include="Views\Módulos\Comunicación y Colaboración\" />
     <Folder Include="Views\Módulos\Contabilidad\" />
     <Folder Include="Views\Módulos\Gestión de Inventario\" />
