@@ -123,6 +123,7 @@
     <Compile Include="Controllers\AdministrativoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -190,6 +191,10 @@
     <Content Include="Views\Administrativo\RolYPrivilegio.cshtml" />
     <Content Include="Views\Administrativo\BloqueoDesbloqueoUsuarios.cshtml" />
     <Content Include="Views\Administrativo\RegistroActividades.cshtml" />
+    <Content Include="Views\Proveedores\RegistroProveedor.cshtml" />
+    <Content Include="Views\Proveedores\EditarProveedor.cshtml" />
+    <Content Include="Views\Proveedores\EliminarProveedor.cshtml" />
+    <Content Include="Views\Proveedores\VisualizarProveedores.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -201,7 +206,6 @@
     <Folder Include="Views\Módulos\Gestión de Maquinaria\" />
     <Folder Include="Views\Módulos\Gestión de RH\" />
     <Folder Include="Views\Módulos\Planificación\" />
-    <Folder Include="Views\Módulos\Proveedores\" />
     <Folder Include="Views\Módulos\Reportes y Análisis\" />
     <Folder Include="Views\Módulos\Seguimiento de Proyectos\" />
   </ItemGroup>
