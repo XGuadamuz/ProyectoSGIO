@@ -19,3 +19,14 @@ document.getElementById('toggle-password').addEventListener('click', function ()
         icono.classList.add('bi-eye-slash');
     }
 });
+
+// Función para habilitar la edición del correo
+document.getElementById('edit-correo').addEventListener('click', function () {
+    const correoInput = document.getElementById('correo');
+    if (correoInput.disabled) {
+        correoInput.disabled = false;
+        correoInput.focus();
+    } else {
+        correoInput.disabled = true;
+    }
+});

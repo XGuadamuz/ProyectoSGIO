@@ -149,7 +149,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="root\css\Layout_Externo.css" />
-    <Content Include="root\css\diseño.css" />
     <Content Include="root\css\styles.css" />
     <Content Include="root\js\funciones.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -187,6 +186,7 @@
     <Content Include="Views\Home\PortafolioItem.cshtml" />
     <Content Include="Views\Login\OlvidoContraseña.cshtml" />
     <Content Include="Views\Administrativo\NewUserAdmin.cshtml" />
+    <Content Include="Views\Administrativo\VerPerfil.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

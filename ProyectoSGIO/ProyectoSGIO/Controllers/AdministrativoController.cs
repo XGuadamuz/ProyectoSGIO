@@ -12,5 +12,9 @@ namespace ProyectoSGIO.Controllers
         {
             return View();
         }
+        public ActionResult VerPerfil()
+        {
+            return View();
+        }
     }
 }
