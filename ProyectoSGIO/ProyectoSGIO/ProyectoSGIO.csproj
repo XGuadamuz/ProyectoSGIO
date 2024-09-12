@@ -187,6 +187,9 @@
     <Content Include="Views\Login\OlvidoContraseña.cshtml" />
     <Content Include="Views\Administrativo\NewUserAdmin.cshtml" />
     <Content Include="Views\Administrativo\VerPerfil.cshtml" />
+    <Content Include="Views\Administrativo\RolYPrivilegio.cshtml" />
+    <Content Include="Views\Administrativo\BloqueoDesbloqueoUsuarios.cshtml" />
+    <Content Include="Views\Administrativo\RegistroActividades.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

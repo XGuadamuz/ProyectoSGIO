@@ -16,5 +16,17 @@ namespace ProyectoSGIO.Controllers
         {
             return View();
         }
+        public ActionResult RolYPrivilegio()
+        {
+            return View();
+        }
+        public ActionResult BloqueoDesbloqueoUsuarios()
+        {
+            return View();
+        }
+        public ActionResult RegistroActividades()
+        {
+            return View();
+        }
     }
 }

@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewBag.Title = "RolYPrivilegio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Gestión de Roles y Privilegios</h2>
+
+    <!-- Botón para crear un nuevo rol -->
+    <div class="text-end mb-3">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearRolModal">Crear Nuevo Rol</button>
+    </div>
+
+    <!-- Tabla de Roles Existentes -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Rol</th>
+                <th>Permisos</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Administrador</td>
+                <td>Todos los permisos</td>
+                <td>
+                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarRolModal">Editar</button>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarRolModal">Eliminar</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td>Acceso limitado</td>
+                <td>
+                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarRolModal">Editar</button>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarRolModal">Eliminar</button>
+                </td>
+            </tr>
+            <!-- Más roles -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal para Crear Rol -->
+<div class="modal fade" id="crearRolModal" tabindex="-1" aria-labelledby="crearRolLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="crearRolLabel">Crear Nuevo Rol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="nombreRol" class="form-label">Nombre del Rol</label>
+                        <input type="text" class="form-control" id="nombreRol" placeholder="Ingrese el nombre del rol" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="permisos" class="form-label">Permisos</label>
+                        <select class="form-select" id="permisos" multiple>
+                            <option value="ver">Ver</option>
+                            <option value="editar">Editar</option>
+                            <option value="eliminar">Eliminar</option>
+                            <option value="admin">Administrar</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Rol</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Editar Rol -->
+<div class="modal fade" id="editarRolModal" tabindex="-1" aria-labelledby="editarRolLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarRolLabel">Editar Rol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="editarNombreRol" class="form-label">Nombre del Rol</label>
+                        <input type="text" class="form-control" id="editarNombreRol" value="Nombre del rol actual" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarPermisos" class="form-label">Permisos</label>
+                        <select class="form-select" id="editarPermisos" multiple>
+                            <option value="ver" selected>Ver</option>
+                            <option value="editar">Editar</option>
+                            <option value="eliminar">Eliminar</option>
+                            <option value="admin">Administrar</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Actualizar Rol</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Eliminar Rol -->
+<div class="modal fade" id="eliminarRolModal" tabindex="-1" aria-labelledby="eliminarRolLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarRolLabel">Eliminar Rol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este rol? Esta acción no se puede deshacer.</p>
+                <button type="button" class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
