@@ -121,6 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdministrativoController.cs" />
+    <Compile Include="Controllers\ContabilidadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
@@ -195,13 +196,21 @@
     <Content Include="Views\Proveedores\EditarProveedor.cshtml" />
     <Content Include="Views\Proveedores\EliminarProveedor.cshtml" />
     <Content Include="Views\Proveedores\VisualizarProveedores.cshtml" />
+    <Content Include="Views\Contabilidad\RegistroFactura.cshtml" />
+    <Content Include="Views\Contabilidad\EditarFactura.cshtml" />
+    <Content Include="Views\Contabilidad\VisualizarFacturas.cshtml" />
+    <Content Include="Views\Contabilidad\DetalleFactura.cshtml" />
+    <Content Include="Views\Contabilidad\CierreFinancieroMes.cshtml" />
+    <Content Include="Views\Contabilidad\ConfirmarCierreMes.cshtml" />
+    <Content Include="Views\Contabilidad\CierreFinancieroAnual.cshtml" />
+    <Content Include="Views\Contabilidad\ConfirmarCierreAnual.cshtml" />
+    <Content Include="Views\Contabilidad\ReconciliacionCuentas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="root\img\" />
     <Folder Include="Views\Módulos\Comunicación y Colaboración\" />
-    <Folder Include="Views\Módulos\Contabilidad\" />
     <Folder Include="Views\Módulos\Gestión de Inventario\" />
     <Folder Include="Views\Módulos\Gestión de Maquinaria\" />
     <Folder Include="Views\Módulos\Gestión de RH\" />
