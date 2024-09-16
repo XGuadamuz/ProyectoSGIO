@@ -211,10 +211,10 @@
     <Folder Include="Models\" />
     <Folder Include="root\img\" />
     <Folder Include="Views\Módulos\Comunicación y Colaboración\" />
-    <Folder Include="Views\Módulos\Gestión de Inventario\" />
-    <Folder Include="Views\Módulos\Gestión de Maquinaria\" />
-    <Folder Include="Views\Módulos\Gestión de RH\" />
+    <Folder Include="Views\Módulos\Inventario\" />
+    <Folder Include="Views\Módulos\Maquinaria\" />
     <Folder Include="Views\Módulos\Planificación\" />
+    <Folder Include="Views\Módulos\Recursos Humanos\" />
     <Folder Include="Views\Módulos\Reportes y Análisis\" />
     <Folder Include="Views\Módulos\Seguimiento de Proyectos\" />
   </ItemGroup>
