@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "CierreFinancieroMes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Cierre Financiero Mensual</h2>
+
+    <!-- Selección de rango de fechas -->
+    <div class="row mb-4">
+        <div class="col-md-5">
+            <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+            <input type="date" class="form-control" id="fechaInicio">
+        </div>
+        <div class="col-md-5">
+            <label for="fechaFin" class="form-label">Fecha de Fin</label>
+            <input type="date" class="form-control" id="fechaFin">
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-primary w-100" id="generarReporteBtn">Generar Reporte</button>
+        </div>
+    </div>
+
+    <!-- Tabla de Transacciones Pendientes -->
+    <h4 class="mb-3">Transacciones Pendientes</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Número de Transacción</th>
+                <th>Descripción</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2024-08-10</td>
+                <td>TX-12345</td>
+                <td>Pago pendiente de proveedor ABC</td>
+                <td>$1,500.00</td>
+                <td><span class="badge bg-warning">Pendiente</span></td>
+                <td>
+                    <button class="btn btn-sm btn-primary">Revisar</button>
+                </td>
+            </tr>
+            <!-- Más transacciones -->
+        </tbody>
+    </table>
+
+    <!-- Botón para iniciar el cierre -->
+    <button class="btn btn-danger w-100 mt-4" id="iniciarCierreBtn">Iniciar Cierre Mensual</button>
+</div>
+

@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Registro";
+    Layout = "~/Views/Shared/_LayoutExterno.cshtml";
+}
+
+<form class="form">
+    <p class="title">¡Únete a nosotros!</p>
+    <p class="message">Completa el formulario para crear una nueva cuenta y empezar a hace tus sueños realidad.</p>
+    <div class="flex">
+        <label>
+            <input required="" placeholder="" type="text" class="input">
+            <span>Nombre</span>
+        </label>
+
+        <label>
+            <input required="" placeholder="" type="text" class="input">
+            <span>Apellido</span>
+        </label>
+    </div>
+
+    <label>
+        <input required="" placeholder="" type="email" class="input">
+        <span>Correo</span>
+    </label>
+
+    <label>
+        <input required="" placeholder="" type="password" class="input">
+        <span>Contraseña</span>
+    </label>
+    <label>
+        <input required="" placeholder="" type="password" class="input">
+        <span>Confirmar Contraseña</span>
+    </label>
+    <button class="submit">Confirmar</button>
+    <p class="signin">¿Ya tiene una cuenta? <a href="#">Iniciar Sesión</a> </p>
+</form>
