@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Scripts\bootstrap.bundle.js" />
+    <None Remove="Scripts\bootstrap.bundle.js.map" />
+    <None Remove="Scripts\bootstrap.bundle.min.js" />
+    <None Remove="Scripts\bootstrap.bundle.min.js.map" />
+    <None Remove="Scripts\bootstrap.esm.js" />
+    <None Remove="Scripts\bootstrap.esm.js.map" />
+    <None Remove="Scripts\bootstrap.esm.min.js" />
+    <None Remove="Scripts\bootstrap.esm.min.js.map" />
+    <None Remove="Scripts\bootstrap.js" />
+    <None Remove="Scripts\bootstrap.js.map" />
+    <None Remove="Scripts\bootstrap.min.js" />
+    <None Remove="Scripts\bootstrap.min.js.map" />
+    <None Remove="Scripts\jquery-3.7.0.js" />
+    <None Remove="Scripts\jquery-3.7.0.min.js" />
+    <None Remove="Scripts\jquery-3.7.0.min.map" />
+    <None Remove="Scripts\jquery-3.7.0.slim.js" />
+    <None Remove="Scripts\jquery-3.7.0.slim.min.js" />
+    <None Remove="Scripts\jquery-3.7.0.slim.min.map" />
+    <None Remove="Scripts\jquery.validate.js" />
+    <None Remove="Scripts\jquery.validate.min.js" />
+    <None Remove="Scripts\jquery.validate.unobtrusive.js" />
+    <None Remove="Scripts\jquery.validate.unobtrusive.min.js" />
+    <None Remove="Scripts\modernizr-2.8.3.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.esm.js" />
+    <Content Include="Scripts\bootstrap.esm.js.map" />
+    <Content Include="Scripts\bootstrap.esm.min.js" />
+    <Content Include="Scripts\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\jquery-3.7.0.js" />
+    <Content Include="Scripts\jquery-3.7.0.min.js" />
+    <Content Include="Scripts\jquery-3.7.0.min.map" />
+    <Content Include="Scripts\jquery-3.7.0.slim.js" />
+    <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
+    <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "EditarProveedor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Editar Proveedor</h2>
+
+    <!-- Formulario de Edición de Proveedor -->
+    <form>
+        <!-- Nombre del Proveedor -->
+        <div class="mb-3">
+            <label for="nombreProveedor" class="form-label">Nombre del Proveedor</label>
+            <input type="text" class="form-control" id="nombreProveedor" value="Proveedor ABC" required>
+        </div>
+
+        <!-- Correo Electrónico -->
+        <div class="mb-3">
+            <label for="correoProveedor" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="correoProveedor" value="abc@proveedor.com" required>
+        </div>
+
+        <!-- Número de Teléfono -->
+        <div class="mb-3">
+            <label for="telefonoProveedor" class="form-label">Número de Teléfono</label>
+            <input type="tel" class="form-control" id="telefonoProveedor" value="1234567890" required>
+        </div>
+
+        <!-- Dirección -->
+        <div class="mb-3">
+            <label for="direccionProveedor" class="form-label">Dirección</label>
+            <input type="text" class="form-control" id="direccionProveedor" value="Calle Falsa 123, Ciudad" required>
+        </div>
+
+        <!-- Botón para guardar cambios -->
+        <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
+    </form>
+</div>

@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "RegistroFactura";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Registrar Factura de Proveedor</h2>
+
+    <!-- Formulario de Registro de Factura -->
+    <form>
+        <!-- Proveedor -->
+        <div class="mb-3">
+            <label for="proveedor" class="form-label">Proveedor</label>
+            <select class="form-select" id="proveedor" required>
+                <option selected disabled>Seleccione un proveedor</option>
+                <option value="1">Proveedor ABC</option>
+                <option value="2">Proveedor XYZ</option>
+                <!-- Más proveedores -->
+            </select>
+        </div>
+
+        <!-- Número de Factura -->
+        <div class="mb-3">
+            <label for="numeroFactura" class="form-label">Número de Factura</label>
+            <input type="text" class="form-control" id="numeroFactura" placeholder="Ingrese el número de factura" required>
+        </div>
+
+        <!-- Fecha de Factura -->
+        <div class="mb-3">
+            <label for="fechaFactura" class="form-label">Fecha de Factura</label>
+            <input type="date" class="form-control" id="fechaFactura" required>
+        </div>
+
+        <!-- Monto de la Factura -->
+        <div class="mb-3">
+            <label for="montoFactura" class="form-label">Monto de la Factura</label>
+            <input type="number" class="form-control" id="montoFactura" placeholder="Ingrese el monto" required>
+        </div>
+
+        <!-- Detalle de la Factura -->
+        <div class="mb-3">
+            <label for="detalleFactura" class="form-label">Detalle de la Factura</label>
+            <textarea class="form-control" id="detalleFactura" rows="4" placeholder="Ingrese los detalles de la factura"></textarea>
+        </div>
+
+        <!-- Botón de Registrar -->
+        <button type="submit" class="btn btn-primary w-100">Registrar Factura</button>
+    </form>
+</div>
+

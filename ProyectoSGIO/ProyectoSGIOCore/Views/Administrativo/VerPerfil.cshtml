@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "VerPerfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Cambiar foto de perfil -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Mi Perfil</h2>
+
+    <div class="text-center mb-4">
+        <img src="https://dummyimage.com/150x150/343a40/ffffff&text=Perfil" alt="Foto de perfil" class="profile-pic mb-3">
+        <div>
+            <label for="fotoPerfil" class="btn btn-outline-secondary">
+                <i class="bi bi-upload"></i> Cambiar foto de perfil
+            </label>
+            <input type="file" id="fotoPerfil" class="d-none">
+        </div>
+    </div>
+
+    <form>
+        <div class="row mb-3">
+            <!-- Nombre -->
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre(s)</label>
+                <input type="text" class="form-control" id="nombre" value="Juan" disabled>
+            </div>
+
+            <!-- Apellidos -->
+            <div class="col-md-6">
+                <label for="apellidos" class="form-label">Apellido(s)</label>
+                <input type="text" class="form-control" id="apellidos" value="Pérez García" disabled>
+            </div>
+        </div>
+
+        <!-- Correo Electrónico -->
+        <div class="mb-3">
+            <label for="correo" class="form-label">Correo Electrónico</label>
+            <div class="input-group">
+                <input type="email" class="form-control" id="correo" value="juan.perez@ejemplo.com" disabled>
+                <button class="btn btn-outline-secondary" type="button" id="edit-correo">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Edad -->
+        <div class="mb-3">
+            <label for="edad" class="form-label">Edad</label>
+            <input type="number" class="form-control" id="edad" value="30" disabled>
+        </div>
+
+        <!-- Rol -->
+        <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <input type="text" class="form-control" id="rol" value="Administrador" disabled>
+        </div>
+    </form>
+
+
+</div>
