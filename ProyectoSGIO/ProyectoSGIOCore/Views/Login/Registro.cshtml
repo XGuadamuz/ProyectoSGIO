@@ -1,36 +1,46 @@
-﻿@{
+﻿@using ProyectoSGIOCore.Models
+@model LoginModel
+@{
     ViewBag.Title = "Registro";
     Layout = "~/Views/Shared/_LayoutExterno.cshtml";
 }
 
-<form class="form">
+<form asp-action="Registro" method="post" class="form">
     <p class="title">¡Únete a nosotros!</p>
-    <p class="message">Completa el formulario para crear una nueva cuenta y empezar a hace tus sueños realidad.</p>
+    <p class="message">Completa el formulario para crear una nueva cuenta y empezar a hacer tus sueños realidad.</p>
+
     <div class="flex">
         <label>
-            <input required="" placeholder="" type="text" class="input">
+            <input asp-for="Nombre" class="input" placeholder="" required />
             <span>Nombre</span>
+            <span class="text-danger" asp-validation-for="Nombre"></span>
         </label>
 
         <label>
-            <input required="" placeholder="" type="text" class="input">
+            <input asp-for="Apellido" class="input" placeholder="" required />
             <span>Apellido</span>
+            <span class="text-danger" asp-validation-for="Apellido"></span>
         </label>
     </div>
 
     <label>
-        <input required="" placeholder="" type="email" class="input">
+        <input asp-for="Correo" class="input" placeholder="" required />
         <span>Correo</span>
+        <span class="text-danger" asp-validation-for="Correo"></span>
     </label>
 
     <label>
-        <input required="" placeholder="" type="password" class="input">
+        <input asp-for="Contraseña" type="password" class="input" placeholder="" required />
         <span>Contraseña</span>
+        <span class="text-danger" asp-validation-for="Contraseña"></span>
     </label>
+
     <label>
-        <input required="" placeholder="" type="password" class="input">
+        <input asp-for="ConfirmarContraseña" type="password" class="input" placeholder="" required />
         <span>Confirmar Contraseña</span>
+        <span class="text-danger" asp-validation-for="ConfirmarContraseña"></span>
     </label>
-    <button class="submit">Confirmar</button>
-    <p class="signin">¿Ya tiene una cuenta? <a href="#">Iniciar Sesión</a> </p>
+
+    <button type="submit" class="submit">Confirmar</button>
+    <p class="signin">¿Ya tiene una cuenta? <a href="#">Iniciar Sesión</a></p>
 </form>
