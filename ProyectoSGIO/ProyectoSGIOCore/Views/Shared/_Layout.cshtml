@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -57,20 +58,28 @@
                     </ul>
                     <!-- Dropdown del Perfil e Iniciar Sesión a la derecha -->
                     <ul class="navbar-nav mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Perfil
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Ver Perfil</a></li>
-                                <li><a class="dropdown-item" href="#">Configuración</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Iniciar sesión</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <!-- Mostrar el nombre del usuario si está autenticado -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#">Ver Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#">Configuración</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="CerrarSesion">Cerrar sesión</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Mostrar el enlace de Iniciar Sesión si no está autenticado -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Acceso" asp-action="IniciarSesion">Iniciar Sesión</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,16 +1,7 @@
 ﻿@{
     ViewBag.Title = "Home Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var successMessage = TempData["SuccessMessage"] as string;
 
-}
-
-@if (!string.IsNullOrEmpty(successMessage))
-{
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-        @successMessage
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
 }
 
 <!-- Carousel -->
@@ -100,15 +91,6 @@
                 <p class="text-muted">Descripción breve del proyecto.</p>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- CTA -->
-<section class="py-5 bg-light text-center">
-    <div class="container px-5">
-        <h2 class="fw-bolder">¿Listo para empezar?</h2>
-        <p class="lead">Regístrate ahora y empieza a gestionar tus proyectos de manera eficiente.</p>
-        <button class="btn-accionUno">Registrarse</button>
     </div>
 </section>
 

@@ -4,6 +4,10 @@ using ProyectoSGIOCore.Models;
 using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.ViewModels;
 
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace ProyectoSGIOCore.Controllers
 {
     public class AccesoController : Controller
@@ -48,6 +52,7 @@ namespace ProyectoSGIOCore.Controllers
         [HttpGet]
         public IActionResult IniciarSesion()
         {
+            if (User.Identity!.IsAuthenticated) return RedirectToAction("Index", "Home");
             return View();
         }
 
@@ -65,6 +70,23 @@ namespace ProyectoSGIOCore.Controllers
                 ViewData["Mensaje"] = "No se encontraron coincidencias";
                 return View();
             }
+
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, usuario_encontrado.Nombre)
+            };
+
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            AuthenticationProperties properties = new AuthenticationProperties()
+            {
+                AllowRefresh = true,
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                properties
+                );
 
             return RedirectToAction("Index", "Home");
         }

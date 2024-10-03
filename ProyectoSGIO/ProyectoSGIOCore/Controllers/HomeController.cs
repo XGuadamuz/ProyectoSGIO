@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ProyectoSGIOCore.Controllers
 {
+    [Authorize]
     [ResponseCache(Duration = 0, NoStore = true)]
-    public class HomeController() : Controller
+    public class HomeController : Controller
     {
         [AllowAnonymous]
         [HttpGet]
@@ -13,19 +17,10 @@ namespace ProyectoSGIOCore.Controllers
             return View();
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult Portafolio()
+        public async Task <IActionResult> CerrarSesion()
         {
-            return View();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("IniciarSesion","Acceso");
         }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult PortafolioItem()
-        {
-            return View();
-        }
-
     }
 }
