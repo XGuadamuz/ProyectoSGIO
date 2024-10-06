@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -15,12 +12,6 @@ namespace ProyectoSGIOCore.Controllers
         public IActionResult Index()
         {
             return View();
-        }
-
-        public async Task <IActionResult> CerrarSesion()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("IniciarSesion","Acceso");
         }
     }
 }

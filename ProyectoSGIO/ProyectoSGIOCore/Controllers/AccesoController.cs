@@ -32,12 +32,16 @@ namespace ProyectoSGIOCore.Controllers
                 ViewData["Mensaje"] = "Las contraseñas no coinciden";
                 return View();
             }
+
+            var rolDefault = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Nombre == "Usuario");
+
             Usuario usuario = new Usuario()
             {
                 Nombre = modelo.Nombre,
                 Apellido = modelo.Apellido,
                 Correo = modelo.Correo,
-                Clave = modelo.Clave
+                Clave = modelo.Clave,
+                IdRol = rolDefault.IdRol //Rol por defecto Usuario
             };
 
             await _dbContext.Usuarios.AddAsync(usuario);
@@ -60,6 +64,7 @@ namespace ProyectoSGIOCore.Controllers
         public async Task<IActionResult> IniciarSesion(IniciarSesionVM modelo)
         {
             Usuario? usuario_encontrado = await _dbContext.Usuarios
+                                        .Include(u => u.Rol)
                                         .Where(u =>
                                         u.Correo == modelo.Correo &&
                                         u.Clave == modelo.Clave
@@ -73,7 +78,8 @@ namespace ProyectoSGIOCore.Controllers
 
             List<Claim> claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, usuario_encontrado.Nombre)
+                new Claim(ClaimTypes.Name, usuario_encontrado.Nombre),
+                new Claim(ClaimTypes.Role, usuario_encontrado.Rol.Nombre)
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -89,6 +95,12 @@ namespace ProyectoSGIOCore.Controllers
                 );
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> CerrarSesion()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("IniciarSesion", "Acceso");
         }
     }
 }

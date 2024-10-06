@@ -8,5 +8,10 @@
         public string Correo { get; set; }
         public string Clave { get; set; }
 
+
+        // Clave foránea para el Rol
+        public int IdRol { get; set; }
+        public Rol Rol { get; set; } 
+
     }
 }

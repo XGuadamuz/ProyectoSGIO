@@ -25,23 +25,47 @@
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="#">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Cotización</a>
-                        </li>
-                        <!-- Dropdown Módulos -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Módulos
-                            </a>
 
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Planificación</a></li>
-                                <li><a class="dropdown-item" href="#">Gestión de RH</a></li>
-                                <li><a class="dropdown-item" href="#">Maquinaria</a></li>
-                                <li><a class="dropdown-item" href="#">Inventario</a></li>
-                                <li><a class="dropdown-item" href="#">Contabilidad</a></li>
-                            </ul>
-                        </li>
+                        @if (User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
+                        {
+                            <!-- Dropdown Módulos -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Módulos
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Planificación</a></li>
+                                    <li><a class="dropdown-item" href="#">Gestión de RH</a></li>
+                                    <li><a class="dropdown-item" href="#">Maquinaria</a></li>
+                                    <li><a class="dropdown-item" href="#">Inventario</a></li>
+                                    <li><a class="dropdown-item" href="#">Contabilidad</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Empleado"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Módulo Empleado
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Empleado 01</a></li>
+                                    <li><a class="dropdown-item" href="#">Empleado 02</a></li>
+                                    <li><a class="dropdown-item" href="#">Empleado 03</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Usuario"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Cotización</a>
+                            </li>
+
+                        }
 
                         <li class="nav-item">
                             <a class="nav-link" href="#">Proyectos previos</a>
@@ -69,7 +93,7 @@
                                     <li><a class="dropdown-item" href="#">Ver Perfil</a></li>
                                     <li><a class="dropdown-item" href="#">Configuración</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="CerrarSesion">Cerrar sesión</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Acceso" asp-action="CerrarSesion">Cerrar sesión</a></li>
                                 </ul>
                             </li>
                         }
