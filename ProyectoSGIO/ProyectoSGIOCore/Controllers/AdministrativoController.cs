@@ -22,6 +22,14 @@ namespace ProyectoSGIOCore.Controllers
         {
 
             var roles = _dbContext.Roles.ToList();
+
+            // Validación roles
+            if (roles == null || !roles.Any())
+            {
+                ViewData["Mensaje"] = "No hay roles disponibles. Por favor, asegúrese de que los roles estén configurados.";
+                return View();
+            }
+
             ViewBag.Roles = roles;
             return View();
         }
@@ -29,29 +37,50 @@ namespace ProyectoSGIOCore.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearUsuario(CrearUsuarioVM modelo)
         {
+            // Cargar los roles
+            var roles = await _dbContext.Roles.ToListAsync();
+            ViewBag.Roles = roles;
+
+            // Verifica si las contraseñas coinciden
             if (modelo.Clave != modelo.ConfirmarClave)
             {
                 ViewData["Mensaje"] = "Las contraseñas no coinciden";
                 return View(modelo);
             }
 
+            // Buscar el rol seleccionado
             var rolDefault = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Nombre == modelo.RolSeleccionado);
 
+            if (rolDefault == null)
+            {
+                ViewData["Mensaje"] = "Debe seleccionar un Rol";
+                return View(modelo);
+            }
+
+            // Crea el usuario
             Usuario usuario = new Usuario()
             {
                 Nombre = modelo.Nombre,
                 Apellido = modelo.Apellido,
                 Correo = modelo.Correo,
                 Clave = modelo.Clave,
-                IdRol = rolDefault?.IdRol ?? 0
+                IdRol = rolDefault.IdRol
             };
 
+            // Guarda el usuario en la base de datos
             await _dbContext.Usuarios.AddAsync(usuario);
             await _dbContext.SaveChangesAsync();
 
-            if (usuario.IdUsuario != 0) return RedirectToAction("CrearUsuario", "Administrativo");
-
-            ViewData["Mensaje"] = "No se pudo crear el usuario";
+            // Redirige si se creó correctamente
+            if (usuario.IdUsuario != 0)
+            {
+                TempData["MensajeExito"] = "Usuario creado correctamente";
+                return RedirectToAction("CrearUsuario", "Administrativo");
+            }
+            else
+            {
+                ViewData["Mensaje"] = "No se pudo crear el usuario";
+            }
             return View(modelo);
         }
     }

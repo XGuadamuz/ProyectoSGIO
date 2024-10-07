@@ -92,7 +92,9 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <!-- Mostrar el nombre del usuario si está autenticado -->
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown d-flex align-items-center">
+
+                                <!-- Nombre del usuario -->
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     @User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()
                                 </a>
@@ -102,6 +104,8 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" asp-controller="Acceso" asp-action="CerrarSesion">Cerrar sesión</a></li>
                                 </ul>
+                                <!-- Imagen de perfil circular -->
+                                <img src="https://dummyimage.com/40x40/343a40/ffffff&text=P" alt="Foto de perfil" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
                             </li>
                         }
                         else
