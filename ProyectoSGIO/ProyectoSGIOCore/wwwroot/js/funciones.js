@@ -4,21 +4,23 @@ document.getElementById('generar-contrasena').addEventListener('click', function
     document.getElementById('contraseña').value = contraseña;
 });
 
-// Función para mostrar/ocultar la contraseña
-document.getElementById('toggle-password').addEventListener('click', function () {
-    const contraseñaInput = document.getElementById('contraseña');
-    const icono = document.getElementById('icon-password');
 
-    if (contraseñaInput.type === "password") {
-        contraseñaInput.type = "text";
-        icono.classList.remove('bi-eye-slash');
-        icono.classList.add('bi-eye');
+// Función para mostrar/ocultar la contraseña
+function togglePasswordVisibility(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
     } else {
-        contraseñaInput.type = "password";
-        icono.classList.remove('bi-eye');
-        icono.classList.add('bi-eye-slash');
+        passwordInput.type = "password";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
     }
-});
+}
+
 
 // Función para habilitar la edición del correo
 document.getElementById('edit-correo').addEventListener('click', function () {

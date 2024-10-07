@@ -16,7 +16,7 @@
 
         <label>
             <input asp-for="Apellido" class="input" required />
-            <span>Apellido</span>
+            <span>Apellido(s)</span>
         </label>
     </div>
 
@@ -25,20 +25,28 @@
         <span>Correo</span>
     </label>
 
-    <label>
-        <input asp-for="Clave" type="password" class="input" required />
+    <label class="password-container">
+        <input asp-for="Clave" id="passwordRegistro" type="password" class="input" required />
         <span>Contraseña</span>
+        <button type="button" class="btn btn-outline-secondary toggle-password" onclick="togglePasswordVisibility('passwordRegistro', 'icon2')">
+            <i id="icon2" class="bi bi-eye-slash"></i>
+        </button>
     </label>
 
-    <label>
-        <input asp-for="ConfirmarClave" type="password" class="input" required />
+    <label class="password-container">
+        <input asp-for="ConfirmarClave" id="passwordConfirmar" type="password" class="input" required />
         <span>Confirmar Contraseña</span>
+        <button type="button" class="btn btn-outline-secondary toggle-password" onclick="togglePasswordVisibility('passwordConfirmar', 'icon3')">
+            <i id="icon3" class="bi bi-eye-slash"></i>
+        </button>
     </label>
 
     <button type="submit" class="submit">Crear Cuenta</button>
 
     <p class="signin">¿Ya tiene una cuenta? <a asp-controller="Acceso" asp-action="IniciarSesion">Iniciar Sesión</a></p>
 </form>
+
+
 @if (ViewData["Mensaje"] != null)
 {
     <div class="alert alert-danger text-center" role="alert">

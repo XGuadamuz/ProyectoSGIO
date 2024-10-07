@@ -79,6 +79,7 @@ namespace ProyectoSGIOCore.Controllers
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, usuario_encontrado.Nombre),
+                new Claim(ClaimTypes.NameIdentifier,usuario_encontrado.IdUsuario.ToString()),
                 new Claim(ClaimTypes.Role, usuario_encontrado.Rol.Nombre)
             };
 
@@ -101,6 +102,25 @@ namespace ProyectoSGIOCore.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("IniciarSesion", "Acceso");
+        }
+
+        [HttpGet]
+        public IActionResult VerPerfil()
+        {
+            // Obtener el Id del usuario autenticado desde los claims
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            // Datos del usuario desde la BD
+            var usuario = _dbContext.Usuarios
+                .Include(u => u.Rol)
+                .FirstOrDefault(u => u.IdUsuario.ToString() == userId);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            return View(usuario);
         }
     }
 }
