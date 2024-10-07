@@ -39,15 +39,25 @@
             </div>
 
             <!-- Contraseña -->
-            <div class="mb-3">
+            <div class="mb-3 password-container">
                 <label for="clave" class="form-label">Contraseña</label>
-                <input type="password" asp-for="Clave" class="form-control" placeholder="Ingresa la contraseña" required>
+                <div class="input-group">
+                    <input type="password" asp-for="Clave" id="passwordCrearUsuario" class="form-control" placeholder="Ingresa la contraseña" required>
+                    <button type="button" class="btn btn-outline-secondary toggle-password" onclick="togglePasswordVisibility('passwordCrearUsuario', 'iconCrearUsuario')">
+                        <i id="iconCrearUsuario" class="bi bi-eye-slash"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Confirmar Contraseña -->
-            <div class="mb-3">
+            <div class="mb-3 password-container">
                 <label for="confirmarClave" class="form-label">Confirmar Contraseña</label>
-                <input type="password" asp-for="ConfirmarClave" class="form-control" placeholder="Confirma la contraseña" required>
+                <div class="input-group">
+                    <input type="password" asp-for="ConfirmarClave" id="passwordConfirmarCrearUsuario" class="form-control" placeholder="Confirma la contraseña" required>
+                    <button type="button" class="btn btn-outline-secondary toggle-password" onclick="togglePasswordVisibility('passwordConfirmarCrearUsuario', 'iconConfirmarCrearUsuario')">
+                        <i id="iconConfirmarCrearUsuario" class="bi bi-eye-slash"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Botón de Envío -->
