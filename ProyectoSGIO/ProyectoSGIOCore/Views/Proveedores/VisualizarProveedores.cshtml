@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<ProyectoSGIOCore.Models.Proveedor>
 @{
     ViewBag.Title = "VisualizarProveedores";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,28 +7,6 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Lista de Proveedores</h2>
 
-    <!-- Barra de Búsqueda -->
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <input type="text" class="form-control" id="buscarProveedor" placeholder="Buscar por nombre o ID">
-        </div>
-
-        <!-- Filtro por Estado -->
-        <div class="col-md-4">
-            <select class="form-select" id="filtroEstado">
-                <option selected disabled>Filtrar por estado</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-            </select>
-        </div>
-
-        <!-- Botón de Búsqueda -->
-        <div class="col-md-2">
-            <button class="btn btn-primary w-100" id="buscarBtn">Buscar</button>
-        </div>
-    </div>
-
-    <!-- Tabla de Proveedores -->
     <table class="table table-striped">
         <thead>
             <tr>
@@ -36,28 +14,31 @@
                 <th>Nombre</th>
                 <th>Correo Electrónico</th>
                 <th>Teléfono</th>
+                <th>Dirección</th>
                 <th>Estado</th>
-                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>Proveedor ABC</td>
-                <td>abc@proveedor.com</td>
-                <td>1234567890</td>
-                <td><span class="badge bg-success">Activo</span></td>
-                <td><button class="btn btn-sm btn-info">Ver Detalles</button></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Proveedor XYZ</td>
-                <td>xyz@proveedor.com</td>
-                <td>0987654321</td>
-                <td><span class="badge bg-danger">Inactivo</span></td>
-                <td><button class="btn btn-sm btn-info">Ver Detalles</button></td>
-            </tr>
-            <!-- Más proveedores -->
+            @foreach (var proveedor in Model)
+            {
+                <tr>
+                    <td>@proveedor.IdProveedor</td>
+                    <td>@proveedor.Nombre</td>
+                    <td>@proveedor.Correo</td>
+                    <td>@proveedor.Telefono</td>
+                    <td>@proveedor.Direccion</td>
+                    <td>
+                        @if (proveedor.Estado)
+                        {
+                            <span class="badge bg-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactivo</span>
+                        }
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

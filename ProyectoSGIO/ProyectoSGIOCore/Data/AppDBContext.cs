@@ -13,6 +13,8 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
 
+        public DbSet<Proveedor> Proveedores { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -50,9 +52,25 @@ namespace ProyectoSGIOCore.Data
                   .HasForeignKey(u => u.IdRol);
             });
 
+            // Configuración de Proveedor
+            modelBuilder.Entity<Proveedor>(tb =>
+            {
+                tb.HasKey(p => p.IdProveedor);
+                tb.Property(p => p.IdProveedor)
+                  .UseIdentityColumn()
+                  .ValueGeneratedOnAdd();
+
+                tb.Property(p => p.Nombre).HasMaxLength(50).IsRequired();
+                tb.Property(p => p.Correo).HasMaxLength(50).IsRequired();
+                tb.Property(p => p.Telefono).HasMaxLength(15).IsRequired();
+                tb.Property(p => p.Direccion).HasMaxLength(200).IsRequired();
+                tb.Property(p => p.Estado).IsRequired();
+            });
+
             // Tablas
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
             modelBuilder.Entity<Rol>().ToTable("Rol");
+            modelBuilder.Entity<Proveedor>().ToTable("Proveedor");
 
             modelBuilder.Entity<Rol>().HasData(
                new Rol { IdRol = 1, Nombre = "Administrador" },
@@ -66,6 +84,11 @@ namespace ProyectoSGIOCore.Data
                new Usuario { IdUsuario = 2, Nombre = "Supervisor", Apellido = "User", Correo = "supervisor@example.com", Clave = "123", IdRol = 2 },
                new Usuario { IdUsuario = 3, Nombre = "Empleado", Apellido = "User", Correo = "empleado@example.com", Clave = "123", IdRol = 3 }
                );
+
+            modelBuilder.Entity<Proveedor>().HasData(
+               new Proveedor { IdProveedor = 1, Nombre = "Proveedor ABC", Correo = "abc@proveedor.com", Telefono = "1234567890", Direccion = "Calle Falsa 123", Estado = true },
+               new Proveedor { IdProveedor = 2, Nombre = "Proveedor XYZ", Correo = "xyz@proveedor.com", Telefono = "0987654321", Direccion = "Avenida Siempre Viva 742", Estado = false }
+            );
         }
     }
 }
