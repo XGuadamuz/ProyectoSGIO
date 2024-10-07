@@ -1,0 +1,57 @@
+﻿@model ProyectoSGIOCore.ViewModels.CrearUsuarioVM 
+@{
+    ViewBag.Title = "Crear Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="form-container">
+        <h2 class="text-center mb-4">Crear Nuevo Usuario</h2>
+        <form asp-action="CrearUsuario" method="post">
+            <!-- Nombre -->
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" asp-for="Nombre" class="form-control" placeholder="Ingrese el nombre" required>
+            </div>
+
+            <!-- Apellidos -->
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellidos</label>
+                <input type="text" asp-for="Apellido" class="form-control" placeholder="Ingrese el o los apellidos" required>
+            </div>
+
+            <!-- Correo Electrónico -->
+            <div class="mb-3">
+                <label for="correo" class="form-label">Correo Electrónico</label>
+                <input type="email" asp-for="Correo" class="form-control" placeholder="ejemplo@correo.com" required>
+            </div>
+
+            <!-- Rol -->
+            <div class="mb-3">
+                <label for="rol" class="form-label">Rol</label>
+                <select asp-for="RolSeleccionado" class="form-select" required>
+                    <option selected disabled>Selecciona un rol</option>
+                    @foreach (var rol in ViewBag.Roles)
+                    {
+                        <option value="@rol.Nombre">@rol.Nombre</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="mb-3">
+                <label for="clave" class="form-label">Contraseña</label>
+                <input type="password" asp-for="Clave" class="form-control" placeholder="Ingresa la contraseña" required>
+            </div>
+
+            <!-- Confirmar Contraseña -->
+            <div class="mb-3">
+                <label for="confirmarClave" class="form-label">Confirmar Contraseña</label>
+                <input type="password" asp-for="ConfirmarClave" class="form-control" placeholder="Confirma la contraseña" required>
+            </div>
+
+            <!-- Botón de Envío -->
+            <button type="submit" class="btn btn-primary w-100">Agregar Usuario</button>
+        </form>
+    </div>
+</div>
