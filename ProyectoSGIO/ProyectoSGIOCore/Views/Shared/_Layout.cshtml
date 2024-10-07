@@ -90,7 +90,7 @@
                                     @User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="#">Ver Perfil</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Acceso" asp-action="VerPerfil">Ver Perfil</a></li>
                                     <li><a class="dropdown-item" href="#">Configuración</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" asp-controller="Acceso" asp-action="CerrarSesion">Cerrar sesión</a></li>
