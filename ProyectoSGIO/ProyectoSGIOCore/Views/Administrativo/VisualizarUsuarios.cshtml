@@ -28,7 +28,7 @@
     </div>
     <!-- Tabla con Bootstrap y DataTable -->
     <div class="table-responsive">
-        <table id="usuariosTable" class="table table-striped table-hover table-bordered">
+        <table id="usuariosTable" class="table table-striped table-hover table-bordered table-custom">
             <thead class="table-primary">
                 <tr>
                     <th>ID</th>
@@ -51,16 +51,16 @@
                         <td>
                             <!-- Botón de editar -->
                             <a href="@Url.Action("CambiarRol", "Administrativo", new { id = usuario.IdUsuario })" class="btn btn-warning me-1" title="Editar">
-                                <i class="bi bi-pencil"></i>
+                                <i class="bi bi-pencil"></i> Editar Rol
                             </a>
 
                             <!-- Botón de bloquear -->
                             <a href="#" class="btn btn-danger me-1" title="Bloquear">
-                                <i class="bi bi-lock"></i>
+                                <i class="bi bi-lock"></i> Bloquear
                             </a>
                             <!-- Botón de desbloquear -->
                             <a href="#" class="btn btn-success" title="Desbloquear">
-                                <i class="bi bi-unlock"></i>
+                                <i class="bi bi-unlock"></i> Desbloquear
                             </a>
                         </td>
                     </tr>
