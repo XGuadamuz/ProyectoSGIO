@@ -6,6 +6,7 @@ using ProyectoSGIOCore.Models;
 
 namespace ProyectoSGIOCore.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     [ResponseCache(Duration = 0, NoStore = true)]
     public class ProveedoresController : Controller
     {
