@@ -18,6 +18,16 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> VisualizarUsuarios()
+        {
+            // Obtener los usuarios de la base de datos, incluyendo los roles
+            var usuarios = await _dbContext.Usuarios
+                                           .Include(u => u.Rol)
+                                           .ToListAsync();
+            return View(usuarios);
+        }
+
+        [HttpGet]
         public IActionResult CrearUsuario()
         {
 

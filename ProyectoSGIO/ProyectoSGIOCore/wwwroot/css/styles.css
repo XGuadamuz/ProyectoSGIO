@@ -125,3 +125,23 @@ footer {
     align-items: center;
     cursor: pointer;
 }
+
+table#usuariosTable th,
+table#usuariosTable td {
+    vertical-align: middle;
+    padding: 10px;
+}
+
+table#usuariosTable thead th {
+    color: black;
+    background-color: white;
+    text-align: center;
+}
+
+table#usuariosTable tbody tr:hover {
+    background-color: hsla(194, 100%, 69%, 1);
+}
+
+table#usuariosTable tbody tr {
+    transition: background-color 0.5s ease;
+}
