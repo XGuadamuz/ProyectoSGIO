@@ -4,6 +4,7 @@ using ProyectoSGIOCore.Models;
 using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -92,6 +93,52 @@ namespace ProyectoSGIOCore.Controllers
                 ViewData["Mensaje"] = "No se pudo crear el usuario";
             }
             return View(modelo);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CambiarRol(int id)
+        {
+            var usuario = await _dbContext.Usuarios.Include(u => u.Rol).FirstOrDefaultAsync(u => u.IdUsuario == id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            // Cargar todos los roles
+            var roles = await _dbContext.Roles.ToListAsync();
+            ViewBag.Roles = roles;
+
+            return View(usuario);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarRol(int id, int nuevoRolId)
+        {
+            var usuario = await _dbContext.Usuarios.FindAsync(id);
+            var rolNuevo = await _dbContext.Roles.FindAsync(nuevoRolId);
+
+            // Verificar si el usuario existe y si el rol existe
+            if (usuario == null || rolNuevo == null)
+            {
+                return NotFound();
+            }
+
+            // Obtener el ID del usuario logueado
+            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Verificar si el administrador intenta cambiar su propio rol
+            if (id == int.Parse(loggedInUserId))
+            {
+                TempData["MensajeError"] = "No puedes cambiar tu propio rol.";
+                return RedirectToAction("VisualizarUsuarios");
+            }
+
+            // Cambiar el rol del usuario
+            usuario.IdRol = rolNuevo.IdRol;
+            await _dbContext.SaveChangesAsync();
+
+            TempData["MensajeExito"] = "Rol cambiado exitosamente.";
+            return RedirectToAction("VisualizarUsuarios");
         }
     }
 }
