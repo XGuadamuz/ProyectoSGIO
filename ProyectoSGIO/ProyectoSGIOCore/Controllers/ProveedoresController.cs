@@ -44,5 +44,60 @@ namespace ProyectoSGIOCore.Controllers
             }
             return View(proveedor); // Si hay errores, volver a la vista de registro
         }
+
+        // GET: Proveedores/EditarProveedor/{id}
+        [HttpGet]
+        public IActionResult EditarProveedor(int id)
+        {
+            var proveedor = _dbContext.Proveedores.Find(id);
+            if (proveedor == null)
+            {
+                return NotFound();
+            }
+            return View(proveedor);
+        }
+
+        // POST: Proveedores/EditarProveedor
+        [HttpPost]
+        public IActionResult EditarProveedor(Proveedor proveedor)
+        {
+            if (ModelState.IsValid)
+            {
+                _dbContext.Proveedores.Update(proveedor);
+                _dbContext.SaveChanges();
+                return RedirectToAction("VisualizarProveedores");
+            }
+            return View(proveedor);
+        }
+
+        // GET: Proveedores/EliminarProveedor/{id}
+        [HttpGet]
+        public IActionResult EliminarProveedor(int id)
+        {
+            var proveedor = _dbContext.Proveedores.Find(id);
+            if (proveedor == null)
+            {
+                return NotFound();
+            }
+            return View(proveedor);
+        }
+
+        // POST: Proveedores/EliminarProveedor
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EliminarProveedorConfirmado(int id)
+        {
+            var proveedor = _dbContext.Proveedores.Find(id);
+            if (proveedor == null)
+            {
+                return NotFound();
+            }
+
+            _dbContext.Proveedores.Remove(proveedor);
+            _dbContext.SaveChanges();
+            return RedirectToAction("VisualizarProveedores");
+        }
     }
+
+
 }
