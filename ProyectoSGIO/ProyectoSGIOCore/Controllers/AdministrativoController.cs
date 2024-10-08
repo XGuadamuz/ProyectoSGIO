@@ -52,6 +52,16 @@ namespace ProyectoSGIOCore.Controllers
             var roles = await _dbContext.Roles.ToListAsync();
             ViewBag.Roles = roles;
 
+            // Verifica si el correo ya está en uso
+            var usuarioExistente = await _dbContext.Usuarios
+                                                   .FirstOrDefaultAsync(u => u.Correo == modelo.Correo);
+
+            if (usuarioExistente != null)
+            {
+                ViewData["Mensaje"] = "El correo electrónico ya está en uso.";
+                return View(modelo);
+            }
+
             // Verifica si las contraseñas coinciden
             if (modelo.Clave != modelo.ConfirmarClave)
             {

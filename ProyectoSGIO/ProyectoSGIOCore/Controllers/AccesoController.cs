@@ -27,6 +27,16 @@ namespace ProyectoSGIOCore.Controllers
         [HttpPost]
         public async Task<IActionResult> Registro(UsuarioVM modelo)
         {
+            // Verificar si el correo ya está en uso
+            var usuarioExistente = await _dbContext.Usuarios
+                                                   .FirstOrDefaultAsync(u => u.Correo == modelo.Correo);
+
+            if (usuarioExistente != null)
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico ya está en uso.");
+                return View(modelo);
+            }
+
             if (modelo.Clave != modelo.ConfirmarClave)
             {
                 ViewData["Mensaje"] = "Las contraseñas no coinciden";
@@ -41,7 +51,7 @@ namespace ProyectoSGIOCore.Controllers
                 Apellido = modelo.Apellido,
                 Correo = modelo.Correo,
                 Clave = modelo.Clave,
-                IdRol = rolDefault.IdRol //Rol por defecto Usuario
+                IdRol = rolDefault.IdRol
             };
 
             await _dbContext.Usuarios.AddAsync(usuario);
