@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.Data;
 using ProyectoSGIOCore.Models;
 using ProyectoSGIOCore.ViewModels;
+using System.Security.Claims;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -67,6 +68,38 @@ namespace ProyectoSGIOCore.Controllers
                 ViewData["Mensaje"] = "No se pudo crear el empleado";
             }
             return View(modelo);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditarEmpleado(int id)
+        {
+            var empleado = await _dbContext.Empleados.FirstOrDefaultAsync(e => e.IdEmpleado == id);
+            if (empleado == null)
+            {
+                return NotFound();
+            }
+
+            return View(empleado);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarEmpleado(Empleado entidad)
+        {
+            var empleado = await _dbContext.Empleados.FindAsync(entidad.IdEmpleado);
+            
+            // Verificar si el empleado existe 
+            if (empleado == null)
+            {
+                return NotFound();
+            }
+
+            empleado.Nombre = entidad.Nombre;
+            empleado.Apellido = entidad.Apellido;
+            empleado.Correo = entidad.Correo;
+            await _dbContext.SaveChangesAsync();
+
+            TempData["MensajeExito"] = "empleado editado exitosamente.";
+            return RedirectToAction("VisualizarEmpleados");
         }
 
         public IActionResult Index()
