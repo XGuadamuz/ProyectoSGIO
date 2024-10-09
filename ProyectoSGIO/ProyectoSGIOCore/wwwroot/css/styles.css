@@ -108,3 +108,44 @@ footer {
     object-fit: cover;
     border: 2px solid #0056B3;
 }
+
+.input-group {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: none;
+    background: none;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.table-custom th,
+.table-custom td {
+    vertical-align: middle;
+    padding: 10px;
+}
+
+.table-custom thead th {
+    color: black;
+    background-color: white;
+    text-align: center;
+}
+
+.table-custom tbody tr:hover {
+    background-color: hsla(194, 100%, 69%, 1);
+}
+
+.table-custom tbody tr {
+    transition: background-color 0.5s ease;
+}
+
+.modal-div-btn {
+    text-align: center;
+}

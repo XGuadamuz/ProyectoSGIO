@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoSGIOCore.Controllers
 {
+    [Authorize]
     [ResponseCache(Duration = 0, NoStore = true)]
-    public class HomeController() : Controller
+    public class HomeController : Controller
     {
         [AllowAnonymous]
         [HttpGet]
@@ -12,20 +13,5 @@ namespace ProyectoSGIOCore.Controllers
         {
             return View();
         }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult Portafolio()
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult PortafolioItem()
-        {
-            return View();
-        }
-
     }
 }
