@@ -98,6 +98,25 @@ namespace ProyectoSGIOCore.Controllers
             _dbContext.SaveChanges();
             return RedirectToAction("VisualizarProveedores");
         }
+
+        // POST: Proveedores/CambiarEstado/{id}
+        [HttpPost]
+        public IActionResult CambiarEstado(int id)
+        {
+            var proveedor = _dbContext.Proveedores.Find(id);
+            if (proveedor == null)
+            {
+                return NotFound();
+            }
+
+            // Cambiar el estado de Activo a Inactivo o viceversa
+            proveedor.Estado = !proveedor.Estado;
+
+            _dbContext.Proveedores.Update(proveedor);
+            _dbContext.SaveChanges();
+
+            return RedirectToAction("VisualizarProveedores");
+        }
     }
 
 

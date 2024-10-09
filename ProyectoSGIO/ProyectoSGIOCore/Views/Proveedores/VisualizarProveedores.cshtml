@@ -42,8 +42,23 @@
                             {
                                 <span class="badge bg-danger">Inactivo</span>
                             }
+
                         </td>
                         <td>
+                            <form asp-action="CambiarEstado" asp-controller="Proveedores" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@proveedor.IdProveedor" />
+                                <button type="submit" class="btn btn-info btn-sm">
+                                    @if (proveedor.Estado)
+                                    {
+                                        <span>Cambiar a Inactivo</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Cambiar a Activo</span>
+                                    }
+                                </button>
+                            </form>
+
                             <!-- Botón de editar con ícono de lápiz -->
                             <a asp-action="EditarProveedor" asp-route-id="@proveedor.IdProveedor" class="btn btn-warning btn-sm">
                                 <i class="bi bi-pencil"></i> Editar
