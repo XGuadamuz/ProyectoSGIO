@@ -54,14 +54,22 @@
                                 <i class="bi bi-pencil"></i> Editar Rol
                             </a>
 
-                            <!-- Botón de bloquear -->
-                            <a href="#" class="btn btn-danger me-1" title="Bloquear">
-                                <i class="bi bi-lock"></i> Bloquear
-                            </a>
-                            <!-- Botón de desbloquear -->
-                            <a href="#" class="btn btn-success" title="Desbloquear">
-                                <i class="bi bi-unlock"></i> Desbloquear
-                            </a>
+                            
+                            @if (usuario.Activo)
+                            {
+                                <!-- Botón de bloquear -->
+                                <button type="button" class="btn btn-danger me-1 bloquearID" data-bs-toggle="modal" data-bs-target="#bloquearModal" title="Bloquear" data-bs-id="@usuario.IdUsuario">
+                                    <i class="bi bi-lock"></i> Bloquear
+                                </button>
+                            }
+                            @if(!usuario.Activo)
+                            {
+                                <!-- Botón de desbloquear -->
+                                <button type="button" class="btn btn-success me-1 bloquearID" data-bs-toggle="modal" data-bs-target="#bloquearModal" title="Desbloquear" data-bs-id="@usuario.IdUsuario">
+                                    <i class="bi bi-unlock"></i> Desbloquear
+                                </button>
+                            }
+                           
                         </td>
                     </tr>
                 }
@@ -69,6 +77,33 @@
         </table>
     </div>
 </div>
+
+
+<!-- Modal para Confirmar Desbloqueo -->
+<div class="modal fade" id="bloquearModal" tabindex="1" aria-labelledby="bloquearModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bloquearModal">CAmbiar Estado de Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("CambiarEstado", "Administrativo", FormMethod.Post))
+                {
+                    <input type="hidden" id="IdUsuario" name="IdUsuario" value="">
+                    <p>¿Estás seguro de que deseas cambiar el estado de este usuario?</p>
+                    <div style="text-align:center;">
+                        <button type="submit" id="submit-Active"class="btn btn-primary">Confirmar Cambio</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 @section scripts {
     <script>
@@ -79,5 +114,11 @@
                 }
             });
         });
+
+
+        $(".bloquearID").click(function () {
+            $("#IdUsuario").val($(this).attr('data-bs-id'));
+         });
+
     </script>
 }
