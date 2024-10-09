@@ -150,5 +150,34 @@ namespace ProyectoSGIOCore.Controllers
             TempData["MensajeExito"] = "Rol cambiado exitosamente.";
             return RedirectToAction("VisualizarUsuarios");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarEstado(Usuario usuario)
+        {
+            usuario = await _dbContext.Usuarios.FindAsync(usuario.IdUsuario);
+            // Verificar si el usuario existe
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            // Obtener el ID del usuario logueado
+            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Verificar si el administrador intenta cambiar su propio estado
+            if (usuario.IdUsuario == int.Parse(loggedInUserId))
+            {
+                TempData["MensajeError"] = "No puedes cambiar tu propio estado.";
+                return RedirectToAction("VisualizarUsuarios");
+            }
+
+            // Cambiar el rol del usuario
+            usuario.Activo = !usuario.Activo;
+            await _dbContext.SaveChangesAsync();
+            TempData["MensajeExito"] = "Estado cambiado exitosamente.";
+            return RedirectToAction("VisualizarUsuarios");
+        }
     }
+
+
 }

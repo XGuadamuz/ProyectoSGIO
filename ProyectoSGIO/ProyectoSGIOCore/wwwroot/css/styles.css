@@ -145,3 +145,7 @@ footer {
 .table-custom tbody tr {
     transition: background-color 0.5s ease;
 }
+
+.modal-div-btn {
+    text-align: center;
+}

@@ -7,7 +7,7 @@
         public string Apellido { get; set; }
         public string Correo { get; set; }
         public string Clave { get; set; }
-
+        public bool Activo { get; set; }
 
         // Clave foránea para el Rol
         public int IdRol { get; set; }

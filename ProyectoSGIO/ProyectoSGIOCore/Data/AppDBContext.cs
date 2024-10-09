@@ -13,6 +13,8 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
 
+        public DbSet<Empleado> Empleados { get; set; }
+
         public DbSet<Proveedor> Proveedores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +33,7 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(u => u.Apellido).HasMaxLength(50).IsRequired();
                 tb.Property(u => u.Correo).HasMaxLength(50).IsRequired();
                 tb.Property(u => u.Clave).HasMaxLength(50).IsRequired();
+                tb.Property(u => u.Activo).HasMaxLength(1).IsRequired();
 
                 tb.HasOne(u => u.Rol)
                   .WithMany(r => r.Usuarios)
@@ -67,10 +70,25 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(p => p.Estado).IsRequired();
             });
 
+            // Configuración de Usuario
+            modelBuilder.Entity<Empleado>(tb =>
+            {
+                tb.HasKey(e => e.IdEmpleado);
+                tb.Property(e => e.IdEmpleado)
+                  .UseIdentityColumn()
+                  .ValueGeneratedOnAdd();
+
+                tb.Property(u => u.Nombre).HasMaxLength(50).IsRequired();
+                tb.Property(u => u.Apellido).HasMaxLength(50).IsRequired();
+                tb.Property(u => u.Correo).HasMaxLength(50).IsRequired();
+
+            });
+
             // Tablas
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
             modelBuilder.Entity<Rol>().ToTable("Rol");
             modelBuilder.Entity<Proveedor>().ToTable("Proveedor");
+            modelBuilder.Entity<Empleado>().ToTable("Empleado");
 
             modelBuilder.Entity<Rol>().HasData(
                new Rol { IdRol = 1, Nombre = "Administrador" },
@@ -80,9 +98,9 @@ namespace ProyectoSGIOCore.Data
                );
 
             modelBuilder.Entity<Usuario>().HasData(
-               new Usuario { IdUsuario = 1, Nombre = "Admin", Apellido = "User", Correo = "admin@example.com", Clave = "123", IdRol = 1 },
-               new Usuario { IdUsuario = 2, Nombre = "Supervisor", Apellido = "User", Correo = "supervisor@example.com", Clave = "123", IdRol = 2 },
-               new Usuario { IdUsuario = 3, Nombre = "Empleado", Apellido = "User", Correo = "empleado@example.com", Clave = "123", IdRol = 3 }
+               new Usuario { IdUsuario = 1, Nombre = "Admin", Apellido = "User", Correo = "admin@example.com", Clave = "123", IdRol = 1, Activo = true },
+               new Usuario { IdUsuario = 2, Nombre = "Supervisor", Apellido = "User", Correo = "supervisor@example.com", Clave = "123", IdRol = 2, Activo = true },
+               new Usuario { IdUsuario = 3, Nombre = "Empleado", Apellido = "User", Correo = "empleado@example.com", Clave = "123", IdRol = 3, Activo = true }
                );
 
             modelBuilder.Entity<Proveedor>().HasData(
