@@ -73,23 +73,30 @@ namespace ProyectoSGIOCore.Controllers
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(IniciarSesionVM modelo)
         {
+            // Buscar el usuario en la base de datos
             Usuario? usuario_encontrado = await _dbContext.Usuarios
                                         .Include(u => u.Rol)
-                                        .Where(u =>
-                                        u.Correo == modelo.Correo &&
-                                        u.Clave == modelo.Clave
-                                        ).FirstOrDefaultAsync();
+                                        .Where(u => u.Correo == modelo.Correo && u.Clave == modelo.Clave)
+                                        .FirstOrDefaultAsync();
 
+            // Si no se encuentra el usuario
             if (usuario_encontrado == null)
             {
                 ViewData["Mensaje"] = "No se encontraron coincidencias";
                 return View();
             }
 
-            List<Claim> claims = new List<Claim>()
+            // Verificar si el usuario está inactivo/bloqueado
+            if (!usuario_encontrado.Activo)
             {
+                ViewData["Mensaje"] = "Tu cuenta ha sido bloqueada. Contacta al administrador para más información.";
+                return View();
+            }
+
+            // Si el usuario está activo, proceder con el inicio de sesión
+            List<Claim> claims = new List<Claim>(){
                 new Claim(ClaimTypes.Name, usuario_encontrado.Nombre),
-                new Claim(ClaimTypes.NameIdentifier,usuario_encontrado.IdUsuario.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, usuario_encontrado.IdUsuario.ToString()),
                 new Claim(ClaimTypes.Role, usuario_encontrado.Rol.Nombre)
             };
 
@@ -99,11 +106,12 @@ namespace ProyectoSGIOCore.Controllers
                 AllowRefresh = true,
             };
 
+            // Autenticación exitosa
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 properties
-                );
+            );
 
             return RedirectToAction("Index", "Home");
         }
