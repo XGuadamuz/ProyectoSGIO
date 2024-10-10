@@ -98,13 +98,9 @@ namespace ProyectoSGIOCore.Controllers
             empleado.Correo = entidad.Correo;
             await _dbContext.SaveChangesAsync();
 
-            TempData["MensajeExito"] = "empleado editado exitosamente.";
+            TempData["MensajeExito"] = "Empleado editado exitosamente.";
             return RedirectToAction("VisualizarEmpleados");
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
     }
 }

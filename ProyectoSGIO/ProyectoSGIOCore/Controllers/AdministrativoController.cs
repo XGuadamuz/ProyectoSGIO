@@ -85,7 +85,8 @@ namespace ProyectoSGIOCore.Controllers
                 Apellido = modelo.Apellido,
                 Correo = modelo.Correo,
                 Clave = modelo.Clave,
-                IdRol = rolDefault.IdRol
+                IdRol = rolDefault.IdRol,
+                Activo = true
             };
 
             // Guarda el usuario en la base de datos
