@@ -17,6 +17,8 @@ namespace ProyectoSGIOCore.Data
 
         public DbSet<Proveedor> Proveedores { get; set; }
 
+        public DbSet<HoraExtra> HorasExtra { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
