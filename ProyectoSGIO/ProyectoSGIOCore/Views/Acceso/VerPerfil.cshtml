@@ -1,10 +1,10 @@
-﻿
+﻿@model ProyectoSGIOCore.Models.Usuario
+
 @{
-    ViewBag.Title = "VerPerfil";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Mi Perfil";
 }
 
-<!-- Cambiar foto de perfil -->
 <div class="container mt-5">
     <h2 class="text-center mb-4">Mi Perfil</h2>
 
@@ -22,40 +22,27 @@
         <div class="row mb-3">
             <!-- Nombre -->
             <div class="col-md-6">
-                <label for="nombre" class="form-label">Nombre(s)</label>
-                <input type="text" class="form-control" id="nombre" value="Juan" disabled>
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" value="@Model.Nombre" disabled>
             </div>
 
             <!-- Apellidos -->
             <div class="col-md-6">
                 <label for="apellidos" class="form-label">Apellido(s)</label>
-                <input type="text" class="form-control" id="apellidos" value="Pérez García" disabled>
+                <input type="text" class="form-control" id="apellidos" value="@Model.Apellido" disabled>
             </div>
         </div>
 
         <!-- Correo Electrónico -->
         <div class="mb-3">
             <label for="correo" class="form-label">Correo Electrónico</label>
-            <div class="input-group">
-                <input type="email" class="form-control" id="correo" value="juan.perez@ejemplo.com" disabled>
-                <button class="btn btn-outline-secondary" type="button" id="edit-correo">
-                    <i class="bi bi-pencil"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Edad -->
-        <div class="mb-3">
-            <label for="edad" class="form-label">Edad</label>
-            <input type="number" class="form-control" id="edad" value="30" disabled>
+            <input type="email" class="form-control" id="correo" value="@Model.Correo" disabled>
         </div>
 
         <!-- Rol -->
         <div class="mb-3">
             <label for="rol" class="form-label">Rol</label>
-            <input type="text" class="form-control" id="rol" value="Administrador" disabled>
+            <input type="text" class="form-control" id="rol" value="@Model.Rol.Nombre" disabled>
         </div>
     </form>
-
-
 </div>

@@ -1,59 +1,23 @@
-﻿
+﻿@model ProyectoSGIOCore.Models.Proveedor
 @{
-    ViewBag.Title = "EliminarProveedor";
+    ViewBag.Title = "Eliminar Proveedor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container mt-5">
     <h2 class="text-center mb-4">Eliminar Proveedor</h2>
 
-    <!-- Tabla de Proveedores -->
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nombre del Proveedor</th>
-                <th>Correo Electrónico</th>
-                <th>Número de Teléfono</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Proveedor ABC</td>
-                <td>abc@proveedor.com</td>
-                <td>1234567890</td>
-                <td>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarProveedorModal">Eliminar</button>
-                </td>
-            </tr>
-            <tr>
-                <td>Proveedor XYZ</td>
-                <td>xyz@proveedor.com</td>
-                <td>0987654321</td>
-                <td>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarProveedorModal">Eliminar</button>
-                </td>
-            </tr>
-            <!-- Más proveedores -->
-        </tbody>
-    </table>
-</div>
-
-<!-- Modal de Confirmación de Eliminación -->
-<div class="modal fade" id="eliminarProveedorModal" tabindex="-1" aria-labelledby="eliminarProveedorLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eliminarProveedorLabel">Confirmar Eliminación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>¿Estás seguro de que deseas eliminar este proveedor? Esta acción no se puede deshacer.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">Eliminar</button>
-            </div>
-        </div>
+    <div class="alert alert-warning text-center mx-auto">
+        <p>¿Estás seguro de que deseas eliminar el proveedor @Model.Nombre? Esta acción no se puede deshacer.</p>
     </div>
+
+    <form asp-action="EliminarProveedorConfirmado" asp-controller="Proveedores" method="post">
+        <input type="hidden" name="id" value="@Model.IdProveedor" />
+        @Html.AntiForgeryToken()
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+            <a asp-action="VisualizarProveedores" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
 </div>
