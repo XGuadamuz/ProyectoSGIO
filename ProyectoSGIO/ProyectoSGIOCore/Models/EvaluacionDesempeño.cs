@@ -9,5 +9,7 @@
         public DateTime FechaEvaluacion { get; set; }
         public string Criterios { get; set; }
         public bool Pendiente { get; set; }
+
+        public string AdministradorEmail { get; set;}
     }
 }
