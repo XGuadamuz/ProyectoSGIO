@@ -1,8 +1,8 @@
-# Proyecto SGIO - Sistema de Gestión de Información de Usuarios
+# Proyecto SGIO - Sistema de Gestión Integral de Obras
 
 ## Descripción
 
-El **Sistema de Gestión de Información de Usuarios (SGIO)** es una aplicación web que permite gestionar usuarios, roles y sus estados en un sistema. Los administradores pueden crear usuarios, asignar roles, cambiar el estado de los usuarios (activar o bloquear) y actualizar sus roles. Los usuarios pueden registrarse, iniciar sesión y acceder a sus perfiles, siempre que su cuenta esté activa.
+El **Sistema de Gestión Integral de Obras (SGIO)** es una aplicación web que permite gestionar usuarios, roles y sus estados en un sistema. Los administradores pueden crear usuarios, asignar roles, cambiar el estado de los usuarios (activar o bloquear) y actualizar sus roles. Los usuarios pueden registrarse, iniciar sesión y acceder a sus perfiles, siempre que su cuenta esté activa.
 
 ## Características
 
