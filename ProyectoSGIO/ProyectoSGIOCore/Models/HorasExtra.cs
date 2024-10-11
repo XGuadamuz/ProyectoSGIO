@@ -1,12 +1,14 @@
 ﻿namespace ProyectoSGIOCore.Models
 {
-    public class HoraExtra
+    public class HorasExtra
     {
-        public int IdHoraExtra { get; set; }
-        public int IdEmpleado { get; set; }
-        public Empleado Empleado { get; set; }
+        public int IdHorasExtra { get; set; }
+        public int IdEmpleado { get; set; } // Relación con empleado
         public DateTime Fecha { get; set; }
         public double CantidadHoras { get; set; }
-        public bool Aprobada { get; set; } // Indica si fue aprobada
+        public bool Aprobada { get; set; } = false;
+
+        // Relación con el modelo Empleado
+        public virtual Empleado Empleado { get; set; }
     }
 }

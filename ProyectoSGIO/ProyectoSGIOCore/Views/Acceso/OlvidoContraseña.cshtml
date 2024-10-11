@@ -1,18 +1,27 @@
-﻿@{
+﻿@model ProyectoSGIOCore.ViewModels.PasswordRecoveryVM
+
+@{
     ViewBag.Title = "Olvido Contraseña";
     Layout = "~/Views/Shared/_LayoutExterno.cshtml";
 }
 
-<form class="form">
+<form asp-controller="PasswordRecovery" asp-action="ForgotPassword" method="post" class="form">
     <p class="title">¿Olvidaste tu contraseña?</p>
     <p class="message">Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
 
     <label>
-        <input required="" placeholder="" type="email" class="input">
+        <input asp-for="Email" required class="input" placeholder="Ingresa tu correo" type="email" />
         <span>Correo</span>
     </label>
 
-    <button class="submit">Enviar enlace de restablecimiento</button>
+    <button type="submit" class="submit">Enviar enlace de restablecimiento</button>
 
-    <p class="signin">¿Recordaste tu contraseña? <a href="#">Inicia sesión</a></p>
+    <p class="signin">¿Recordaste tu contraseña? <a asp-controller="Acceso" asp-action="IniciarSesion">Inicia sesión</a></p>
 </form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger" role="alert">
+        @Html.ValidationSummary()
+    </div>
+}

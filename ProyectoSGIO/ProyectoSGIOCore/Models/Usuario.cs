@@ -1,6 +1,8 @@
-﻿namespace ProyectoSGIOCore.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace ProyectoSGIOCore.Models
 {
-    public class Usuario
+    public class Usuario : IdentityUser
     {
         public int IdUsuario { get; set; }
         public string Nombre { get; set; }

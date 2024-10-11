@@ -17,11 +17,12 @@ namespace ProyectoSGIOCore.Data
 
         public DbSet<Proveedor> Proveedores { get; set; }
 
-        public DbSet<HoraExtra> HorasExtra { get; set; }
+        public DbSet<HorasExtra> HorasExtra { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
 
             // Configuración de Usuario
             modelBuilder.Entity<Usuario>(tb =>
@@ -83,8 +84,26 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(u => u.Nombre).HasMaxLength(50).IsRequired();
                 tb.Property(u => u.Apellido).HasMaxLength(50).IsRequired();
                 tb.Property(u => u.Correo).HasMaxLength(50).IsRequired();
-
             });
+
+            modelBuilder.Entity<HorasExtra>(tb =>
+            {
+                tb.HasKey(h => h.IdHorasExtra); // Aquí se establece IdHoraExtra como clave primaria
+                tb.Property(h => h.IdHorasExtra)
+                  .UseIdentityColumn()
+                  .ValueGeneratedOnAdd();
+
+                tb.Property(h => h.Fecha).IsRequired();
+                tb.Property(h => h.CantidadHoras).IsRequired();
+                tb.Property(h => h.Aprobada).IsRequired();
+
+                tb.HasOne(h => h.Empleado) // Configuración de la relación con Empleado
+                  .WithMany() // Asumiendo que no necesitas una colección inversa en Empleado
+                  .HasForeignKey(h => h.IdEmpleado); // Configura la clave foránea
+            });
+
+
+
 
             // Tablas
             modelBuilder.Entity<Usuario>().ToTable("Usuario");

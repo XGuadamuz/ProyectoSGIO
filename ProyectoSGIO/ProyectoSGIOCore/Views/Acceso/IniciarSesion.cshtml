@@ -24,6 +24,11 @@
 
     <button type="submit" class="submit">Iniciar Sesion</button>
     <p class="signin">¿No tiene una cuenta? <a asp-controller="Acceso" asp-action="Registro">Crear Cuenta</a></p>
+
+    <!-- Añade el enlace para recuperar la contraseña -->
+    <p class="signin">
+        ¿Olvidaste tu contraseña? <a href="@Url.Action("ForgotPassword", "PasswordRecovery")">Recuperar contraseña</a>
+    </p>
 </form>
 
 
