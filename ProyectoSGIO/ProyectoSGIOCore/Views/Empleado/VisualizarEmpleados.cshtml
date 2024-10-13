@@ -48,8 +48,13 @@
                         <td>@empleado.Correo</td>
                         <td>
                             <!-- Botón de editar -->
-                            <a href="@Url.Action("EditarEmpleado", "Empleado", new { id = empleado.IdEmpleado })" class="btn btn-warning me-1" title="Editar">
+                            <a asp-action="EditarEmpleado" asp-route-id="@empleado.IdEmpleado" class="btn btn-warning me-1" title="Editar">
                                 <i class="bi bi-pencil"></i> Editar
+                            </a>
+
+                            <!-- Botón de eliminar -->
+                            <a asp-action="EliminarEmpleado" asp-route-id="@empleado.IdEmpleado" class="btn btn-danger" title="Eliminar">
+                                <i class="bi bi-trash"></i> Eliminar
                             </a>
                         </td>
                     </tr>
