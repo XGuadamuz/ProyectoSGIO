@@ -38,13 +38,13 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Planificación</a></li>
                                     <li><a class="dropdown-item" asp-controller="Empleado" asp-action="VisualizarEmpleados">Gestión de RH</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Inventario" asp-action="VisualizarInventario">Inventario</a></li>
                                     <li><a class="dropdown-item" href="#">Maquinaria</a></li>
-                                    <li><a class="dropdown-item" href="#">Inventario</a></li>
                                     <li><a class="dropdown-item" href="#">Contabilidad</a></li>
                                 </ul>
                             </li>
-                        }                        
-                        
+                        }
+
                         @if (User.IsInRole("Administrador"))
                         {
                             <li class="nav-item">
@@ -148,7 +148,9 @@
                 <div class="col-lg-4 col-md-6 mb-4">
                     <h5 class="text-uppercase">Enlaces</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Inicio</a></li>
+                        <li>
+                            <a class="nav-link" aria-current="page" asp-controller="Home" asp-action="Index">Inicio</a>
+                        </li>
                         <li><a href="#" class="text-white">Acerca de nosotros</a></li>
                         <li><a href="#" class="text-white">Proyectos</a></li>
                         <li><a href="#" class="text-white">Contacto</a></li>
