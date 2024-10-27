@@ -47,9 +47,12 @@ namespace ProyectoSGIOCore.Controllers
         {
             if (!ModelState.IsValid) return View(inventario);
 
+            // Actualiza el Precio Total
             inventario.PrecioTotal = inventario.Cantidad * inventario.PrecioUnidad;
-            _dbContext.Update(inventario);
+
+            _dbContext.Inventarios.Update(inventario);
             await _dbContext.SaveChangesAsync();
+
             return RedirectToAction("VisualizarInventario");
         }
 
