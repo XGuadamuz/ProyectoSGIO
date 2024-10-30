@@ -40,7 +40,8 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(u => u.Clave).HasMaxLength(50).IsRequired();
                 tb.Property(u => u.Activo).HasMaxLength(1).IsRequired();
                 tb.Property(u => u.Temporal).HasMaxLength(1).IsRequired();
-                
+                tb.Property(u => u.TwoFA).HasMaxLength(1).IsRequired();
+
                 tb.HasOne(u => u.Rol)
                   .WithMany(r => r.Usuarios)
                   .HasForeignKey(u => u.IdRol);
@@ -104,9 +105,9 @@ namespace ProyectoSGIOCore.Data
                );
 
             modelBuilder.Entity<Usuario>().HasData(
-               new Usuario { IdUsuario = 1, Nombre = "Admin", Apellido = "User", Correo = "admin@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 1, Activo = true, Temporal = false },
-               new Usuario { IdUsuario = 2, Nombre = "Supervisor", Apellido = "User", Correo = "supervisor@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 2, Activo = true, Temporal = false },
-               new Usuario { IdUsuario = 3, Nombre = "Empleado", Apellido = "User", Correo = "empleado@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 3, Activo = true, Temporal = false }
+               new Usuario { IdUsuario = 1, Nombre = "Admin", Apellido = "User", Correo = "admin@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 1, Activo = true, Temporal = false, TwoFA = false },
+               new Usuario { IdUsuario = 2, Nombre = "Supervisor", Apellido = "User", Correo = "supervisor@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 2, Activo = true, Temporal = false, TwoFA = false },
+               new Usuario { IdUsuario = 3, Nombre = "Empleado", Apellido = "User", Correo = "empleado@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 3, Activo = true, Temporal = false, TwoFA = false }
                );
 
             modelBuilder.Entity<Proveedor>().HasData(

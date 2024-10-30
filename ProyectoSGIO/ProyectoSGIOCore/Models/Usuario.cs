@@ -10,6 +10,8 @@
         public bool Activo { get; set; }
         public bool Temporal { get; set; }
 
+        public bool TwoFA { get; set; }
+
         // Clave foránea para el Rol
         public int IdRol { get; set; }
         public Rol Rol { get; set; } 
