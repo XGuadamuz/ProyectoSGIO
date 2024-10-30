@@ -43,38 +43,46 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var producto in Model)
+                @if (Model != null && Model.Any())
                 {
-                    <tr class="text-center">
-                        <td>@producto.ID</td>
-                        <td>@producto.Nombre</td>
-                        <td>@producto.Categoria</td>
-                        <td>@producto.Cantidad</td>
-                        <td>@producto.PrecioUnidad.ToString("C")</td>
-                        <td>@(producto.Cantidad * producto.PrecioUnidad)</td>
-                        <td>
-                            @if (producto.Cantidad > 0)
-                            {
-                                <span class="text-success">En stock</span>
-                            }
-                            else
-                            {
-                                <span class="text-danger">Sin stock</span>
-                            }
-                        </td>
-                        <td>@(producto.InformacionAdicional ?? "N/A")</td>
-                        <td>
-                            <!-- Botón de editar -->
-                            <a asp-action="EditarInventario" asp-route-id="@producto.ID" class="btn btn-warning me-1" title="Editar">
-                                <i class="bi bi-pencil"></i> Editar
-                            </a>
+                    @foreach (var producto in Model)
+                    {
+                        <tr class="text-center">
+                            <td>@producto.ID</td>
+                            <td>@producto.Nombre</td>
+                            <td>@producto.Categoria</td>
+                            <td>@producto.Cantidad</td>
+                            <td>@producto.PrecioUnidad.ToString("C")</td>
+                            <td>@(producto.Cantidad * producto.PrecioUnidad)</td>
+                            <td>
+                                @if (producto.Cantidad > 0)
+                                {
+                                    <span class="text-success">En stock</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">Sin stock</span>
+                                }
+                            </td>
+                            <td>@(producto.InformacionAdicional ?? "N/A")</td>
+                            <td>
+                                <!-- Botón de editar -->
+                                <a asp-action="EditarInventario" asp-route-id="@producto.ID" class="btn btn-warning me-1" title="Editar">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
 
-                            <!-- Botón de eliminar -->
-                            <button type="button" class="btn btn-danger eliminarProducto" data-bs-toggle="modal" data-bs-target="#eliminarModal" data-bs-id="@producto.ID">
-                                <i class="bi bi-trash"></i> Eliminar
-                            </button>
-
-                        </td>
+                                <!-- Botón de eliminar -->
+                                <button type="button" class="btn btn-danger eliminarProducto" data-bs-toggle="modal" data-bs-target="#eliminarModal" data-bs-id="@producto.ID">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" class="text-center">No hay productos en el inventario.</td>
                     </tr>
                 }
             </tbody>

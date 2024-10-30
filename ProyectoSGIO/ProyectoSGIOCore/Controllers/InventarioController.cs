@@ -3,24 +3,42 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.Data;
 using ProyectoSGIOCore.Models;
+using ProyectoSGIOCore.Servicios;
 
 namespace ProyectoSGIOCore.Controllers
 {
     [Authorize(Roles = "Administrador , Supervisor")]
     public class InventarioController : Controller
     {
+        private readonly IInventarioService _inventarioService;
         private readonly AppDBContext _dbContext;
 
-        public InventarioController(AppDBContext dbContext)
+        public InventarioController(IInventarioService inventarioservice, AppDBContext dbContext)
         {
+            _inventarioService = inventarioservice;
             _dbContext = dbContext;
         }
 
         [HttpGet]
         public async Task<IActionResult> VisualizarInventario()
         {
-            var inventarios = await _dbContext.Inventarios.ToListAsync();
-            return View(inventarios);
+            try
+            {
+                var inventarios = await _dbContext.Inventarios.ToListAsync();
+                //var inventarios = await _dbContext.Inventarios.FirstOrDefaultAsync();
+                return View(inventarios);
+            }
+            catch (DbUpdateException ex)
+            {
+                TempData["MensajeError"] = $"Error al cargar el inventario. Por favor, intente nuevamente. Detalle: {ex.Message}";
+                //return View();
+                return View(new List<Inventario>());
+            }
+            catch(Exception ex)
+            {
+                TempData["MensajeError"] = $"Error desconocido: {ex.Message}";
+                return View();
+            }
         }
 
         [HttpGet]
@@ -42,7 +60,7 @@ namespace ProyectoSGIOCore.Controllers
                 await _dbContext.SaveChangesAsync();
                 TempData["MensajeExito"] = "Producto registrado exitosamente en el inventario.";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["MensajeError"] = "Ocurrió un error al registrar el producto. Intente nuevamente.";
             }
@@ -68,14 +86,24 @@ namespace ProyectoSGIOCore.Controllers
 
             try
             {
-                inventario.PrecioTotal = inventario.Cantidad * inventario.PrecioUnidad;
-                _dbContext.Update(inventario);
-                await _dbContext.SaveChangesAsync();
-                TempData["MensajeExito"] = "Producto modificado exitosamente.";
+                var (success, message) = await _inventarioService.ActualizarInventarioAsync(
+                    inventario.ID,
+                    inventario.Cantidad);
+
+                if (success)
+                {
+                    TempData["MensajeExito"] = "Producto modificado exitosamente.";
+                }
+                else
+                {
+                    TempData["MensajeError"] = message;
+                    return View(inventario);
+                }
             }
-            catch
+            catch (Exception)
             {
                 TempData["MensajeError"] = "Ocurrió un error al intentar modificar el producto.";
+                return View(inventario);
             }
 
             return RedirectToAction("VisualizarInventario");
@@ -97,7 +125,7 @@ namespace ProyectoSGIOCore.Controllers
                 await _dbContext.SaveChangesAsync();
                 TempData["MensajeExito"] = "Producto eliminado exitosamente.";
             }
-            catch
+            catch (Exception)
             {
                 TempData["MensajeError"] = "Ocurrió un error al intentar eliminar el producto.";
             }

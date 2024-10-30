@@ -20,7 +20,7 @@ namespace ProyectoSGIOCore.Data
 
         public DbSet<FacturaProveedor> Facturas { get; set; }
 
-        public DbSet<FacturaProveedor> Facturas { get; set; }
+        //public DbSet<FacturaProveedor> Facturas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
