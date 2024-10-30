@@ -57,7 +57,7 @@ namespace ProyectoSGIOCore.Controllers
                 Nombre = modelo.Nombre,
                 Apellido = modelo.Apellido,
                 Correo = modelo.Correo,
-                Clave = modelo.Clave,
+                Clave = _utilitariosModel.Encrypt(modelo.Clave),
                 IdRol = rolDefault.IdRol,
                 Activo = true,
                 Temporal = false,
