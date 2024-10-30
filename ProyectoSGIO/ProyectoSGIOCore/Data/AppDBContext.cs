@@ -18,6 +18,8 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Inventario> Inventarios { get; set; }
 
+        public DbSet<FacturaProveedor> Facturas { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
