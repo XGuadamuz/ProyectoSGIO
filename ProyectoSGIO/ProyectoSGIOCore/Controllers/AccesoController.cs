@@ -7,15 +7,22 @@ using ProyectoSGIOCore.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ProyectoSGIOCore.Services;
+using Microsoft.Extensions.Hosting;
 
 namespace ProyectoSGIOCore.Controllers
 {
     public class AccesoController : Controller
     {
         private readonly AppDBContext _dbContext;
-        public AccesoController(AppDBContext appDBContext)
+        private readonly IUtilitariosModel _utilitariosModel;
+        private readonly IHostEnvironment _hostEnvironment;
+
+        public AccesoController(AppDBContext appDBContext, IUtilitariosModel utilitariosModel, IHostEnvironment hostEnvironment)
         {
             _dbContext = appDBContext;
+            _utilitariosModel = utilitariosModel;
+            _hostEnvironment = hostEnvironment;
         }
 
         [HttpGet]
@@ -74,10 +81,11 @@ namespace ProyectoSGIOCore.Controllers
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(IniciarSesionVM modelo)
         {
+            string claveEncriptada = _utilitariosModel.Encrypt(modelo.Clave);
             // Buscar el usuario en la base de datos
             Usuario? usuario_encontrado = await _dbContext.Usuarios
                                         .Include(u => u.Rol)
-                                        .Where(u => u.Correo == modelo.Correo && u.Clave == modelo.Clave)
+                                        .Where(u => u.Correo == modelo.Correo && u.Clave == claveEncriptada)
                                         .FirstOrDefaultAsync();
 
             // Si no se encuentra el usuario
@@ -114,14 +122,117 @@ namespace ProyectoSGIOCore.Controllers
                 properties
             );
 
+            if (usuario_encontrado.Temporal)
+            {
+                ViewData["Mensaje"] = "Se requiere cambiar contraseña.";
+                return RedirectToAction("CambiarContraseña", "Acceso");
+            }
+
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> CerrarSesion()
+        [HttpGet]
+        public IActionResult RecuperarCuenta()
         {
+            return View();
+
+        }
+
+        [HttpGet]
+        public IActionResult CambiarContraseña()
+        {
+            return View();
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarContraseña(UsuarioVM modelo)
+        {
+            if (modelo.Clave != modelo.ConfirmarClave)
+            {
+                ViewData["Mensaje"] = "Las contraseñas no coinciden";
+                return View();
+            }
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            Usuario? usuario_encontrado = _dbContext.Usuarios
+                .FirstOrDefault(u => u.IdUsuario.ToString() == userId);
+
+            // Verificar si el empleado existe 
+            string contrasenna_nueva = _utilitariosModel.Encrypt(modelo.Clave);
+            bool es_temporal = false;
+            usuario_encontrado.Clave = contrasenna_nueva;
+            usuario_encontrado.Temporal = es_temporal;
+
+            var result = await _dbContext.SaveChangesAsync();
+
+            if (result == 0)
+            {
+                ViewData["Mensaje"] = "Error al editar contraseña. Contacta al administrador para más información.";
+                return View();
+            }
+            else {
+                return RedirectToAction("IniciarSesion", "Acceso");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecuperarCuenta(IniciarSesionVM modelo)
+        {
+            // Buscar el usuario en la base de datos
+            Usuario? usuario_encontrado = await _dbContext.Usuarios
+                                        .Include(u => u.Rol)
+                                        .Where(u => u.Correo == modelo.Correo)
+                                        .FirstOrDefaultAsync();
+
+            // Si no se encuentra el usuario
+            if (usuario_encontrado == null)
+            {
+                ViewData["Mensaje"] = "No se encontraron coincidencias";
+                return View();
+            }
+
+            // Verificar si el usuario está inactivo/bloqueado
+            if (!usuario_encontrado.Activo)
+            {
+                ViewData["Mensaje"] = "Tu cuenta ha sido bloqueada. Contacta al administrador para más información.";
+                return View();
+            }
+
+            string contrasenna_temporal = _utilitariosModel.GenerarCodigo();
+            string contrasenna_temporal_nueva = _utilitariosModel.Encrypt(contrasenna_temporal);
+            bool es_temporal = true;
+            usuario_encontrado.Clave = contrasenna_temporal_nueva;
+            usuario_encontrado.Temporal = es_temporal;
+
+            var result = await _dbContext.SaveChangesAsync();
+
+            if (result == 0)
+            {
+                ViewData["Mensaje"] = "Error al editar contraseña. Contacta al administrador para más información.";
+                return View();
+            }
+            else
+            {
+                string ruta = Path.Combine(_hostEnvironment.ContentRootPath, "FormatoCorreo.html");
+                string htmlBody = System.IO.File.ReadAllText(ruta);
+                htmlBody = htmlBody.Replace("@nombre@", usuario_encontrado.Nombre);
+                htmlBody = htmlBody.Replace("@apellido@", usuario_encontrado.Apellido);
+                htmlBody = htmlBody.Replace("@correo@", usuario_encontrado.Correo);
+                htmlBody = htmlBody.Replace("@contrasenna_temporal@", contrasenna_temporal);
+
+                _utilitariosModel.EnviarCorreo(usuario_encontrado.Correo!, "Recuperar acceso en cuenta SGIO!", htmlBody);
+                ViewData["Mensaje"] = "La nueva contraseña se envio a tu correo";
+                return RedirectToAction("IniciarSesion", "Acceso");
+            }
+        }
+            public async Task<IActionResult> CerrarSesion()
+        {       
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("IniciarSesion", "Acceso");
         }
+
+
 
         [HttpGet]
         public IActionResult VerPerfil()
