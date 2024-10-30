@@ -4,9 +4,11 @@ using ProyectoSGIOCore.Data;
 using ProyectoSGIOCore.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoSGIOCore.Controllers
 {
+    [Authorize(Roles = "Administrador , Supervisor")]
     public class FacturasController : Controller
     {
         private readonly AppDBContext _dbContext;
