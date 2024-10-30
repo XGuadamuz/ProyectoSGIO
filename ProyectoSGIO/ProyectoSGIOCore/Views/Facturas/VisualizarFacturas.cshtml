@@ -33,7 +33,7 @@
                         <td>@(factura.Proveedor != null ? factura.Proveedor.Nombre : "Proveedor no encontrado")</td>
                         <td>@factura.NumeroFactura</td>
                         <td>@factura.FechaEmision.ToShortDateString()</td>
-                        <td>@factura.MontoTotal:C</td>
+                        <td>@factura.MontoTotal</td>
                         <td>@factura.Descripcion</td>
                     </tr>
                 }

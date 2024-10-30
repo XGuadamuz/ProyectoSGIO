@@ -6,7 +6,7 @@ using ProyectoSGIOCore.Models;
 
 namespace ProyectoSGIOCore.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Administrador , Supervisor")]
     public class InventarioController : Controller
     {
         private readonly AppDBContext _dbContext;
