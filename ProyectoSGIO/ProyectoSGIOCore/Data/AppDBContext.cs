@@ -101,9 +101,9 @@ namespace ProyectoSGIOCore.Data
                );
 
             modelBuilder.Entity<Usuario>().HasData(
-               new Usuario { IdUsuario = 1, Nombre = "Admin", Apellido = "User", Correo = "admin@example.com", Clave = "123", IdRol = 1, Activo = true, Temporal = false },
-               new Usuario { IdUsuario = 2, Nombre = "Supervisor", Apellido = "User", Correo = "supervisor@example.com", Clave = "123", IdRol = 2, Activo = true, Temporal = false },
-               new Usuario { IdUsuario = 3, Nombre = "Empleado", Apellido = "User", Correo = "empleado@example.com", Clave = "123", IdRol = 3, Activo = true, Temporal = false }
+               new Usuario { IdUsuario = 1, Nombre = "Admin", Apellido = "User", Correo = "admin@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 1, Activo = true, Temporal = false },
+               new Usuario { IdUsuario = 2, Nombre = "Supervisor", Apellido = "User", Correo = "supervisor@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 2, Activo = true, Temporal = false },
+               new Usuario { IdUsuario = 3, Nombre = "Empleado", Apellido = "User", Correo = "empleado@example.com", Clave = "PTOmGpZfmyerAqbyAbnVHw==", IdRol = 3, Activo = true, Temporal = false }
                );
 
             modelBuilder.Entity<Proveedor>().HasData(
