@@ -59,7 +59,9 @@ namespace ProyectoSGIOCore.Controllers
                 Correo = modelo.Correo,
                 Clave = modelo.Clave,
                 IdRol = rolDefault.IdRol,
-                Activo = true
+                Activo = true,
+                Temporal = false,
+                TwoFA = false,
             };
 
             await _dbContext.Usuarios.AddAsync(usuario);
@@ -102,11 +104,14 @@ namespace ProyectoSGIOCore.Controllers
                 return View();
             }
 
+            var pinAcceso = _utilitariosModel.GenerarPin();
+
             // Si el usuario está activo, proceder con el inicio de sesión
             List<Claim> claims = new List<Claim>(){
                 new Claim(ClaimTypes.Name, usuario_encontrado.Nombre),
                 new Claim(ClaimTypes.NameIdentifier, usuario_encontrado.IdUsuario.ToString()),
-                new Claim(ClaimTypes.Role, usuario_encontrado.Rol.Nombre)
+                new Claim(ClaimTypes.Role, usuario_encontrado.Rol.Nombre),
+                new Claim(ClaimTypes.Authentication,pinAcceso)
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -126,6 +131,20 @@ namespace ProyectoSGIOCore.Controllers
             {
                 ViewData["Mensaje"] = "Se requiere cambiar contraseña.";
                 return RedirectToAction("CambiarContraseña", "Acceso");
+            }
+
+            if (usuario_encontrado.TwoFA) 
+            {
+                string ruta = Path.Combine(_hostEnvironment.ContentRootPath, "FormatoTwoFA.html");
+                string htmlBody = System.IO.File.ReadAllText(ruta);
+                htmlBody = htmlBody.Replace("@nombre@", usuario_encontrado.Nombre);
+                htmlBody = htmlBody.Replace("@apellido@", usuario_encontrado.Apellido);
+                htmlBody = htmlBody.Replace("@pinAcceso@", pinAcceso);
+
+                _utilitariosModel.EnviarCorreo(usuario_encontrado.Correo!, "Autenticación de 2 factores en cuenta SGIO!", htmlBody);
+                ViewData["Mensaje"] = "El pin se envio a tu correo";
+                return RedirectToAction("TwoFA", "Acceso");
+
             }
 
             return RedirectToAction("Index", "Home");
@@ -176,7 +195,77 @@ namespace ProyectoSGIOCore.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult TwoFA()
+        {
+            return View();
+
+        }
+
+        [HttpGet]
+        public IActionResult ActivarTwoFA()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            // Datos del usuario desde la BD
+            var usuario = _dbContext.Usuarios
+                .Include(u => u.Rol)
+                .FirstOrDefault(u => u.IdUsuario.ToString() == userId);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            return View(usuario);
+
+        }
+
         [HttpPost]
+        public async Task<IActionResult> ActivarTwoFA(Usuario modelo)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var usuario = _dbContext.Usuarios
+                .Include(u => u.Rol)
+                .FirstOrDefault(u => u.IdUsuario.ToString() == userId);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            usuario.TwoFA = true;
+
+            var result = await _dbContext.SaveChangesAsync();
+
+            if (result == 0)
+            {
+                ViewData["Mensaje"] = "Error al editar contraseña. Contacta al administrador para más información.";
+                return View();
+            }else
+            {
+                return RedirectToAction("IniciarSesion", "Acceso");
+            }
+        }
+
+
+            [HttpPost]
+        public async Task<IActionResult> TwoFA(IniciarSesionVM modelo)
+        {
+            var pin = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Authentication)?.Value;
+            if (modelo.Clave == pin)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else {
+                ViewData["Mensaje"] = "El Pin es incorrecto, intente de nuevo.";
+                return View();
+            }
+        }
+
+
+
+            [HttpPost]
         public async Task<IActionResult> RecuperarCuenta(IniciarSesionVM modelo)
         {
             // Buscar el usuario en la base de datos

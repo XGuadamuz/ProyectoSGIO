@@ -93,6 +93,19 @@ namespace ProyectoSGIOCore.Models
             return res.ToString();
         }
 
+        public string GenerarPin()
+        {
+            int length = 8;
+            const string valid = "1234567890";
+            StringBuilder res = new StringBuilder();
+            Random rnd = new Random();
+            while (0 < length--)
+            {
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
+            return res.ToString();
+        }
+
         public void EnviarCorreo(string Destinatario, string Asunto, string Mensaje)
         {
             string correoSMTP = _configuration.GetSection("settings:correoSMTP").Value!;
