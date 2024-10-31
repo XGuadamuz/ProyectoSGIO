@@ -102,5 +102,31 @@ namespace ProyectoSGIOCore.Controllers
             return RedirectToAction("VisualizarEmpleados");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EliminarEmpleado(int id)
+        {
+            var empleado = await _dbContext.Empleados.FindAsync(id);
+            if (empleado == null)
+            {
+                return NotFound();
+            }
+            return View(empleado);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EliminarEmpleadoConfirmado(int id)
+        {
+            var empleado = await _dbContext.Empleados.FindAsync(id);
+            if (empleado == null)
+            {
+                return NotFound();
+            }
+
+            _dbContext.Empleados.Remove(empleado);
+            await _dbContext.SaveChangesAsync();
+            TempData["MensajeExito"] = "Empleado eliminado exitosamente.";
+            return RedirectToAction("VisualizarEmpleados");
+        }
     }
 }

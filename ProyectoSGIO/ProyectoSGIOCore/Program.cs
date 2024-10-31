@@ -2,10 +2,13 @@ using ProyectoSGIOCore.Data;
 using Microsoft.EntityFrameworkCore;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ProyectoSGIOCore.Models;
+using ProyectoSGIOCore.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IUtilitariosModel, UtilitariosModel>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddHttpClient();

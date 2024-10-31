@@ -1,0 +1,22 @@
+﻿@model ProyectoSGIOCore.Models.Empleado
+@{
+    ViewData["Title"] = "Eliminar Empleado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Eliminar Empleado</h2>
+
+    <div class="alert alert-warning text-center mx-auto">
+
+        <p>¿Estás seguro que deseas eliminar al empleado: @Model.Nombre @Model.Apellido?</p>
+    </div>
+    <form asp-action="EliminarEmpleadoConfirmado" asp-route-id="@Model.IdEmpleado" method="post">
+        <div class="text-center">
+            <input type="hidden" name="IdEmpleado" value="@Model.IdEmpleado" />
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a asp-action="VisualizarEmpleados" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>

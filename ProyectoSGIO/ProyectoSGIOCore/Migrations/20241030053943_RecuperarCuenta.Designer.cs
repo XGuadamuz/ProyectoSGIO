@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoSGIOCore.Data;
 
@@ -11,9 +12,11 @@ using ProyectoSGIOCore.Data;
 namespace ProyectoSGIOCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241030053943_RecuperarCuenta")]
+    partial class RecuperarCuenta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,10 +222,6 @@ namespace ProyectoSGIOCore.Migrations
                         .HasMaxLength(1)
                         .HasColumnType("bit");
 
-                    b.Property<bool>("TwoFA")
-                        .HasMaxLength(1)
-                        .HasColumnType("bit");
-
                     b.HasKey("IdUsuario");
 
                     b.HasIndex("IdRol");
@@ -235,36 +234,33 @@ namespace ProyectoSGIOCore.Migrations
                             IdUsuario = 1,
                             Activo = true,
                             Apellido = "User",
-                            Clave = "PTOmGpZfmyerAqbyAbnVHw==",
+                            Clave = "123",
                             Correo = "admin@example.com",
                             IdRol = 1,
                             Nombre = "Admin",
-                            Temporal = false,
-                            TwoFA = false
+                            Temporal = false
                         },
                         new
                         {
                             IdUsuario = 2,
                             Activo = true,
                             Apellido = "User",
-                            Clave = "PTOmGpZfmyerAqbyAbnVHw==",
+                            Clave = "123",
                             Correo = "supervisor@example.com",
                             IdRol = 2,
                             Nombre = "Supervisor",
-                            Temporal = false,
-                            TwoFA = false
+                            Temporal = false
                         },
                         new
                         {
                             IdUsuario = 3,
                             Activo = true,
                             Apellido = "User",
-                            Clave = "PTOmGpZfmyerAqbyAbnVHw==",
+                            Clave = "123",
                             Correo = "empleado@example.com",
                             IdRol = 3,
                             Nombre = "Empleado",
-                            Temporal = false,
-                            TwoFA = false
+                            Temporal = false
                         });
                 });
 
