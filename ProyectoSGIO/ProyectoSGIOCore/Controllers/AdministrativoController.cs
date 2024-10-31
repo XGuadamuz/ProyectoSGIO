@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using ProyectoSGIOCore.Servicios;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -12,10 +13,12 @@ namespace ProyectoSGIOCore.Controllers
     public class AdministrativoController : Controller
     {
         private readonly AppDBContext _dbContext;
+        private readonly IUsuarioService _usuarioService;
 
-        public AdministrativoController(AppDBContext dbContext)
+        public AdministrativoController(IUsuarioService usuarioService,AppDBContext dbContext)
         {
             _dbContext = dbContext;
+            _usuarioService = usuarioService;
         }
 
         [HttpGet]

@@ -108,7 +108,7 @@ namespace ProyectoSGIOCore.Servicios
         {
             try
             {
-                // Aquí podrías agregar verificación de permisos del usuario
+                
                 var inventario = await _dbContext.Inventarios
                     .Include(i => i.Proveedor)
                     .FirstOrDefaultAsync(i => i.ID == id);
