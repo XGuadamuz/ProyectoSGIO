@@ -115,7 +115,7 @@
 </section>
 
 <!-- Testimonios -->
-<section class="py-5 bg-white">
+<section class="py-5 bg-light">
     <div class="container px-5">
         <h2 class="fw-bolder text-center mb-5">Lo que dicen nuestros clientes</h2>
         <div class="row gx-5">
@@ -143,3 +143,17 @@
         </div>
     </div>
 </section>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <section class="py-5 text-center">
+        <div class="container">
+            <h2 class="fw-bold text-primary">¡Regístrate ahora!</h2>
+            <p class="lead text-muted mb-4">Accede a todas las funcionalidades del sistema y gestiona tus proyectos de manera eficiente.</p>
+            <button class="btnRegistro" onclick="location.href='@Url.Action("Registro", "Acceso")'">Registrarse</button>
+        </div>
+    </section>
+}
+
+<br />
+<br />
