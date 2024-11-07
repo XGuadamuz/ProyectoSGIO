@@ -1,0 +1,42 @@
+﻿@model ProyectoSGIOCore.Models.Proyecto
+@{
+    ViewBag.Title = "Agregar Tareas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Agregar Tareas al Proyecto: @Model.Nombre</h2>
+
+<form asp-action="AgregarTareas" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div id="tareas-container">
+        <div class="tarea">
+            <input type="text" name="tareas[0].Nombre" placeholder="Nombre de la Tarea" required />
+            <input type="date" name="tareas[0].FechaInicio" required />
+            <input type="date" name="tareas[0].FechaFin" required />
+            <input type="checkbox" name="tareas[0].Completada" /> Completada
+        </div>
+    </div>
+
+    <button type="button" onclick="agregarTarea()">Agregar otra tarea</button>
+    <button type="submit" class="btn btn-primary">Guardar Tareas</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+<script>
+    let tareaIndex = 1;
+
+    function agregarTarea() {
+        const container = document.getElementById('tareas-container');
+        const newTarea = document.createElement('div');
+        newTarea.className = 'tarea';
+        newTarea.innerHTML = `
+            <input type="text" name="tareas[${tareaIndex}].Nombre" placeholder="Nombre de la Tarea" required />
+            <input type="date" name="tareas[${tareaIndex}].FechaInicio" required />
+            <input type="date" name="tareas[${tareaIndex}].FechaFin" required />
+            <input type="checkbox" name="tareas[${tareaIndex}].Completada" /> Completada
+        `;
+        container.appendChild(newTarea);
+        tareaIndex++;
+    }
+</script>

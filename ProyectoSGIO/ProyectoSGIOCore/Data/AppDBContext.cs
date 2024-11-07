@@ -12,13 +12,12 @@ namespace ProyectoSGIOCore.Data
         }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
-
         public DbSet<Empleado> Empleados { get; set; }
-
         public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Inventario> Inventarios { get; set; }
-
-        public DbSet<FacturaProveedor> Facturas { get; set; }        
+        public DbSet<FacturaProveedor> Facturas { get; set; }
+        public DbSet<Proyecto> Proyectos { get; set; }
+        public DbSet<Tarea> Tareas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

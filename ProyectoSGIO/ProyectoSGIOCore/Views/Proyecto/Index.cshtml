@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ProyectoSGIOCore.Models.Proyecto>
+
+@{
+    ViewData["Title"] = "Lista de Proyectos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Proyectos</h2>
+
+<a asp-action="Crear" class="btn btn-primary">Crear Nuevo Proyecto</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha de Creación</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var proyecto in Model)
+        {
+            <tr>
+                <td>@proyecto.Nombre</td>
+                <td>@proyecto.FechaCreacion.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Detalles" asp-route-id="@proyecto.Id" class="btn btn-info">Detalles</a>
+                    <a asp-action="AgregarTareas" asp-route-id="@proyecto.Id" class="btn btn-secondary">Agregar Tareas</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

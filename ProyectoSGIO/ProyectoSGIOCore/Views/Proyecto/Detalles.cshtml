@@ -1,0 +1,33 @@
+﻿@model ProyectoSGIOCore.Models.Proyecto
+@{
+    ViewData["Title"] = "Detalles del Cronograma";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalles del Proyecto: @Model.Nombre</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre de la Tarea</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Completada</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tarea in Model.Tareas)
+        {
+            <tr>
+                <td>@tarea.Nombre</td>
+                <td>@tarea.FechaInicio.ToShortDateString()</td>
+                <td>@tarea.FechaFin.ToShortDateString()</td>
+                <td>
+                    <input type="checkbox" asp-for="@tarea.Completada" disabled="@tarea.Completada" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Volver a Proyectos</a>

@@ -1,0 +1,18 @@
+﻿@model ProyectoSGIOCore.Models.Proyecto
+@{
+    ViewBag.Title = "Crear Proyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Crear Nuevo Proyecto</h2>
+
+<form asp-action="Crear" method="post">
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
