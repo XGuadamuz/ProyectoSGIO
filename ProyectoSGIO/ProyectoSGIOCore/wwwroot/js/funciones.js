@@ -1,11 +1,4 @@
-﻿// Función para generar una contraseña automáticamente
-document.getElementById('generar-contrasena').addEventListener('click', function () {
-    const contraseña = Math.random().toString(36).slice(-8);
-    document.getElementById('contraseña').value = contraseña;
-});
-
-
-// Función para mostrar/ocultar la contraseña
+﻿// Función para mostrar/ocultar la contraseña
 function togglePasswordVisibility(inputId, iconId) {
     const passwordInput = document.getElementById(inputId);
     const icon = document.getElementById(iconId);
@@ -22,13 +15,19 @@ function togglePasswordVisibility(inputId, iconId) {
 }
 
 
-// Función para habilitar la edición del correo
-document.getElementById('edit-correo').addEventListener('click', function () {
-    const correoInput = document.getElementById('correo');
-    if (correoInput.disabled) {
-        correoInput.disabled = false;
-        correoInput.focus();
-    } else {
-        correoInput.disabled = true;
-    }
-});
+//Funcion para Agrear Tareas a un Proyecto
+let tareaIndex = 1;
+
+function agregarTarea() {
+    const container = document.getElementById('tareas-container');
+    const newTarea = document.createElement('div');
+    newTarea.className = 'tarea';
+    newTarea.innerHTML = `
+            <input type="text" name="tareas[${tareaIndex}].Nombre" placeholder="Nombre de la Tarea" required />
+            <input type="date" name="tareas[${tareaIndex}].FechaInicio" required />
+            <input type="date" name="tareas[${tareaIndex}].FechaFin" required />
+            <input type="checkbox" name="tareas[${tareaIndex}].Completada" /> Completada
+        `;
+    container.appendChild(newTarea);
+    tareaIndex++;
+}
