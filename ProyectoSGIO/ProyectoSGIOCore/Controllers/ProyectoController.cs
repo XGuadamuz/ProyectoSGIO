@@ -2,9 +2,11 @@
 using ProyectoSGIOCore.Data;
 using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoSGIOCore.Controllers
 {
+    [Authorize(Roles = "Administrador , Supervisor")]
     public class ProyectoController : Controller
     {
         private readonly AppDBContext _dbContext;
@@ -14,7 +16,7 @@ namespace ProyectoSGIOCore.Controllers
             _dbContext = context;
         }
 
-        // Método para crear un nuevo proyecto
+        [HttpGet]
         public IActionResult Crear()
         {
             return View();
@@ -23,17 +25,26 @@ namespace ProyectoSGIOCore.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear(Proyecto proyecto)
         {
+            if (string.IsNullOrEmpty(proyecto.Nombre))
+            {
+                TempData["MensajeError"] = "El nombre del proyecto no puede estar vacío.";
+                return View(proyecto);
+            }
+
             if (ModelState.IsValid)
             {
                 proyecto.FechaCreacion = DateTime.Now;
                 _dbContext.Proyectos.Add(proyecto);
                 await _dbContext.SaveChangesAsync();
-                return RedirectToAction("Index");
+                TempData["MensajeExito"] = "Proyecto creado correctamente.";
+                return RedirectToAction("ListaProyectos");
             }
+
+            TempData["MensajeError"] = "Ocurrió un error al crear el proyecto.";
             return View(proyecto);
         }
 
-        // Método para agregar tareas a un proyecto existente
+        [HttpGet]
         public async Task<IActionResult> AgregarTareas(int id)
         {
             var proyecto = await _dbContext.Proyectos.Include(p => p.Tareas)
@@ -51,20 +62,34 @@ namespace ProyectoSGIOCore.Controllers
             var proyecto = await _dbContext.Proyectos.FindAsync(id);
             if (proyecto == null)
             {
-                return NotFound();
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("ListaProyectos");
             }
 
             foreach (var tarea in tareas)
             {
+                if (string.IsNullOrEmpty(tarea.Nombre))
+                {
+                    TempData["MensajeError"] = "El nombre de cada tarea no puede estar vacío.";
+                    return RedirectToAction("AgregarTareas", new { id });
+                }
+
+                if (tarea.FechaInicio >= tarea.FechaFin)
+                {
+                    TempData["MensajeError"] = "La fecha de inicio debe ser anterior a la fecha de finalización para cada tarea.";
+                    return RedirectToAction("AgregarTareas", new { id });
+                }
+
                 tarea.ProyectoId = id;
                 _dbContext.Tareas.Add(tarea);
             }
 
             await _dbContext.SaveChangesAsync();
+            TempData["MensajeExito"] = "Tareas agregadas correctamente.";
             return RedirectToAction("Detalles", new { id });
         }
 
-        // Método para ver detalles del proyecto junto con sus tareas
+        [HttpGet]
         public async Task<IActionResult> Detalles(int id)
         {
             var proyecto = await _dbContext.Proyectos.Include(p => p.Tareas)
@@ -76,8 +101,8 @@ namespace ProyectoSGIOCore.Controllers
             return View(proyecto);
         }
 
-        // Método para ver todos los proyectos
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> ListaProyectos()
         {
             var proyectos = await _dbContext.Proyectos.ToListAsync();
             return View(proyectos);

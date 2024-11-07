@@ -4,9 +4,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["MensajeError"] != null)
+{
+    <div class="alert alert-danger text-center mt-3" role="alert">
+        @TempData["MensajeError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <h2>Agregar Tareas al Proyecto: @Model.Nombre</h2>
 
-<form asp-action="AgregarTareas" method="post">
+<form asp-action="AgregarTareas" asp-controller="Proyecto" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div id="tareas-container">
@@ -20,23 +28,5 @@
 
     <button type="button" onclick="agregarTarea()">Agregar otra tarea</button>
     <button type="submit" class="btn btn-primary">Guardar Tareas</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <a asp-action="ListaProyectos" asp-controller="Proyecto" class="btn btn-secondary">Cancelar</a>
 </form>
-
-<script>
-    let tareaIndex = 1;
-
-    function agregarTarea() {
-        const container = document.getElementById('tareas-container');
-        const newTarea = document.createElement('div');
-        newTarea.className = 'tarea';
-        newTarea.innerHTML = `
-            <input type="text" name="tareas[${tareaIndex}].Nombre" placeholder="Nombre de la Tarea" required />
-            <input type="date" name="tareas[${tareaIndex}].FechaInicio" required />
-            <input type="date" name="tareas[${tareaIndex}].FechaFin" required />
-            <input type="checkbox" name="tareas[${tareaIndex}].Completada" /> Completada
-        `;
-        container.appendChild(newTarea);
-        tareaIndex++;
-    }
-</script>
