@@ -1,7 +1,7 @@
 ﻿@model ProyectoSGIOCore.Models.Proyecto
 @{
     ViewBag.Title = "Crear Proyecto";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Proyecto/ProyectoLayout.cshtml";
 }
 
 <h2>Crear Nuevo Proyecto</h2>
@@ -15,12 +15,64 @@
 }
 
 <form asp-action="Crear" asp-controller="Proyecto" method="post">
-    <div class="form-group">
-        <label asp-for="Nombre"></label>
-        <input asp-for="Nombre" class="form-control" />
+    <!-- Campo para el nombre del proyecto -->
+    <div class="form-group mb-3">
+        <label asp-for="Nombre" class="form-label">Nombre del Proyecto</label>
+        <input asp-for="Nombre" class="form-control" required />
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Crear</button>
-    <a asp-action="ListaProyectos" class="btn btn-secondary">Cancelar</a>
+    <hr />
+
+    <!-- Contenedor de tareas -->
+    <h4>Tareas</h4>
+    <div id="tareas-container" class="mt-3">
+        <!-- Contenedor donde se añadirán las tareas -->
+    </div>
+
+    <!-- Botón para agregar tareas -->
+    <button type="button" class="btn btn-outline-primary mt-3" onclick="agregarTarea()">Agregar Tarea</button>
+
+    <!-- Botones de acción -->
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Crear Proyecto</button>
+        <a asp-action="ListaProyectos" class="btn btn-secondary">Cancelar</a>
+    </div>
 </form>
+
+<script>
+    let tareaIndex = 0;
+
+    function agregarTarea() {
+        // Crear un contenedor de tarea con los inputs y etiquetas
+        const tareaHTML = `
+                    <div class="tarea mb-3 p-2" style="border: 1px solid #ddd; border-radius: 5px;">
+                        <div class="d-flex align-items-center mb-2" style="gap: 15px;">
+                            <input type="text" name="tareas[${tareaIndex}].Nombre" placeholder="Nombre de la Tarea" class="form-control" required />
+                        </div>
+                        <div class="d-flex align-items-center mb-2" style="gap: 15px;">
+                            <div>
+                                <label class="form-label">Fecha de Inicio</label>
+                                <input type="date" name="tareas[${tareaIndex}].FechaInicio" class="form-control" required />
+                            </div>
+                            <div>
+                                <label class="form-label">Fecha de Fin</label>
+                                <input type="date" name="tareas[${tareaIndex}].FechaFin" class="form-control" required />
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm mt-4" onclick="eliminarTarea(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+        // Añadir la tarea al contenedor
+        document.getElementById("tareas-container").insertAdjacentHTML('beforeend', tareaHTML);
+        tareaIndex++;
+    }
+
+    function eliminarTarea(button) {
+        // Eliminar el elemento de tarea
+        button.parentElement.parentElement.remove();
+    }
+</script>

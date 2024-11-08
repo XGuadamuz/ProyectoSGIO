@@ -1,18 +1,10 @@
 ﻿@model ProyectoSGIOCore.Models.Proyecto
 @{
     ViewData["Title"] = "Detalles del Cronograma";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Proyecto/ProyectoLayout.cshtml";
 }
 
 <h2>Detalles del Proyecto: @Model.Nombre</h2>
-@if (TempData["MensajeExito"] != null)
-{
-    <div class="alert alert-success text-center mt-3" role="alert">
-        @TempData["MensajeExito"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
-    </div>
-}
 
 <table class="table">
     <thead>

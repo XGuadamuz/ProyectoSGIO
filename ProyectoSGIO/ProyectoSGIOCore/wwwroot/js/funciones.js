@@ -15,19 +15,26 @@ function togglePasswordVisibility(inputId, iconId) {
 }
 
 
-//Funcion para Agrear Tareas a un Proyecto
-let tareaIndex = 1;
+////Funcion para Agrear Tareas a un Proyecto
+//let tareaIndex = 0;
 
-function agregarTarea() {
-    const container = document.getElementById('tareas-container');
-    const newTarea = document.createElement('div');
-    newTarea.className = 'tarea';
-    newTarea.innerHTML = `
-            <input type="text" name="tareas[${tareaIndex}].Nombre" placeholder="Nombre de la Tarea" required />
-            <input type="date" name="tareas[${tareaIndex}].FechaInicio" required />
-            <input type="date" name="tareas[${tareaIndex}].FechaFin" required />
-            <input type="checkbox" name="tareas[${tareaIndex}].Completada" /> Completada
-        `;
-    container.appendChild(newTarea);
-    tareaIndex++;
-}
+//function agregarTarea() {
+//    // Crear un contenedor de tarea con los inputs organizados en una fila
+//    const tareaHTML = `
+//                <div class="tarea d-flex align-items-center mb-2" style="gap: 15px;">
+//                    <input type="text" name="tareas[${tareaIndex}].Nombre" placeholder="Nombre de la Tarea" class="form-control" required />
+//                    <input type="date" name="tareas[${tareaIndex}].FechaInicio" class="form-control" required />
+//                    <input type="date" name="tareas[${tareaIndex}].FechaFin" class="form-control" required />
+//                    <button type="button" class="btn-close" aria-label="Close" onclick="eliminarTarea(this)"></button>
+//                </div>
+//            `;
+
+//    // Añadir la tarea al contenedor
+//    document.getElementById("tareas-container").insertAdjacentHTML('beforeend', tareaHTML);
+//    tareaIndex++;
+//}
+
+//// Eliminar el elemento de tarea
+//function eliminarTarea(button) {
+//    button.parentElement.remove();
+//}
