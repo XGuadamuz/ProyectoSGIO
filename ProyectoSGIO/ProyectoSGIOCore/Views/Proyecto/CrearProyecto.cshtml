@@ -14,6 +14,7 @@
     </div>
 }
 
+<div class="form-container" style="max-height: 100vh; overflow-y: auto;">
 <form asp-action="CrearProyecto" asp-controller="Proyecto" method="post">
     <!-- Campo para el nombre del proyecto -->
     <div class="form-group mb-3">
@@ -39,6 +40,7 @@
         <a asp-action="Proyectos" class="btn btn-secondary">Cancelar</a>
     </div>
 </form>
+</div>
 
 <script>
     let tareaIndex = 0;
