@@ -17,7 +17,7 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListaProyectos()
+        public async Task<IActionResult> Proyectos()
         {
             var proyectos = await _dbContext.Proyectos.ToListAsync();
             return View(proyectos);
@@ -25,13 +25,13 @@ namespace ProyectoSGIOCore.Controllers
 
 
         [HttpGet]
-        public IActionResult Crear()
+        public IActionResult CrearProyecto()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear(Proyecto proyecto, List<Tarea> tareas)
+        public async Task<IActionResult> CrearProyecto(Proyecto proyecto, List<Tarea> tareas)
         {
             if (string.IsNullOrEmpty(proyecto.Nombre))
             {
@@ -44,13 +44,13 @@ namespace ProyectoSGIOCore.Controllers
                 if (string.IsNullOrEmpty(tarea.Nombre))
                 {
                     TempData["MensajeError"] = "El nombre de cada tarea no puede estar vacío.";
-                    return View(proyecto); // Retorna la vista de creación para corregir la tarea
+                    return View(proyecto);
                 }
 
                 if (tarea.FechaInicio >= tarea.FechaFin)
                 {
                     TempData["MensajeError"] = "La fecha de inicio debe ser anterior a la fecha de finalización para cada tarea.";
-                    return View(proyecto); // Retorna la vista de creación para corregir la tarea
+                    return View(proyecto);
                 }
             }
 
@@ -60,7 +60,6 @@ namespace ProyectoSGIOCore.Controllers
                 _dbContext.Proyectos.Add(proyecto);
                 await _dbContext.SaveChangesAsync();
 
-                // Asocia cada tarea válida con el proyecto recién creado
                 foreach (var tarea in tareas)
                 {
                     tarea.ProyectoId = proyecto.Id;
@@ -69,14 +68,12 @@ namespace ProyectoSGIOCore.Controllers
 
                 await _dbContext.SaveChangesAsync();
                 TempData["MensajeExito"] = "Proyecto y tareas creados correctamente.";
-                return RedirectToAction("ListaProyectos");
+                return RedirectToAction("Proyectos");
             }
 
             TempData["MensajeError"] = "Ocurrió un error al crear el proyecto.";
             return View(proyecto);
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> AgregarTareas(int id)
@@ -86,7 +83,7 @@ namespace ProyectoSGIOCore.Controllers
             if (proyecto == null)
             {
                 TempData["MensajeError"] = "Proyecto no encontrado.";
-                return RedirectToAction("ListaProyectos");
+                return RedirectToAction("Proyectos");
             }
             return View(proyecto);
         }
@@ -98,7 +95,7 @@ namespace ProyectoSGIOCore.Controllers
             if (proyecto == null)
             {
                 TempData["MensajeError"] = "Proyecto no encontrado.";
-                return RedirectToAction("ListaProyectos");
+                return RedirectToAction("Proyectos");
             }
 
             foreach (var tarea in tareas)
@@ -125,14 +122,14 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detalles(int id)
+        public async Task<IActionResult> GestionarProyecto(int id)
         {
             var proyecto = await _dbContext.Proyectos.Include(p => p.Tareas)
                                                    .FirstOrDefaultAsync(p => p.Id == id);
             if (proyecto == null)
             {
                 TempData["MensajeError"] = "Proyecto no encontrado.";
-                return RedirectToAction("ListaProyectos");
+                return RedirectToAction("Proyectos");
             }
             return View(proyecto);
         }

@@ -1,7 +1,7 @@
 ﻿@model ProyectoSGIOCore.Models.Proyecto
 @{
     ViewData["Title"] = "Detalles del Cronograma";
-    Layout = "~/Views/Proyecto/ProyectoLayout.cshtml";
+    Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
 <h2>Detalles del Proyecto: @Model.Nombre</h2>
@@ -30,4 +30,4 @@
     </tbody>
 </table>
 
-<a asp-action="ListaProyectos" asp-controller="Proyecto" class="btn btn-secondary">Volver a Proyectos</a>
+<a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-secondary">Volver a Proyectos</a>

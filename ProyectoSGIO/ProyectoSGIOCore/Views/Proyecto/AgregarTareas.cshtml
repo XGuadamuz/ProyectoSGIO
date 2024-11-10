@@ -1,7 +1,7 @@
 ﻿@model ProyectoSGIOCore.Models.Proyecto
 @{
     ViewBag.Title = "Agregar Tareas";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
 @if (TempData["MensajeError"] != null)
@@ -28,5 +28,5 @@
 
     <button type="button" onclick="agregarTarea()">Agregar otra tarea</button>
     <button type="submit" class="btn btn-primary">Guardar Tareas</button>
-    <a asp-action="ListaProyectos" asp-controller="Proyecto" class="btn btn-secondary">Cancelar</a>
+    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-secondary">Cancelar</a>
 </form>

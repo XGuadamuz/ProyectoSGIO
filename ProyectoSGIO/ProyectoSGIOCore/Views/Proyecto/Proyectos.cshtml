@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Lista de Proyectos";
-    Layout = "~/Views/Proyecto/ProyectoLayout.cshtml";
+    Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
 <h2>Proyectos</h2>
@@ -16,7 +16,7 @@
     </div>
 }
 
-<a asp-action="Crear" asp-controller="Proyecto" class="btn btn-primary">Crear Proyecto</a>
+<a asp-action="CrearProyecto" asp-controller="Proyecto" class="btn btn-primary">Crear Proyecto</a>
 
 <table class="table">
     <thead>
@@ -33,7 +33,7 @@
                 <td>@proyecto.Nombre</td>
                 <td>@proyecto.FechaCreacion.ToShortDateString()</td>
                 <td>
-                    <a asp-action="Detalles" asp-route-id="@proyecto.Id" class="btn btn-info">Detalles</a>
+                    <a asp-action="GestionarProyecto" asp-route-id="@proyecto.Id" class="btn btn-info">Gestionar</a>
                     <a asp-action="AgregarTareas" asp-route-id="@proyecto.Id" class="btn btn-secondary">Agregar Tareas</a>
                 </td>
             </tr>
