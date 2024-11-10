@@ -15,24 +15,43 @@ function togglePasswordVisibility(inputId, iconId) {
 }
 
 
-////Funcion para Agrear Tareas a un Proyecto
-//let tareaIndex = 0;
+//Funcion para agrear Fases a un Proyecto
+function addPhase() {
+    const phaseIndex = document.querySelectorAll('.fase').length;
+    const phaseHtml = `
+                <div class="fase">
+                    <label>Nombre de la Fase</label>
+                    <input name="fases[${phaseIndex}].Nombre" />
 
-//function agregarTarea() {
-//    // Crear un contenedor de tarea con los inputs organizados en una fila
-//    const tareaHTML = `
-//                <div class="tarea d-flex align-items-center mb-2" style="gap: 15px;">
-//                    <input type="text" name="tareas[${tareaIndex}].Nombre" placeholder="Nombre de la Tarea" class="form-control" required />
-//                    <input type="date" name="tareas[${tareaIndex}].FechaInicio" class="form-control" required />
-//                    <input type="date" name="tareas[${tareaIndex}].FechaFin" class="form-control" required />
-//                    <button type="button" class="btn-close" aria-label="Close" onclick="eliminarTarea(this)"></button>
-//                </div>
-//            `;
+                    <h4>Tareas</h4>
+                    <div class="tareas-container" data-phase-index="${phaseIndex}">
+                    </div>
+                    <button type="button" onclick="addTask(${phaseIndex})">Agregar Tarea</button>
+                </div>
+            `;
+    document.getElementById('fases-container').insertAdjacentHTML('beforeend', phaseHtml);
+}
 
-//    // Añadir la tarea al contenedor
-//    document.getElementById("tareas-container").insertAdjacentHTML('beforeend', tareaHTML);
-//    tareaIndex++;
-//}
+//Funcion para agrear Tareas a un Proyecto
+
+function addTask(phaseIndex) {
+    const tareasContainer = document.querySelector(`.tareas-container[data-phase-index="${phaseIndex}"]`);
+    const taskIndex = tareasContainer.querySelectorAll('.tarea').length;
+    const taskHtml = `
+                <div class="tarea">
+                    <label>Nombre de la Tarea</label>
+                    <input name="fases[${phaseIndex}].Tareas[${taskIndex}].Nombre" />
+
+                    <label>Fecha de Inicio</label>
+                    <input type="date" name="fases[${phaseIndex}].Tareas[${taskIndex}].FechaInicio" />
+
+                    <label>Fecha de Fin</label>
+                    <input type="date" name="fases[${phaseIndex}].Tareas[${taskIndex}].FechaFin" />
+                </div>
+            `;
+    tareasContainer.insertAdjacentHTML('beforeend', taskHtml);
+}
+
 
 //// Eliminar el elemento de tarea
 //function eliminarTarea(button) {

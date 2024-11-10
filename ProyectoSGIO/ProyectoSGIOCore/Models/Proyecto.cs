@@ -6,7 +6,7 @@
         public string Nombre { get; set; }
         public DateTime FechaCreacion { get; set; }
 
-        // Relación con Tareas
-        public List<Tarea> Tareas { get; set; } = new List<Tarea>();
+        // Relación con Fases
+        public ICollection<Fase> Fases { get; set; } = new List<Fase>();
     }
 }

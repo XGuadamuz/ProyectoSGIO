@@ -14,19 +14,32 @@
 
 <h2>Agregar Tareas al Proyecto: @Model.Nombre</h2>
 
-<form asp-action="AgregarTareas" asp-controller="Proyecto" method="post">
-    <input type="hidden" asp-for="Id" />
+<form asp-action="AgregarTareas" method="post">
+    <input type="hidden" name="faseId" value="@Model.Id" />
 
     <div id="tareas-container">
-        <div class="tarea">
-            <input type="text" name="tareas[0].Nombre" placeholder="Nombre de la Tarea" required />
-            <input type="date" name="tareas[0].FechaInicio" required />
-            <input type="date" name="tareas[0].FechaFin" required />
-            <input type="checkbox" name="tareas[0].Completada" /> Completada
-        </div>
+        <!-- Contenedor de tareas dinámicas -->
     </div>
 
-    <button type="button" onclick="agregarTarea()">Agregar otra tarea</button>
-    <button type="submit" class="btn btn-primary">Guardar Tareas</button>
-    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-secondary">Cancelar</a>
+    <button type="button" onclick="addTask()">Agregar Tarea</button>
+    <button type="submit">Guardar Tareas</button>
 </form>
+
+    <script>
+        function addTask() {
+            const taskIndex = document.querySelectorAll('.tarea').length;
+            const taskHtml = `
+                <div class="tarea">
+                    <label>Nombre de la Tarea</label>
+                    <input name="tareas[${taskIndex}].Nombre" />
+
+                    <label>Fecha de Inicio</label>
+                    <input type="date" name="tareas[${taskIndex}].FechaInicio" />
+
+                    <label>Fecha de Fin</label>
+                    <input type="date" name="tareas[${taskIndex}].FechaFin" />
+                </div>
+            `;
+            document.getElementById('tareas-container').insertAdjacentHTML('beforeend', taskHtml);
+        }
+    </script>

@@ -4,30 +4,30 @@
     Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
-<h2>Detalles del Proyecto: @Model.Nombre</h2>
+<h2>Gestionar Proyecto: @Model.Nombre</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre de la Tarea</th>
-            <th>Fecha Inicio</th>
-            <th>Fecha Fin</th>
-            <th>Completada</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var tarea in Model.Tareas)
-        {
-            <tr>
-                <td>@tarea.Nombre</td>
-                <td>@tarea.FechaInicio.ToShortDateString()</td>
-                <td>@tarea.FechaFin.ToShortDateString()</td>
-                <td>
-                    <input type="checkbox" asp-for="@tarea.Completada" disabled="@tarea.Completada" />
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<p>Fecha de Creación: @Model.FechaCreacion.ToShortDateString()</p>
+
+<h3>Fases</h3>
+
+@foreach (var fase in Model.Fases)
+{
+    <div class="fase">
+        <h4>@fase.Nombre</h4>
+        <p>Fase ID: @fase.Id</p>
+
+        <h5>Tareas</h5>
+        <ul>
+            @foreach (var tarea in fase.Tareas)
+            {
+                <li>
+                    <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
+                </li>
+            }
+        </ul>
+
+        <a href="@Url.Action("AgregarTareas", "Proyecto", new { faseId = fase.Id })">Agregar Tareas</a>
+    </div>
+}
 
 <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-secondary">Volver a Proyectos</a>

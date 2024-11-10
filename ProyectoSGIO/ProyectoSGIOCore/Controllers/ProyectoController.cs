@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoSGIOCore.Controllers
 {
-    [Authorize(Roles = "Administrador , Supervisor")]
+    [Authorize(Roles = "Administrador, Supervisor")]
     public class ProyectoController : Controller
     {
         private readonly AppDBContext _dbContext;
@@ -19,10 +19,9 @@ namespace ProyectoSGIOCore.Controllers
         [HttpGet]
         public async Task<IActionResult> Proyectos()
         {
-            var proyectos = await _dbContext.Proyectos.ToListAsync();
+            var proyectos = await _dbContext.Proyectos.Include(p => p.Fases).ThenInclude(f => f.Tareas).ToListAsync();
             return View(proyectos);
         }
-
 
         [HttpGet]
         public IActionResult CrearProyecto()
@@ -31,7 +30,7 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearProyecto(Proyecto proyecto, List<Tarea> tareas)
+        public async Task<IActionResult> CrearProyecto(Proyecto proyecto, List<Fase> fases)
         {
             if (string.IsNullOrEmpty(proyecto.Nombre))
             {
@@ -39,18 +38,27 @@ namespace ProyectoSGIOCore.Controllers
                 return View(proyecto);
             }
 
-            foreach (var tarea in tareas)
+            foreach (var fase in fases)
             {
-                if (string.IsNullOrEmpty(tarea.Nombre))
+                if (string.IsNullOrEmpty(fase.Nombre))
                 {
-                    TempData["MensajeError"] = "El nombre de cada tarea no puede estar vacío.";
+                    TempData["MensajeError"] = "Cada fase debe tener un nombre.";
                     return View(proyecto);
                 }
 
-                if (tarea.FechaInicio >= tarea.FechaFin)
+                foreach (var tarea in fase.Tareas)
                 {
-                    TempData["MensajeError"] = "La fecha de inicio debe ser anterior a la fecha de finalización para cada tarea.";
-                    return View(proyecto);
+                    if (string.IsNullOrEmpty(tarea.Nombre))
+                    {
+                        TempData["MensajeError"] = "Cada tarea debe tener un nombre.";
+                        return View(proyecto);
+                    }
+
+                    if (tarea.FechaInicio >= tarea.FechaFin)
+                    {
+                        TempData["MensajeError"] = "La fecha de inicio de cada tarea debe ser anterior a su fecha de finalización.";
+                        return View(proyecto);
+                    }
                 }
             }
 
@@ -60,14 +68,28 @@ namespace ProyectoSGIOCore.Controllers
                 _dbContext.Proyectos.Add(proyecto);
                 await _dbContext.SaveChangesAsync();
 
-                foreach (var tarea in tareas)
+                foreach (var fase in fases)
                 {
-                    tarea.ProyectoId = proyecto.Id;
-                    _dbContext.Tareas.Add(tarea);
+                    if (!_dbContext.Fases.Any(f => f.Nombre == fase.Nombre && f.ProyectoId == proyecto.Id))
+                    {
+                        fase.Id = 0;
+                        fase.ProyectoId = proyecto.Id;
+                        _dbContext.Fases.Add(fase);
+
+                        foreach (var tarea in fase.Tareas)
+                        {
+                            if (!_dbContext.Tareas.Any(t => t.Nombre == tarea.Nombre && t.FaseId == fase.Id))
+                            {
+                                tarea.Id = 0;
+                                tarea.FaseId = fase.Id;
+                                _dbContext.Tareas.Add(tarea);
+                            }
+                        }
+                    }
                 }
 
                 await _dbContext.SaveChangesAsync();
-                TempData["MensajeExito"] = "Proyecto y tareas creados correctamente.";
+                TempData["MensajeExito"] = "Proyecto, fases y tareas creado correctamente.";
                 return RedirectToAction("Proyectos");
             }
 
@@ -76,25 +98,24 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AgregarTareas(int id)
+        public async Task<IActionResult> AgregarTareas(int faseId)
         {
-            var proyecto = await _dbContext.Proyectos.Include(p => p.Tareas)
-                                                   .FirstOrDefaultAsync(p => p.Id == id);
-            if (proyecto == null)
+            var fase = await _dbContext.Fases.Include(f => f.Tareas).FirstOrDefaultAsync(f => f.Id == faseId);
+            if (fase == null)
             {
-                TempData["MensajeError"] = "Proyecto no encontrado.";
+                TempData["MensajeError"] = "Fase no encontrada.";
                 return RedirectToAction("Proyectos");
             }
-            return View(proyecto);
+            return View(fase);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AgregarTareas(int id, List<Tarea> tareas)
+        public async Task<IActionResult> AgregarTareas(int faseId, List<Tarea> tareas)
         {
-            var proyecto = await _dbContext.Proyectos.FindAsync(id);
-            if (proyecto == null)
+            var fase = await _dbContext.Fases.FindAsync(faseId);
+            if (fase == null)
             {
-                TempData["MensajeError"] = "Proyecto no encontrado.";
+                TempData["MensajeError"] = "Fase no encontrada.";
                 return RedirectToAction("Proyectos");
             }
 
@@ -103,34 +124,38 @@ namespace ProyectoSGIOCore.Controllers
                 if (string.IsNullOrEmpty(tarea.Nombre))
                 {
                     TempData["MensajeError"] = "El nombre de cada tarea no puede estar vacío.";
-                    return RedirectToAction("AgregarTareas", new { id });
+                    return RedirectToAction("AgregarTareas", new { faseId });
                 }
 
                 if (tarea.FechaInicio >= tarea.FechaFin)
                 {
                     TempData["MensajeError"] = "La fecha de inicio debe ser anterior a la fecha de finalización para cada tarea.";
-                    return RedirectToAction("AgregarTareas", new { id });
+                    return RedirectToAction("AgregarTareas", new { faseId });
                 }
 
-                tarea.ProyectoId = id;
+                tarea.FaseId = faseId;
                 _dbContext.Tareas.Add(tarea);
             }
 
             await _dbContext.SaveChangesAsync();
             TempData["MensajeExito"] = "Tareas agregadas correctamente.";
-            return RedirectToAction("Detalles", new { id });
+            return RedirectToAction("GestionarProyecto", new { id = fase.ProyectoId });
         }
 
         [HttpGet]
         public async Task<IActionResult> GestionarProyecto(int id)
         {
-            var proyecto = await _dbContext.Proyectos.Include(p => p.Tareas)
-                                                   .FirstOrDefaultAsync(p => p.Id == id);
+            var proyecto = await _dbContext.Proyectos
+                                           .Include(p => p.Fases)
+                                           .ThenInclude(f => f.Tareas)
+                                           .FirstOrDefaultAsync(p => p.Id == id);
+
             if (proyecto == null)
             {
                 TempData["MensajeError"] = "Proyecto no encontrado.";
                 return RedirectToAction("Proyectos");
             }
+
             return View(proyecto);
         }
     }

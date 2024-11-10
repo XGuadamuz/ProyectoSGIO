@@ -17,6 +17,7 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Inventario> Inventarios { get; set; }
         public DbSet<FacturaProveedor> Facturas { get; set; }
         public DbSet<Proyecto> Proyectos { get; set; }
+        public DbSet<Fase> Fases { get; set; }
         public DbSet<Tarea> Tareas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
