@@ -17,43 +17,61 @@ function togglePasswordVisibility(inputId, iconId) {
 
 //Funcion para agrear Fases a un Proyecto
 function addPhase() {
-    const phaseIndex = document.querySelectorAll('.fase').length;
+    const phaseIndex = document.querySelectorAll('.fase-card').length;
     const phaseHtml = `
-                <div class="fase">
-                    <label>Nombre de la Fase</label>
-                    <input name="fases[${phaseIndex}].Nombre" />
+        <div class="fase-card">
+            <label>Ingrese un nombre para esta Fase</label>
+            <br />
 
-                    <h4>Tareas</h4>
-                    <div class="tareas-container" data-phase-index="${phaseIndex}">
-                    </div>
-                    <button type="button" onclick="addTask(${phaseIndex})">Agregar Tarea</button>
-                </div>
-            `;
+            <input type="text" name="fases[${phaseIndex}].Nombre" placeholder="Nombre de la Fase" />
+            
+            <hr />
+            <h4>Tareas</h4>
+            <div class="tareas-container" data-phase-index="${phaseIndex}">
+            </div>
+
+            <button type="button" class="btn btn-success mt-3" onclick="addTask(${phaseIndex})">Agregar Tarea</button>
+        </div>
+
+    `;
     document.getElementById('fases-container').insertAdjacentHTML('beforeend', phaseHtml);
 }
 
-//Funcion para agrear Tareas a un Proyecto
 
+//Funcion para agrear Tareas a un Proyecto
 function addTask(phaseIndex) {
     const tareasContainer = document.querySelector(`.tareas-container[data-phase-index="${phaseIndex}"]`);
-    const taskIndex = tareasContainer.querySelectorAll('.tarea').length;
+    const taskIndex = tareasContainer.querySelectorAll('.tarea-item').length;
     const taskHtml = `
-                <div class="tarea">
-                    <label>Nombre de la Tarea</label>
-                    <input name="fases[${phaseIndex}].Tareas[${taskIndex}].Nombre" />
+        <div class="tarea-item">
+            <input type="text" name="fases[${phaseIndex}].Tareas[${taskIndex}].Nombre" placeholder="Nombre de la Tarea" />
 
-                    <label>Fecha de Inicio</label>
-                    <input type="date" name="fases[${phaseIndex}].Tareas[${taskIndex}].FechaInicio" />
+            <label>Fecha de Inicio</label>
+            <input type="date" name="fases[${phaseIndex}].Tareas[${taskIndex}].FechaInicio" />
 
-                    <label>Fecha de Fin</label>
-                    <input type="date" name="fases[${phaseIndex}].Tareas[${taskIndex}].FechaFin" />
-                </div>
-            `;
+            <label>Fecha de Fin</label>
+            <input type="date" name="fases[${phaseIndex}].Tareas[${taskIndex}].FechaFin" />
+
+            <!-- Botón de eliminación -->
+            <button type="button" class="btn-delete" onclick="eliminarTarea(this)">
+                <i class="fa fa-trash"></i>
+            </button>
+        </div>
+    `;
     tareasContainer.insertAdjacentHTML('beforeend', taskHtml);
 }
 
 
-//// Eliminar el elemento de tarea
-//function eliminarTarea(button) {
-//    button.parentElement.remove();
-//}
+// Eliminar Fase
+function deletePhase(phaseIndex) {
+    const phaseCard = document.querySelector(`.fase-card[data-phase-index="${phaseIndex}"]`);
+    if (phaseCard) {
+        phaseCard.remove();
+    }
+}
+
+// Eliminar el elemento de tarea
+function eliminarTarea(button) {
+    const tareaItem = button.closest('.tarea-item');
+    tareaItem.remove();
+}

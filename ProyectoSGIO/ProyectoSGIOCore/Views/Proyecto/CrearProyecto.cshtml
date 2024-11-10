@@ -15,19 +15,22 @@
 <h2>Crear Proyecto</h2>
 
 <form asp-action="CrearProyecto" method="post">
-    <div>
-        <label>Nombre del Proyecto</label>
-        <input asp-for="Nombre" />
-        <span asp-validation-for="Nombre"></span>
+    <div class="mb-3">
+        <label class="form-label">Nombre del Proyecto</label>
+        <input asp-for="Nombre" class="form-control" placeholder="Ingrese el nombre del proyecto" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
+
+    <hr />
 
     <h3>Fases</h3>
+    <div class="form-container">
     <div id="fases-container">
-        <!-- Contenedor de fases dinámicas -->
+        <!-- Aquí se añadirán los contenedores de fase en formato de "card" -->
     </div>
 
-    <button type="button" onclick="addPhase()">Agregar Fase</button>
 
-    <button type="submit">Crear Proyecto</button>
+    <button type="button" class="btn btn-primary mt-3" onclick="addPhase()">Agregar Fase</button>
+    <button type="submit" class="btn btn-success mt-3">Crear Proyecto</button>
+    </div>
 </form>
-
