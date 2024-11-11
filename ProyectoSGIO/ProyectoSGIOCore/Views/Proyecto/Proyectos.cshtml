@@ -12,30 +12,33 @@
     <div class="alert alert-success text-center mt-3" role="alert">
         @TempData["MensajeExito"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
     </div>
 }
 
-<a asp-action="CrearProyecto" asp-controller="Proyecto" class="btn btn-primary">Crear Proyecto</a>
+<div class="header-actions">
+    <a asp-action="CrearProyecto" asp-controller="Proyecto" class="btn btn-primary">Crear Proyecto</a>
+</div>
 
-<table>
-    <thead>
-        <tr>
-            <th>Nombre del Proyecto</th>
-            <th>Fecha de Creación</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var proyecto in Model)
-        {
+<div class="table-container">
+    <table class="styled-table">
+        <thead>
             <tr>
-                <td>@proyecto.Nombre</td>
-                <td>@proyecto.FechaCreacion.ToShortDateString()</td>
-                <td>
-                    <a href="@Url.Action("GestionarProyecto", "Proyecto", new { id = proyecto.Id })">Gestionar</a>
-                </td>
+                <th>Nombre del Proyecto</th>
+                <th>Fecha de Creación</th>
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var proyecto in Model)
+            {
+                <tr>
+                    <td>@proyecto.Nombre</td>
+                    <td>@proyecto.FechaCreacion.ToShortDateString()</td>
+                    <td>
+                        <a href="@Url.Action("GestionarProyecto", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-primary btn-sm">Gestionar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

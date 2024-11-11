@@ -89,7 +89,7 @@ namespace ProyectoSGIOCore.Controllers
                 }
 
                 await _dbContext.SaveChangesAsync();
-                TempData["MensajeExito"] = "Proyecto, fases y tareas creado correctamente.";
+                TempData["MensajeExito"] = "Proyecto creado correctamente.";
                 return RedirectToAction("Proyectos");
             }
 

@@ -6,28 +6,37 @@
 
 <h2>Gestionar Proyecto: @Model.Nombre</h2>
 
-<p>Fecha de Creación: @Model.FechaCreacion.ToShortDateString()</p>
+<div class="project-details">
+    <p><strong>Fecha de Creación:</strong> @Model.FechaCreacion.ToShortDateString()</p>
+</div>
 
-<h3>Fases</h3>
+<h3>Fases del Proyecto</h3>
 
-@foreach (var fase in Model.Fases)
-{
-    <div class="fase">
-        <h4>@fase.Nombre</h4>
-        <p>Fase ID: @fase.Id</p>
+<div class="fases-container">
+    @foreach (var fase in Model.Fases)
+    {
+        <div class="fase-card">
+            <div class="fase-header">
+                <h4>@fase.Nombre</h4>
+            </div>
 
-        <h5>Tareas</h5>
-        <ul>
-            @foreach (var tarea in fase.Tareas)
-            {
-                <li>
-                    <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
-                </li>
-            }
-        </ul>
+            <div class="tareas-list">
+                <h5>Tareas</h5>
+                <ul>
+                    @foreach (var tarea in fase.Tareas)
+                    {
+                        <li>
+                            <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
+                        </li>
+                    }
+                </ul>
+            </div>
 
-        <a href="@Url.Action("AgregarTareas", "Proyecto", new { faseId = fase.Id })">Agregar Tareas</a>
-    </div>
-}
+            <a href="@Url.Action("AgregarTareas", "Proyecto", new { faseId = fase.Id })" class="btn btn-outline-primary btn-sm">Agregar Tareas</a>
+        </div>
+    }
+</div>
 
-<a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-secondary">Volver a Proyectos</a>
+<div class="return-button">
+    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-secondary">Volver a Proyectos</a>
+</div>

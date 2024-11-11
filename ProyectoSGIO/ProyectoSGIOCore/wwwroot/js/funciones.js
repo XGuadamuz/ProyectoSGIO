@@ -19,20 +19,23 @@ function togglePasswordVisibility(inputId, iconId) {
 function addPhase() {
     const phaseIndex = document.querySelectorAll('.fase-card').length;
     const phaseHtml = `
-        <div class="fase-card">
-            <label>Ingrese un nombre para esta Fase</label>
-            <br />
+        <div class="fase-card" data-phase-index="${phaseIndex}">
+            <div class="fase-header">
+                <label>Ingrese un nombre para esta Fase</label>
+                <input type="text" name="fases[${phaseIndex}].Nombre" placeholder="Nombre de la Fase" />
+                
+                <!-- Botón de eliminación de fase -->
+                <button type="button" class="btn-delete-phase" onclick="deletePhase(${phaseIndex})">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
 
-            <input type="text" name="fases[${phaseIndex}].Nombre" placeholder="Nombre de la Fase" />
-            
             <hr />
             <h4>Tareas</h4>
-            <div class="tareas-container" data-phase-index="${phaseIndex}">
-            </div>
+            <div class="tareas-container" data-phase-index="${phaseIndex}"></div>
 
             <button type="button" class="btn btn-success mt-3" onclick="addTask(${phaseIndex})">Agregar Tarea</button>
         </div>
-
     `;
     document.getElementById('fases-container').insertAdjacentHTML('beforeend', phaseHtml);
 }

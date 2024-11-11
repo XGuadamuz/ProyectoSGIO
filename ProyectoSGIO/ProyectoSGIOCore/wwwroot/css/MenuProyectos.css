@@ -1,4 +1,24 @@
-﻿.fase-card {
+﻿
+h2, h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 28px;
+}
+
+h3 {
+    font-size: 24px;
+}
+
+.mb-3 label {
+    font-weight: bold;
+}
+
+/* Estilo para la tarjeta de cada fase */
+.fase-card {
     background-color: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -7,10 +27,45 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-    .btn-add-task:hover {
-        background-color: #218838;
+/* Estilo para el encabezado de fase */
+.fase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+    .fase-header label {
+        margin-right: 8px;
     }
 
+    .fase-header input[type="text"] {
+        flex: 1;
+        padding: 6px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+/* Botón de eliminación de fase */
+.btn-delete-phase {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-delete-phase:hover {
+        background-color: #c82333;
+    }
+
+    .btn-delete-phase i {
+        font-size: 16px;
+    }
+
+/* Estilo para el contenedor de tareas */
 .tarea-item {
     display: flex;
     align-items: center;
@@ -26,6 +81,7 @@
         border-radius: 4px;
     }
 
+/* Botón de eliminación de tarea */
 .btn-delete {
     background-color: #dc3545;
     color: #fff;
@@ -44,7 +100,171 @@
         font-size: 16px;
     }
 
-.fase-card h5 {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
+/* Contenedor con desplazamiento para las fases */
+.fases-scroll-container {
+    max-height: 650px;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-bottom: 20px;
+}
+
+.fases-container {
+    max-height: 750px;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-bottom: 20px;
+}
+
+    .fases-scroll-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .fases-scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .fases-scroll-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+
+        .fases-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+
+.header-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+/* Tabla estilizada */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+    .styled-table thead tr {
+        background-color: #0275d8; /* Azul oscuro */
+        color: #ffffff;
+        text-align: left;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+    }
+
+    .styled-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+        background-color: #f9f9f9;
+    }
+
+        .styled-table tbody tr:hover {
+            background-color: #e6f2ff;
+        }
+
+.btn-outline-primary {
+    color: #0275d8;
+    border-color: #0275d8;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #0275d8;
+        color: #ffffff;
+    }
+
+/* Contenedor de detalles del proyecto */
+.project-details {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 16px;
+    color: #555;
+}
+
+.fases-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Tarjeta de cada fase */
+.fase-card {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+    .fase-card:hover {
+        transform: scale(1.03);
+    }
+
+.fases-container {
+    padding: 20px;
+}
+
+.fase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+    .fase-header h4 {
+        margin: 0;
+        color: #0275d8;
+    }
+
+.fase-id {
+    font-size: 14px;
+    color: #777;
+}
+
+.tareas-list ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.tareas-list li {
+    background-color: #e9ecef;
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 4px;
+    color: #555;
+}
+
+.btn-outline-primary {
+    color: #0275d8;
+    border-color: #0275d8;
+    margin-top: 12px;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #0275d8;
+        color: #ffffff;
+    }
+
+.return-button {
+    text-align: center;
+    margin-top: 24px;
+}
+
+    .return-button .btn-secondary {
+        padding: 10px 20px;
+    }
+
+.crear-proyecto-container .fase-card:hover {
+    transform: none;
 }
