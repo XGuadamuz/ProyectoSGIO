@@ -1,4 +1,4 @@
-﻿
+﻿/* Títulos */
 h2, h3 {
     text-align: center;
     color: #333;
@@ -13,26 +13,64 @@ h3 {
     font-size: 24px;
 }
 
+/* Labels */
 .mb-3 label {
     font-weight: bold;
 }
 
-/* Estilo para la tarjeta de cada fase */
+/* Tarjeta de cada fase */
 .fase-card {
     background-color: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 20px;
+    padding: 12px;
+    margin: 20px 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
 }
 
-/* Estilo para el encabezado de fase */
+    /* Hover para las tarjetas de fase, desactivado en CrearProyecto */
+    .fase-card:hover {
+        transform: scale(1.01);
+    }
+
+.crear-proyecto-container .fase-card:hover {
+    transform: none;
+}
+
+/* Contenedor de desplazamiento para el contenido principal */
+.content-scroll-container {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-bottom: 20px;
+}
+
+    /* Estilos para personalizar la barra de desplazamiento */
+    .content-scroll-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .content-scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .content-scroll-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+
+        .content-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+/* Encabezado de fase */
 .fase-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
     margin-bottom: 12px;
+    gap: 12px;
 }
 
     .fase-header label {
@@ -46,8 +84,14 @@ h3 {
         border-radius: 4px;
     }
 
+    .fase-header h4 {
+        margin: 0;
+        color: #0275d8;
+    }
+
 /* Botón de eliminación de fase */
-.btn-delete-phase {
+.btn-delete-phase,
+.btn-delete {
     background-color: #dc3545;
     color: #fff;
     border: none;
@@ -57,15 +101,17 @@ h3 {
     transition: background-color 0.3s ease;
 }
 
-    .btn-delete-phase:hover {
+    .btn-delete-phase:hover,
+    .btn-delete:hover {
         background-color: #c82333;
     }
 
-    .btn-delete-phase i {
+    .btn-delete-phase i,
+    .btn-delete i {
         font-size: 16px;
     }
 
-/* Estilo para el contenedor de tareas */
+/* Contenedor de tareas */
 .tarea-item {
     display: flex;
     align-items: center;
@@ -81,35 +127,9 @@ h3 {
         border-radius: 4px;
     }
 
-/* Botón de eliminación de tarea */
-.btn-delete {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 6px 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-    .btn-delete:hover {
-        background-color: #c82333;
-    }
-
-    .btn-delete i {
-        font-size: 16px;
-    }
-
 /* Contenedor con desplazamiento para las fases */
 .fases-scroll-container {
     max-height: 650px;
-    overflow-y: auto;
-    padding-right: 8px;
-    margin-bottom: 20px;
-}
-
-.fases-container {
-    max-height: 750px;
     overflow-y: auto;
     padding-right: 8px;
     margin-bottom: 20px;
@@ -132,7 +152,29 @@ h3 {
             background: #999;
         }
 
+/* Contenedor de detalles del proyecto */
+.project-details {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 16px;
+    color: #555;
+}
 
+/* Listado de tareas */
+.tareas-list ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.tareas-list li {
+    background-color: #e9ecef;
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 4px;
+    color: #555;
+}
+
+/* Botones */
 .header-actions {
     display: flex;
     justify-content: flex-end;
@@ -142,6 +184,17 @@ h3 {
 .table-container {
     overflow-x: auto;
 }
+
+.btn-outline-primary {
+    color: #0275d8;
+    border-color: #0275d8;
+    margin-top: 12px;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #0275d8;
+        color: #ffffff;
+    }
 
 /* Tabla estilizada */
 .styled-table {
@@ -153,7 +206,7 @@ h3 {
 }
 
     .styled-table thead tr {
-        background-color: #0275d8; /* Azul oscuro */
+        background-color: #0275d8;
         color: #ffffff;
         text-align: left;
     }
@@ -172,90 +225,6 @@ h3 {
             background-color: #e6f2ff;
         }
 
-.btn-outline-primary {
-    color: #0275d8;
-    border-color: #0275d8;
-}
-
-    .btn-outline-primary:hover {
-        background-color: #0275d8;
-        color: #ffffff;
-    }
-
-/* Contenedor de detalles del proyecto */
-.project-details {
-    text-align: center;
-    margin-bottom: 24px;
-    font-size: 16px;
-    color: #555;
-}
-
-.fases-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-/* Tarjeta de cada fase */
-.fase-card {
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 20px 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
-}
-
-    .fase-card:hover {
-        transform: scale(1.03);
-    }
-
-.fases-container {
-    padding: 20px;
-}
-
-.fase-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-    .fase-header h4 {
-        margin: 0;
-        color: #0275d8;
-    }
-
-.fase-id {
-    font-size: 14px;
-    color: #777;
-}
-
-.tareas-list ul {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.tareas-list li {
-    background-color: #e9ecef;
-    margin: 8px 0;
-    padding: 8px;
-    border-radius: 4px;
-    color: #555;
-}
-
-.btn-outline-primary {
-    color: #0275d8;
-    border-color: #0275d8;
-    margin-top: 12px;
-}
-
-    .btn-outline-primary:hover {
-        background-color: #0275d8;
-        color: #ffffff;
-    }
-
 .return-button {
     text-align: center;
     margin-top: 24px;
@@ -265,6 +234,10 @@ h3 {
         padding: 10px 20px;
     }
 
-.crear-proyecto-container .fase-card:hover {
-    transform: none;
+/* Contenedor de desplazamiento para el contenido principal */
+.content-scroll-container {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-bottom: 20px;
 }

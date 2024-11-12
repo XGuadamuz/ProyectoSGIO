@@ -6,13 +6,10 @@
 
 <h2>Gestionar Proyecto: @Model.Nombre</h2>
 
-<div class="project-details">
-    <p><strong>Fecha de Creación:</strong> @Model.FechaCreacion.ToShortDateString()</p>
-</div>
+<p class="project-details">Fecha de Creación: @Model.FechaCreacion.ToShortDateString()</p>
 
-<h3>Fases del Proyecto</h3>
-
-<div class="fases-container">
+<div class="content-scroll-container">
+    <h3>Fases</h3>
     @foreach (var fase in Model.Fases)
     {
         <div class="fase-card">
@@ -30,9 +27,8 @@
                         </li>
                     }
                 </ul>
+                <a href="@Url.Action("AgregarTareas", "Proyecto", new { faseId = fase.Id })" class="btn btn-outline-primary">Agregar Tareas</a>
             </div>
-
-            <a href="@Url.Action("AgregarTareas", "Proyecto", new { faseId = fase.Id })" class="btn btn-outline-primary btn-sm">Agregar Tareas</a>
         </div>
     }
 </div>
