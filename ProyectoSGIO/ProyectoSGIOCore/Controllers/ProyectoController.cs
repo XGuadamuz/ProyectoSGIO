@@ -158,5 +158,20 @@ namespace ProyectoSGIOCore.Controllers
 
             return View(proyecto);
         }
+
+        [HttpPost]
+        public IActionResult ActualizarTareas([FromBody] Dictionary<int, bool> tareasCompletadas)
+        {
+            foreach (var tareaId in tareasCompletadas.Keys)
+            {
+                var tarea = _dbContext.Tareas.Find(tareaId);
+                if (tarea != null)
+                {
+                    tarea.Completada = tareasCompletadas[tareaId];
+                }
+            }
+            _dbContext.SaveChanges();
+            return Ok();
+        }
     }
 }

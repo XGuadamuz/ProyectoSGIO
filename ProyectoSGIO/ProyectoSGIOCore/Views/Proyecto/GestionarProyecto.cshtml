@@ -5,7 +5,6 @@
 }
 
 <h2>Gestionar Proyecto: @Model.Nombre</h2>
-
 <p class="project-details">Fecha de Creación: @Model.FechaCreacion.ToShortDateString()</p>
 
 <div class="content-scroll-container">
@@ -23,7 +22,14 @@
                     @foreach (var tarea in fase.Tareas)
                     {
                         <li>
-                            <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
+                            <label class="checkbox-btn">
+                                <input id="checkbox-@tarea.Id" type="checkbox"
+                                @(tarea.Completada ? "checked" : "")>
+                                <span class="checkmark"></span>
+                            </label>
+                            <strong>@tarea.Nombre</strong> -
+                            Inicio: @tarea.FechaInicio.ToShortDateString() -
+                            Fin: @tarea.FechaFin.ToShortDateString()
                         </li>
                     }
                 </ul>
@@ -35,4 +41,50 @@
 
 <div class="return-button">
     <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-secondary">Volver a Proyectos</a>
+    <button id="saveChangesBtn" class="btn btn-primary">Guardar Cambios</button>
 </div>
+
+<!-- Modal de Confirmación -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>¿Estás seguro de que deseas guardar los cambios?</p>
+        <button id="confirmSave" class="btn btn-success">Confirmar</button>
+        <button id="cancelSave" class="btn btn-secondary">Cancelar</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Manejo del Modal
+        document.getElementById('saveChangesBtn').onclick = function () {
+            document.getElementById('confirmModal').style.display = 'block';
+        };
+
+        document.getElementById('cancelSave').onclick = function () {
+            document.getElementById('confirmModal').style.display = 'none';
+        };
+
+        document.getElementById('confirmSave').onclick = function () {
+            document.getElementById('confirmModal').style.display = 'none';
+            guardarCambios();
+        };
+
+        // Manejo de Guardar Cambios
+        function guardarCambios() {
+            let tareasCompletadas = {};
+            document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+                tareasCompletadas[checkbox.id.split('-')[1]] = checkbox.checked;
+            });
+            fetch('@Url.Action("ActualizarTareas", "Proyecto")', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(tareasCompletadas)
+            }).then(response => {
+                if (response.ok) {
+                    alert('Cambios guardados exitosamente');
+                }
+            });
+        }
+    </script>
+}
