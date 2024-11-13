@@ -115,17 +115,25 @@ h3 {
 .tarea-item {
     display: flex;
     align-items: center;
-    margin-top: 12px;
-    gap: 12px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
 }
 
-    .tarea-item input[type="text"],
-    .tarea-item input[type="date"] {
-        flex: 1;
-        padding: 6px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
+.tarea-info {
+    flex: 1;
+    padding-right: 10px;
+}
+
+.tarea-item input[type="text"],
+.tarea-item input[type="date"] {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
 
 /* Contenedor con desplazamiento para las fases */
 .fases-scroll-container {
@@ -267,13 +275,15 @@ h3 {
         cursor: pointer;
         font-size: 14px;
     }
+
 .checkmark {
+    margin: -6px;
     position: absolute;
     top: 0;
     left: 0;
     height: 25px;
     width: 25px;
-    border: 2.5px solid #ffffff;
+    border: 2.5px solid #0275d8;
     transition: .2s linear;
 }
 

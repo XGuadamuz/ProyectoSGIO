@@ -4,6 +4,18 @@
     Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
+<!-- Mensaje Exito -->
+<div id="successMessage" class="alert alert-success text-center mt-3" style="display:none;">
+    <span id="successText"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<!-- Mensaje Fracaso -->
+<div id="errorMessage" class="alert alert-danger text-center mt-3" style="display:none;">
+    <span id="errorText"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
 <h2>Gestionar Proyecto: @Model.Nombre</h2>
 <p class="project-details">Fecha de Creación: @Model.FechaCreacion.ToShortDateString()</p>
 
@@ -21,15 +33,14 @@
                 <ul>
                     @foreach (var tarea in fase.Tareas)
                     {
-                        <li>
+                        <li class="tarea-item">
+                            <div class="tarea-info">
+                                <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
+                            </div>
                             <label class="checkbox-btn">
-                                <input id="checkbox-@tarea.Id" type="checkbox"
-                                @(tarea.Completada ? "checked" : "")>
+                                <input id="checkbox_@tarea.Id" type="checkbox" @(tarea.Completada ? "checked" : "") />
                                 <span class="checkmark"></span>
                             </label>
-                            <strong>@tarea.Nombre</strong> -
-                            Inicio: @tarea.FechaInicio.ToShortDateString() -
-                            Fin: @tarea.FechaFin.ToShortDateString()
                         </li>
                     }
                 </ul>
@@ -40,51 +51,70 @@
 </div>
 
 <div class="return-button">
-    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-secondary">Volver a Proyectos</a>
-    <button id="saveChangesBtn" class="btn btn-primary">Guardar Cambios</button>
+    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-primary">Volver a Proyectos</a>
+    <button id="saveChangesBtn" class="btn btn-success">Guardar Cambios</button>
 </div>
 
-<!-- Modal de Confirmación -->
-<div id="confirmModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <p>¿Estás seguro de que deseas guardar los cambios?</p>
-        <button id="confirmSave" class="btn btn-success">Confirmar</button>
-        <button id="cancelSave" class="btn btn-secondary">Cancelar</button>
+<!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmar cambios</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas guardar los cambios?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmSave" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // Manejo del Modal
         document.getElementById('saveChangesBtn').onclick = function () {
-            document.getElementById('confirmModal').style.display = 'block';
-        };
-
-        document.getElementById('cancelSave').onclick = function () {
-            document.getElementById('confirmModal').style.display = 'none';
+            new bootstrap.Modal(document.getElementById('confirmModal')).show();
         };
 
         document.getElementById('confirmSave').onclick = function () {
-            document.getElementById('confirmModal').style.display = 'none';
             guardarCambios();
         };
 
-        // Manejo de Guardar Cambios
         function guardarCambios() {
             let tareasCompletadas = {};
             document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
-                tareasCompletadas[checkbox.id.split('-')[1]] = checkbox.checked;
+                tareasCompletadas[checkbox.id.split('_')[1]] = checkbox.checked;
             });
+
             fetch('@Url.Action("ActualizarTareas", "Proyecto")', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(tareasCompletadas)
-            }).then(response => {
-                if (response.ok) {
-                    alert('Cambios guardados exitosamente');
-                }
-            });
+            }).then(response => response.json())
+                .then(data => {
+                    const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+                    confirmModal.hide();
+
+                    // Reiniciar visibilidad y texto de mensajes
+                    document.getElementById('successMessage').style.display = 'none';
+                    document.getElementById('errorMessage').style.display = 'none';
+                    document.getElementById('successText').textContent = '';  // Limpia el mensaje previo
+                    document.getElementById('errorText').textContent = '';  // Limpia el mensaje previo
+
+                    if (data.message) {
+                        document.getElementById('successText').textContent = data.message;
+                        document.getElementById('successMessage').style.display = 'block';
+                    } else if (data.error) {
+                        document.getElementById('errorText').textContent = data.error;
+                        document.getElementById('errorMessage').style.display = 'block';
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
         }
     </script>
 }

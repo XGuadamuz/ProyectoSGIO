@@ -146,9 +146,9 @@ namespace ProyectoSGIOCore.Controllers
         public async Task<IActionResult> GestionarProyecto(int id)
         {
             var proyecto = await _dbContext.Proyectos
-                                           .Include(p => p.Fases)
-                                           .ThenInclude(f => f.Tareas)
-                                           .FirstOrDefaultAsync(p => p.Id == id);
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (proyecto == null)
             {
@@ -160,18 +160,60 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> GuardarCambios(int proyectoId, List<int> tareasCompletadas)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            try
+            {
+                foreach (var fase in proyecto.Fases)
+                {
+                    foreach (var tarea in fase.Tareas)
+                    {
+                        tarea.Completada = tareasCompletadas.Contains(tarea.Id);
+                    }
+                }
+
+                await _dbContext.SaveChangesAsync();
+                TempData["MensajeExito"] = "Cambios guardados exitosamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = $"Error al guardar los cambios: {ex.Message}";
+            }
+
+            return RedirectToAction("GestionarProyecto", new { id = proyectoId });
+        }
+
+        [HttpPost]
         public IActionResult ActualizarTareas([FromBody] Dictionary<int, bool> tareasCompletadas)
         {
-            foreach (var tareaId in tareasCompletadas.Keys)
+            try
             {
-                var tarea = _dbContext.Tareas.Find(tareaId);
-                if (tarea != null)
+                foreach (var tareaId in tareasCompletadas.Keys)
                 {
-                    tarea.Completada = tareasCompletadas[tareaId];
+                    var tarea = _dbContext.Tareas.Find(tareaId);
+                    if (tarea != null)
+                    {
+                        tarea.Completada = tareasCompletadas[tareaId];
+                    }
                 }
+                _dbContext.SaveChanges();
+                return Ok(new { message = "Cambios guardados exitosamente." });
             }
-            _dbContext.SaveChanges();
-            return Ok();
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = $"Error al guardar cambios: {ex.Message}" });
+            }
         }
     }
 }
