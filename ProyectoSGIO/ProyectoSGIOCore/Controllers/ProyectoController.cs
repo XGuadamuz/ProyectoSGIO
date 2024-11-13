@@ -112,7 +112,7 @@ namespace ProyectoSGIOCore.Controllers
         [HttpPost]
         public async Task<IActionResult> AgregarTareas(int faseId, List<Tarea> tareas)
         {
-            var fase = await _dbContext.Fases.FindAsync(faseId);
+            var fase = await _dbContext.Fases.Include(f => f.Tareas).FirstOrDefaultAsync(f => f.Id == faseId);
             if (fase == null)
             {
                 TempData["MensajeError"] = "Fase no encontrada.";

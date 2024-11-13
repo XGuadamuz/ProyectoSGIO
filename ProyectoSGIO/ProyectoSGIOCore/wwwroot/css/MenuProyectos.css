@@ -38,6 +38,10 @@ h3 {
     transform: none;
 }
 
+.agregar-tarea-container .fase-card:hover {
+    transform: none;
+}
+
 /* Contenedor de desplazamiento para el contenido principal */
 .content-scroll-container {
     max-height: 75vh;
@@ -174,12 +178,28 @@ h3 {
     padding-left: 0;
 }
 
+.agregar-tarea-container {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
 .tareas-list li {
-    background-color: #e9ecef;
-    margin: 8px 0;
-    padding: 8px;
-    border-radius: 4px;
-    color: #555;
+    background-color: #f9f9f9;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tareas-list button:hover {
+    background-color: #fff;
+}
+
+.tareas-list li:hover {
+    background-color: #0275d864;
 }
 
 /* Botones */

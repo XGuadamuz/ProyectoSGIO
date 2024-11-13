@@ -44,7 +44,7 @@
                         </li>
                     }
                 </ul>
-                <a href="@Url.Action("AgregarTareas", "Proyecto", new { faseId = fase.Id })" class="btn btn-outline-primary">Agregar Tareas</a>
+                <a href="@Url.Action("AgregarTareas", "Proyecto", new { faseId = fase.Id })" class="btn btn-outline-primary">Agregar Tarea</a>
             </div>
         </div>
     }
@@ -102,8 +102,6 @@
                     // Reiniciar visibilidad y texto de mensajes
                     document.getElementById('successMessage').style.display = 'none';
                     document.getElementById('errorMessage').style.display = 'none';
-                    document.getElementById('successText').textContent = '';  // Limpia el mensaje previo
-                    document.getElementById('errorText').textContent = '';  // Limpia el mensaje previo
 
                     if (data.message) {
                         document.getElementById('successText').textContent = data.message;
