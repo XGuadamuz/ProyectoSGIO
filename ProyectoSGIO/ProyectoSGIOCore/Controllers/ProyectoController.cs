@@ -20,21 +20,18 @@ namespace ProyectoSGIOCore.Controllers
         [HttpGet]
         public async Task<IActionResult> Proyectos()
         {
-            var proyectos = await _dbContext.Proyectos.Include(p => p.Fases).ThenInclude(f => f.Tareas).ToListAsync();
+            var proyectos = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .Include(p => p.Usuario)
+                .ToListAsync();
+
             return View(proyectos);
         }
 
         [HttpGet]
-        public async Task<IActionResult> CrearProyecto()
+        public IActionResult CrearProyecto()
         {
-
-            // Obtener los usuarios registrados con rol "Usuario"
-            var usuarios = await _dbContext.Usuarios
-                .Where(u => u.Rol.Nombre == "Usuario")
-                .ToListAsync();
-
-            ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Nombre");
-
             return View();
         }
 
@@ -47,42 +44,14 @@ namespace ProyectoSGIOCore.Controllers
                 return View(proyecto);
             }
 
-            if (proyecto.Usuario == null)
-            {
-                TempData["MensajeError"] = "Debe seleccionar un usuario.";
-                return View(proyecto);
-            }
-
-            foreach (var fase in fases)
-            {
-                if (string.IsNullOrEmpty(fase.Nombre))
-                {
-                    TempData["MensajeError"] = "Cada fase debe tener un nombre.";
-                    return View(proyecto);
-                }
-
-                foreach (var tarea in fase.Tareas)
-                {
-                    if (string.IsNullOrEmpty(tarea.Nombre))
-                    {
-                        TempData["MensajeError"] = "Cada tarea debe tener un nombre.";
-                        return View(proyecto);
-                    }
-
-                    if (tarea.FechaInicio >= tarea.FechaFin)
-                    {
-                        TempData["MensajeError"] = "La fecha de inicio de cada tarea debe ser anterior a su fecha de finalización.";
-                        return View(proyecto);
-                    }
-                }
-            }
-
+            // Guardar el proyecto y sus fases/tareas si todo está correcto
             if (ModelState.IsValid)
             {
                 proyecto.FechaCreacion = DateTime.Now;
                 _dbContext.Proyectos.Add(proyecto);
                 await _dbContext.SaveChangesAsync();
 
+                // Guardar fases y tareas relacionadas
                 foreach (var fase in fases)
                 {
                     if (!_dbContext.Fases.Any(f => f.Nombre == fase.Nombre && f.ProyectoId == proyecto.Id))
@@ -110,6 +79,50 @@ namespace ProyectoSGIOCore.Controllers
 
             TempData["MensajeError"] = "Ocurrió un error al crear el proyecto.";
             return View(proyecto);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AsignarCliente(int id)
+        {
+            var proyecto = await _dbContext.Proyectos.FindAsync(id);
+            if (proyecto == null) return NotFound();
+
+            var usuarios = await _dbContext.Usuarios
+                .Where(u => u.Rol.Nombre == "Usuario")
+                .ToListAsync();
+
+            ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
+            ViewBag.ProyectoId = id;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AsignarCliente(int id, int usuarioId)
+        {
+            var proyecto = await _dbContext.Proyectos.FindAsync(id);
+            if (proyecto == null) return NotFound();
+
+            // Verificar si se seleccionó un usuario
+            if (usuarioId == 0)
+            {
+                TempData["MensajeError"] = "Debe seleccionar un usuario para asignar al proyecto.";
+                ViewBag.ProyectoId = id;
+
+                // Volver a cargar los usuarios para que se muestren en el dropdown
+                var usuarios = await _dbContext.Usuarios
+                    .Where(u => u.Rol.Nombre == "Usuario")
+                    .ToListAsync();
+                ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
+
+                return View(proyecto);
+            }
+
+            proyecto.IdUsuario = usuarioId;
+            await _dbContext.SaveChangesAsync();
+
+            TempData["MensajeExito"] = "Cliente asignado correctamente.";
+            return RedirectToAction("Proyectos");
         }
 
         [HttpGet]

@@ -212,6 +212,10 @@ h3 {
     overflow-x: auto;
 }
 
+    .table-container .styled-table td a.btn {
+        margin: 0;
+    }
+
 .btn-outline-primary {
     color: #0275d8;
     border-color: #0275d8;

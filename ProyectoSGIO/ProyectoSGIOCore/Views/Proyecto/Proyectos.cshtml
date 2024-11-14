@@ -25,6 +25,7 @@
             <tr>
                 <th>Nombre del Proyecto</th>
                 <th>Fecha de Creación</th>
+                <th>Cliente Asignado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -35,7 +36,18 @@
                     <td>@proyecto.Nombre</td>
                     <td>@proyecto.FechaCreacion.ToShortDateString()</td>
                     <td>
+                        @if (proyecto.Usuario != null)
+                        {
+                            <span>@proyecto.Usuario.Nombre @proyecto.Usuario.Apellido</span>
+                        }
+                        else
+                        {
+                            <span>Usuario sin asignar</span>
+                        }
+                    </td>
+                    <td>
                         <a href="@Url.Action("GestionarProyecto", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-primary btn-sm">Gestionar</a>
+                        <a href="@Url.Action("AsignarCliente", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-dark btn-sm">Asignar Cliente</a>
                     </td>
                 </tr>
             }
