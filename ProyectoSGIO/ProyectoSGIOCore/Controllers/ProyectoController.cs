@@ -44,6 +44,30 @@ namespace ProyectoSGIOCore.Controllers
                 return View(proyecto);
             }
 
+            foreach (var fase in fases)
+            {
+                if (string.IsNullOrEmpty(fase.Nombre))
+                {
+                    TempData["MensajeError"] = "El nombre de la fase no puede estar vacío.";
+                    return View(proyecto);
+                }
+
+                foreach (var tarea in fase.Tareas)
+                {
+                    if (string.IsNullOrEmpty(tarea.Nombre))
+                    {
+                        TempData["MensajeError"] = "El nombre de la tarea no puede estar vacío.";
+                        return View(proyecto);
+                    }
+
+                    if (tarea.FechaInicio >= tarea.FechaFin)
+                    {
+                        TempData["MensajeError"] = "La fecha de fin de la tarea no puede ser menor o igual a la fecha de inicio.";
+                        return View(proyecto);
+                    }
+                }
+            }
+
             // Guardar el proyecto y sus fases/tareas si todo está correcto
             if (ModelState.IsValid)
             {
@@ -80,6 +104,7 @@ namespace ProyectoSGIOCore.Controllers
             TempData["MensajeError"] = "Ocurrió un error al crear el proyecto.";
             return View(proyecto);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> AsignarCliente(int id)
