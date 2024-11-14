@@ -64,7 +64,6 @@ function addTask(phaseIndex) {
     tareasContainer.insertAdjacentHTML('beforeend', taskHtml);
 }
 
-
 // Eliminar Fase
 function deletePhase(phaseIndex) {
     const phaseCard = document.querySelector(`.fase-card[data-phase-index="${phaseIndex}"]`);

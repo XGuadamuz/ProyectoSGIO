@@ -88,7 +88,7 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(u => u.Correo).HasMaxLength(50).IsRequired();
 
             });
-
+            
             // Tablas
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
             modelBuilder.Entity<Rol>().ToTable("Rol");

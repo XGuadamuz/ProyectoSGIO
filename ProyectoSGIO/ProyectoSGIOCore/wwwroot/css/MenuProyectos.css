@@ -133,7 +133,6 @@ h3 {
 
 .tarea-item input[type="text"],
 .tarea-item input[type="date"] {
-    flex: 1;
     padding: 6px;
     border: 1px solid #ddd;
     border-radius: 4px;

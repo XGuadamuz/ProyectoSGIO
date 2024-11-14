@@ -1,4 +1,6 @@
-﻿namespace ProyectoSGIOCore.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ProyectoSGIOCore.Models
 {
     public class Proyecto
     {
@@ -8,5 +10,8 @@
 
         // Relación con Fases
         public ICollection<Fase> Fases { get; set; } = new List<Fase>();
+
+        // Relación con Cliente
+        public Usuario Usuario { get; set; }
     }
 }

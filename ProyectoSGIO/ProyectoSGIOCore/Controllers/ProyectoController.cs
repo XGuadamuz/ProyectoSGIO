@@ -3,6 +3,7 @@ using ProyectoSGIOCore.Data;
 using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -24,8 +25,16 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpGet]
-        public IActionResult CrearProyecto()
+        public async Task<IActionResult> CrearProyecto()
         {
+
+            // Obtener los usuarios registrados con rol "Usuario"
+            var usuarios = await _dbContext.Usuarios
+                .Where(u => u.Rol.Nombre == "Usuario")
+                .ToListAsync();
+
+            ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Nombre");
+
             return View();
         }
 
@@ -35,6 +44,12 @@ namespace ProyectoSGIOCore.Controllers
             if (string.IsNullOrEmpty(proyecto.Nombre))
             {
                 TempData["MensajeError"] = "El nombre del proyecto no puede estar vacío.";
+                return View(proyecto);
+            }
+
+            if (proyecto.Usuario == null)
+            {
+                TempData["MensajeError"] = "Debe seleccionar un usuario.";
                 return View(proyecto);
             }
 

@@ -21,6 +21,15 @@
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <label class="form-label">Usuario</label>
+        <select asp-for="Id" asp-items="ViewBag.Usuarios" class="form-select">
+            <option value="">Seleccione un usuario</option>
+        </select>
+
+        <span asp-validation-for="Usuario.IdUsuario" class="text-danger"></span>
+    </div>
+
     <hr />
 
     <h3>Fases</h3>
