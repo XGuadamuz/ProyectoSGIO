@@ -69,8 +69,43 @@
     </div>
 </div>
 
+<!-- Modal para agregar tareas -->
+<div class="modal fade" id="modalAgregarTarea" tabindex="-1" aria-labelledby="modalAgregarTareaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarTareaLabel">Agregar Tareas a la Fase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="alertContainer" class="mb-3"></div>
+                <form id="formAgregarTareas">
+                    <input type="hidden" id="faseId" name="faseId" />
+                    <div class="mb-3">
+                        <label for="tareaNombre">Nombre de la Tarea</label>
+                        <input type="text" class="form-control" id="tareaNombre" name="tareas[0].Nombre" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="fechaInicio">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="fechaInicio" name="tareas[0].FechaInicio" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="fechaFin">Fecha de Fin</label>
+                        <input type="date" class="form-control" id="fechaFin" name="tareas[0].FechaFin" required />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="content-scroll-container">
+    <h3>Fases</h3>
     @foreach (var fase in Model.Fases)
     {
         <div class="fase-card">
@@ -97,7 +132,8 @@
                         </li>
                     }
                 </ul>
-                <a href="@Url.Action("AgregarTareas", "Proyecto", new { faseId = fase.Id })" class="btn btn-outline-primary">Agregar Tarea</a>
+                <!-- Botón para agregar tareas a una fase -->
+                <button class="btn btn-outline-primary agregar-tareas-btn" data-fase-id="@fase.Id">Agregar Tareas</button>
             </div>
         </div>
 
@@ -189,6 +225,75 @@
                 }).catch(error => {
                     console.error('Error:', error);
                 });
+        }
+
+        // Botones de agregar tareas
+        document.querySelectorAll('.agregar-tareas-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const faseId = button.getAttribute('data-fase-id');
+
+                try {
+                    const response = await fetch(`/Proyecto/ObtenerFase?faseId=${faseId}`);
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        mostrarAlertaEnModal(data.mensaje || "Error al cargar la fase.", "danger");
+                        return;
+                    }
+
+                    // Configurar el modal
+                    document.getElementById('modalAgregarTareaLabel').textContent = `Agregar tareas a la fase: ${data.nombre}`;
+                    document.getElementById('faseId').value = data.id;
+                    const modal = new bootstrap.Modal(document.getElementById('modalAgregarTarea'));
+                    modal.show();
+
+                } catch (error) {
+                    mostrarAlertaEnModal("Error al cargar los datos de la fase. Intente de nuevo.", "danger");
+                    console.error("Error:", error);
+                }
+            });
+        });
+
+        // Enviar formulario de agregar tareas
+        document.getElementById('formAgregarTareas').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch('/Proyecto/AgregarTareasModal', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+
+                if (response.ok && result.exito) {
+                    mostrarAlertaEnModal(result.mensaje, "success");
+
+                    // Cerrar el modal después de un corto intervalo
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarTarea'));
+                        modal.hide();
+                        location.reload(); // Actualiza la página
+                    }, 2000);
+                } else {
+                    mostrarAlertaEnModal(result.mensaje || "Error al agregar tareas.", "danger");
+                }
+
+            } catch (error) {
+                mostrarAlertaEnModal("Error al enviar el formulario. Intente de nuevo.", "danger");
+                console.error("Error:", error);
+            }
+        });
+
+        // Función para mostrar alertas dentro del modal
+        function mostrarAlertaEnModal(mensaje, tipo = "danger") {
+            const alertContainer = document.getElementById("alertContainer");
+            alertContainer.innerHTML = `
+                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                    ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
         }
     </script>
 }

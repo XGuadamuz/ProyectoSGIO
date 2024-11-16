@@ -221,39 +221,35 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AgregarTareas(int faseId)
+        public async Task<IActionResult> ObtenerFase(int faseId)
         {
-            var fase = await _dbContext.Fases.Include(f => f.Tareas).FirstOrDefaultAsync(f => f.Id == faseId);
+            var fase = await _dbContext.Fases.FirstOrDefaultAsync(f => f.Id == faseId);
             if (fase == null)
             {
-                TempData["MensajeError"] = "Fase no encontrada.";
-                return RedirectToAction("Proyectos");
+                return NotFound(new { mensaje = "Fase no encontrada." });
             }
-            return View(fase);
+            return Json(new { id = fase.Id, nombre = fase.Nombre });
         }
 
         [HttpPost]
-        public async Task<IActionResult> AgregarTareas(int faseId, List<Tarea> tareas)
+        public async Task<IActionResult> AgregarTareasModal(int faseId, List<Tarea> tareas)
         {
             var fase = await _dbContext.Fases.Include(f => f.Tareas).FirstOrDefaultAsync(f => f.Id == faseId);
             if (fase == null)
             {
-                TempData["MensajeError"] = "Fase no encontrada.";
-                return RedirectToAction("Proyectos");
+                return Json(new { exito = false, mensaje = "Fase no encontrada." });
             }
 
             foreach (var tarea in tareas)
             {
                 if (string.IsNullOrEmpty(tarea.Nombre))
                 {
-                    TempData["MensajeError"] = "El nombre de cada tarea no puede estar vacío.";
-                    return RedirectToAction("AgregarTareas", new { faseId });
+                    return Json(new { exito = false, mensaje = "El nombre de cada tarea no puede estar vacío." });
                 }
 
                 if (tarea.FechaInicio >= tarea.FechaFin)
                 {
-                    TempData["MensajeError"] = "La fecha de inicio debe ser anterior a la fecha de finalización para cada tarea.";
-                    return RedirectToAction("AgregarTareas", new { faseId });
+                    return Json(new { exito = false, mensaje = "La fecha de inicio debe ser anterior a la fecha de finalización para cada tarea." });
                 }
 
                 tarea.FaseId = faseId;
@@ -261,8 +257,7 @@ namespace ProyectoSGIOCore.Controllers
             }
 
             await _dbContext.SaveChangesAsync();
-            TempData["MensajeExito"] = "Tareas agregadas correctamente.";
-            return RedirectToAction("GestionarProyecto", new { id = fase.ProyectoId });
+            return Json(new { exito = true, mensaje = "Tareas agregadas correctamente." });
         }
 
         [HttpGet]
