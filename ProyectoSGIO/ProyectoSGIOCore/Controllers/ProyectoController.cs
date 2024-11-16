@@ -105,7 +105,6 @@ namespace ProyectoSGIOCore.Controllers
             return View(proyecto);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> AsignarCliente(int id)
         {
@@ -148,6 +147,77 @@ namespace ProyectoSGIOCore.Controllers
 
             TempData["MensajeExito"] = "Cliente asignado correctamente.";
             return RedirectToAction("Proyectos");
+        }
+
+        [HttpPost]
+        public IActionResult AgregarFase(int proyectoId, string Nombre)
+        {
+            if (string.IsNullOrWhiteSpace(Nombre))
+            {
+                TempData["MensajeError"] = "El nombre de la fase no puede estar vacío.";
+                return RedirectToAction("GestionarProyecto", new { id = proyectoId });
+            }
+
+            // Buscar el proyecto correspondiente
+            var proyecto = _dbContext.Proyectos.Include(p => p.Fases).FirstOrDefault(p => p.Id == proyectoId);
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("GestionarProyecto", new { id = proyectoId });
+            }
+
+            // Verificar si el nombre de la fase ya existe
+            if (proyecto.Fases.Any(f => f.Nombre == Nombre))
+            {
+                TempData["MensajeError"] = "Ya existe una fase con este nombre en el proyecto.";
+                return RedirectToAction("GestionarProyecto", new { id = proyectoId });
+            }
+
+            var nuevaFase = new Fase
+            {
+                Nombre = Nombre,
+                ProyectoId = proyectoId,
+                Tareas = new List<Tarea>()
+            };
+
+            // Guardar en la base de datos
+            _dbContext.Fases.Add(nuevaFase);
+            _dbContext.SaveChanges();
+
+            TempData["MensajeExito"] = "Fase agregada correctamente.";
+            return RedirectToAction("GestionarProyecto", new { id = proyectoId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarFase(int faseId)
+        {
+            var fase = await _dbContext.Fases
+                .Include(f => f.Tareas)
+                .FirstOrDefaultAsync(f => f.Id == faseId);
+
+            if (fase == null)
+            {
+                TempData["MensajeError"] = "La fase no fue encontrada.";
+                return RedirectToAction("Proyectos");
+            }
+
+            try
+            {
+                // Eliminar todas las tareas asociadas a la fase
+                _dbContext.Tareas.RemoveRange(fase.Tareas);
+
+                // Eliminar la fase
+                _dbContext.Fases.Remove(fase);
+
+                await _dbContext.SaveChangesAsync();
+                TempData["MensajeExito"] = "Fase eliminada correctamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = $"Error al eliminar la fase: {ex.Message}";
+            }
+
+            return RedirectToAction("GestionarProyecto", new { id = fase.ProyectoId });
         }
 
         [HttpGet]

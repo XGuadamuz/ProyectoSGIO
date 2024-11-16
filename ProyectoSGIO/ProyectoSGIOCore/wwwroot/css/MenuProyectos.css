@@ -140,7 +140,7 @@ h3 {
 
 /* Contenedor con desplazamiento para las fases */
 .fases-scroll-container {
-    max-height: 650px;
+    max-height: 850px;
     overflow-y: auto;
     padding-right: 8px;
     margin-bottom: 20px;
