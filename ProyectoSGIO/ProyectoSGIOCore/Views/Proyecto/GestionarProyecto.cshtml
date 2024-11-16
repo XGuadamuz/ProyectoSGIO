@@ -1,6 +1,6 @@
 ﻿@model ProyectoSGIOCore.Models.Proyecto
 @{
-    ViewData["Title"] = "Detalles del Cronograma";
+    ViewData["Title"] = "Detalles del Proyecto";
     Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
@@ -133,7 +133,7 @@
                     }
                 </ul>
                 <!-- Botón para agregar tareas a una fase -->
-                <button class="btn btn-outline-primary agregar-tareas-btn" data-fase-id="@fase.Id">Agregar Tareas</button>
+                <a class="btn btn-outline-primary agregar-tareas-btn" data-fase-id="@fase.Id">Agregar Tareas</a>
             </div>
         </div>
 
@@ -289,11 +289,11 @@
         function mostrarAlertaEnModal(mensaje, tipo = "danger") {
             const alertContainer = document.getElementById("alertContainer");
             alertContainer.innerHTML = `
-                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-                    ${mensaje}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            `;
+                        <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                            ${mensaje}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `;
         }
     </script>
 }
