@@ -48,8 +48,30 @@
                     <td>
                         <a href="@Url.Action("GestionarProyecto", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-primary btn-sm">Gestionar</a>
                         <a href="@Url.Action("AsignarCliente", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-dark btn-sm">Asignar Cliente</a>
+                        <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarProyecto_@proyecto.Id">Eliminar</button>
                     </td>
                 </tr>
+                <!-- Modal de confirmación de eliminación -->
+                <div class="modal fade modal-lg" id="modalEliminarProyecto_@proyecto.Id" tabindex="-1" aria-labelledby="modalEliminarProyectoLabel_@proyecto.Id" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEliminarProyectoLabel_@proyecto.Id">Confirmar Eliminación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Estás seguro de que deseas eliminar el proyecto <strong>@proyecto.Nombre</strong> junto con todas sus fases y tareas? Esta acción no se puede deshacer.
+                            </div>
+                            <div class="modal-footer">
+                                <form asp-action="EliminarProyecto" asp-controller="Proyecto" method="post">
+                                    <input type="hidden" name="proyectoId" value="@proyecto.Id" />
+                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                </form>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
         </tbody>
     </table>

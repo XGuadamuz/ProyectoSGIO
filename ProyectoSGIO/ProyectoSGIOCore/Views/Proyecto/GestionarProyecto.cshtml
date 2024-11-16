@@ -4,37 +4,40 @@
     Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
-<!-- Mensaje Exito -->
-<div id="successMessage" class="alert alert-success text-center mt-3" style="display:none;">
-    <span id="successText"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-
-@if (TempData["MensajeExito"] != null)
-{
-    <div class="alert alert-success text-center mt-3" role="alert">
-        @TempData["MensajeExito"]
+<!-- Sección: Mensajes de Éxito y Error -->
+<div class="alert-messages">
+    <!-- Mensaje Exito -->
+    <div id="successMessage" class="alert alert-success text-center mt-3" style="display:none;">
+        <span id="successText"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-}
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success text-center mt-3" role="alert">
+            @TempData["MensajeExito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-<!-- Mensaje Fracaso -->
-<div id="errorMessage" class="alert alert-danger text-center mt-3" style="display:none;">
-    <span id="errorText"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-
-@if (TempData["MensajeError"] != null)
-{
-    <div class="alert alert-danger text-center mt-3" role="alert">
-        @TempData["MensajeError"]
+    <!-- Mensaje Fracaso -->
+    <div id="errorMessage" class="alert alert-danger text-center mt-3" style="display:none;">
+        <span id="errorText"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-}
+    @if (TempData["MensajeError"] != null)
+    {
+        <div class="alert alert-danger text-center mt-3" role="alert">
+            @TempData["MensajeError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+</div>
 
+<!-- Sección: Encabezado del Proyecto -->
 <h2>Gestionar Proyecto: @Model.Nombre</h2>
 <p class="project-details">Fecha de Creación: @Model.FechaCreacion.ToShortDateString()</p>
 
+<!-- Sección: Lista de Fases -->
 <div class="content-scroll-container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Fases</h3>
@@ -43,28 +46,84 @@
         </button>
     </div>
 
-    <!-- Modal para Agregar Fase -->
-    <div class="modal fade" id="modalAgregarFase" tabindex="-1" aria-labelledby="modalAgregarFaseLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAgregarFaseLabel">Agregar Nueva Fase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <form asp-action="AgregarFase" asp-controller="Proyecto" method="post">
+    @foreach (var fase in Model.Fases)
+    {
+        <div class="fase-card">
+            <!-- Encabezado de la Fase -->
+            <div class="fase-header d-flex justify-content-between align-items-center">
+                <h4>@fase.Nombre</h4>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarFase_@fase.Id">
+                    Eliminar Fase
+                </button>
+            </div>
+
+            <!-- Lista de Tareas -->
+            <div class="tareas-list">
+                <h5>Tareas</h5>
+                <ul>
+                    @foreach (var tarea in fase.Tareas)
+                    {
+                        <li class="tarea-item">
+                            <div class="tarea-info">
+                                <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
+                            </div>
+                            <label class="checkbox-btn">
+                                <input id="checkbox_@tarea.Id" type="checkbox" @(tarea.Completada ? "checked" : "") />
+                                <span class="checkmark"></span>
+                            </label>
+                        </li>
+                    }
+                </ul>
+                <a class="btn btn-outline-primary agregar-tareas-btn" data-fase-id="@fase.Id">Agregar Tareas</a>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmación para Eliminar Fase -->
+        <div class="modal fade" id="modalEliminarFase_@fase.Id" tabindex="-1" aria-labelledby="modalEliminarFaseLabel_@fase.Id" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEliminarFaseLabel_@fase.Id">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
                     <div class="modal-body">
-                        <input type="hidden" name="proyectoId" value="@Model.Id" />
-                        <div class="mb-3">
-                            <label for="NombreFase" class="form-label">Nombre de la Fase</label>
-                            <input type="text" class="form-control" id="NombreFase" name="Nombre" required />
-                        </div>
+                        ¿Está seguro de eliminar la fase <strong>@fase.Nombre</strong> y todas sus tareas? Esta acción no se puede deshacer.
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <form asp-action="EliminarFase" asp-controller="Proyecto" method="post">
+                            <input type="hidden" name="faseId" value="@fase.Id" />
+                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                        </form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     </div>
-                </form>
+                </div>
             </div>
+        </div>
+    }
+</div>
+
+<!-- Sección: Modales -->
+<!-- Modal para Agregar Fase -->
+<div class="modal fade" id="modalAgregarFase" tabindex="-1" aria-labelledby="modalAgregarFaseLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarFaseLabel">Agregar Nueva Fase</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form asp-action="AgregarFase" asp-controller="Proyecto" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="proyectoId" value="@Model.Id" />
+                    <div class="mb-3">
+                        <label for="NombreFase" class="form-label">Nombre de la Fase</label>
+                        <input type="text" class="form-control" id="NombreFase" name="Nombre" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -103,71 +162,7 @@
     </div>
 </div>
 
-
-<div class="content-scroll-container">
-    <h3>Fases</h3>
-    @foreach (var fase in Model.Fases)
-    {
-        <div class="fase-card">
-            <div class="fase-header d-flex justify-content-between align-items-center">
-                <h4>@fase.Nombre</h4>
-                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarFase_@fase.Id">
-                    Eliminar Fase
-                </button>
-            </div>
-
-            <div class="tareas-list">
-                <h5>Tareas</h5>
-                <ul>
-                    @foreach (var tarea in fase.Tareas)
-                    {
-                        <li class="tarea-item">
-                            <div class="tarea-info">
-                                <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
-                            </div>
-                            <label class="checkbox-btn">
-                                <input id="checkbox_@tarea.Id" type="checkbox" @(tarea.Completada ? "checked" : "") />
-                                <span class="checkmark"></span>
-                            </label>
-                        </li>
-                    }
-                </ul>
-                <!-- Botón para agregar tareas a una fase -->
-                <a class="btn btn-outline-primary agregar-tareas-btn" data-fase-id="@fase.Id">Agregar Tareas</a>
-            </div>
-        </div>
-
-        <!-- Modal de Confirmación -->
-        <div class="modal fade" id="modalEliminarFase_@fase.Id" tabindex="-1" aria-labelledby="modalEliminarFaseLabel_@fase.Id" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalEliminarFaseLabel_@fase.Id">Confirmar Eliminación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Está seguro de eliminar la fase <strong>@fase.Nombre</strong> y todas sus tareas? Esta acción es irreversible.
-                    </div>
-                    <div class="modal-footer">
-                        <form asp-action="EliminarFase" asp-controller="Proyecto" method="post">
-                            <input type="hidden" name="faseId" value="@fase.Id" />
-                            <button type="submit" class="btn btn-danger">Confirmar</button>
-                        </form>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
-
-
-<div class="return-button">
-    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-primary">Volver a Proyectos</a>
-    <button id="saveChangesBtn" class="btn btn-success">Guardar Cambios</button>
-</div>
-
-<!-- Modal -->
+<!-- Modal de Confirmación para Guardar Cambios -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -184,6 +179,12 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Sección: Botones de Navegación -->
+<div class="return-button">
+    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-primary">Volver a Proyectos</a>
+    <button id="saveChangesBtn" class="btn btn-success">Guardar Cambios</button>
 </div>
 
 @section Scripts {
@@ -289,11 +290,11 @@
         function mostrarAlertaEnModal(mensaje, tipo = "danger") {
             const alertContainer = document.getElementById("alertContainer");
             alertContainer.innerHTML = `
-                        <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-                            ${mensaje}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                        ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                    `;
+                        `;
         }
     </script>
 }

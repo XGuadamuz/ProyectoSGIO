@@ -105,6 +105,48 @@ namespace ProyectoSGIOCore.Controllers
             return View(proyecto);
         }
 
+        [HttpPost]
+        public IActionResult EliminarProyecto(int proyectoId)
+        {
+            try
+            {
+                var proyecto = _dbContext.Proyectos
+                    .Include(p => p.Fases)
+                    .ThenInclude(f => f.Tareas)
+                    .FirstOrDefault(p => p.Id == proyectoId);
+
+                if (proyecto != null)
+                {
+                    // Eliminar tareas
+                    foreach (var fase in proyecto.Fases)
+                    {
+                        _dbContext.Tareas.RemoveRange(fase.Tareas);
+                    }
+
+                    // Eliminar fases
+                    _dbContext.Fases.RemoveRange(proyecto.Fases);
+
+                    // Eliminar proyecto
+                    _dbContext.Proyectos.Remove(proyecto);
+                    _dbContext.SaveChanges();
+
+                    TempData["MensajeExito"] = "El proyecto ha sido eliminado exitosamente.";
+                }
+                else
+                {
+                    TempData["MensajeError"] = "El proyecto no fue encontrado.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = "Ocurrió un error al eliminar el proyecto. Intente nuevamente.";
+                // Log del error
+                Console.WriteLine(ex.Message);
+            }
+
+            return RedirectToAction("Proyectos");
+        }
+
         [HttpGet]
         public async Task<IActionResult> AsignarCliente(int id)
         {
