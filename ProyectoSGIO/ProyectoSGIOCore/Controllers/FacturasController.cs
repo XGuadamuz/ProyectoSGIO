@@ -119,5 +119,61 @@ namespace ProyectoSGIOCore.Controllers
             // Devolver el archivo HTML para descarga
             return File(bytes, "text/html", "ReporteFacturas.html");
         }
+
+        [HttpGet]
+        public IActionResult EditarFactura(int id)
+        {
+            var factura = _dbContext.Facturas
+                .Include(f => f.Proveedor) // Incluye la relación con el proveedor
+                .FirstOrDefault(f => f.IdFactura == id);
+
+            if (factura == null)
+            {
+                return NotFound("Factura no encontrada.");
+            }
+
+            ViewBag.Proveedores = new SelectList(_dbContext.Proveedores, "IdProveedor", "Nombre", factura.IdProveedor);
+            return View(factura);
+        }
+
+        [HttpPost]
+        public IActionResult EditarFactura(FacturaProveedor factura)
+        {
+            if (ModelState.IsValid)
+            {
+                var facturaExistente = _dbContext.Facturas
+                    .Include(f => f.Proveedor)
+                    .FirstOrDefault(f => f.IdFactura == factura.IdFactura);
+
+                if (facturaExistente == null)
+                {
+                    return NotFound("Factura no encontrada.");
+                }
+
+                // Actualizar los valores de la factura
+                facturaExistente.IdProveedor = factura.IdProveedor;
+                facturaExistente.FechaEmision = factura.FechaEmision;
+                facturaExistente.MontoTotal = factura.MontoTotal;
+                facturaExistente.NumeroFactura = factura.NumeroFactura;
+                facturaExistente.Descripcion = factura.Descripcion;
+
+                // Reasignar el proveedor relacionado
+                facturaExistente.Proveedor = _dbContext.Proveedores.Find(factura.IdProveedor);
+                if (facturaExistente.Proveedor == null)
+                {
+                    ModelState.AddModelError("", "El proveedor seleccionado no existe.");
+                    ViewBag.Proveedores = new SelectList(_dbContext.Proveedores, "IdProveedor", "Nombre", factura.IdProveedor);
+                    return View(factura);
+                }
+
+                _dbContext.Facturas.Update(facturaExistente);
+                _dbContext.SaveChanges();
+                return RedirectToAction("VisualizarFacturas");
+            }
+
+            // Si hay errores de validación, recargar la lista de proveedores
+            ViewBag.Proveedores = new SelectList(_dbContext.Proveedores, "IdProveedor", "Nombre", factura.IdProveedor);
+            return View(factura);
+        }
     }
 }
