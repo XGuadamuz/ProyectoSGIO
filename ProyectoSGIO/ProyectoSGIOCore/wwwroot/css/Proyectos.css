@@ -120,10 +120,12 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 5px;
     margin-bottom: 10px;
     padding: 10px;
     background-color: #f9f9f9;
     border-radius: 8px;
+    position: relative;
 }
 
 .tarea-info {
@@ -137,6 +139,31 @@ h3 {
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+
+/*Boton para eliminar tarea*/
+.eliminar-tarea-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    width: 25px;
+    margin: 0 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    .eliminar-tarea-btn:hover {
+        background-color: #c82333;
+    }
+
+    .eliminar-tarea-btn i {
+        color: inherit;
+        font-size: 16px;
+    }
+
+    .eliminar-tarea-btn:focus {
+        outline: none;
+    }
+
 
 /* Contenedor con desplazamiento para las fases */
 .fases-scroll-container {
@@ -300,7 +327,7 @@ h3 {
     }
 
 .checkmark {
-    margin: -6px;
+    margin: -7.5px;
     position: absolute;
     top: 0;
     left: 0;

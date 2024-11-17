@@ -302,6 +302,46 @@ namespace ProyectoSGIOCore.Controllers
             return Json(new { exito = true, mensaje = "Tareas agregadas correctamente." });
         }
 
+        [HttpPost]
+        public IActionResult EliminarTarea(int tareaId)
+        {
+            try
+            {
+                var tarea = _dbContext.Tareas
+                    .Include(t => t.Fase)
+                    .FirstOrDefault(t => t.Id == tareaId);
+
+                if (tarea == null)
+                {
+                    TempData["MensajeError"] = "No se encontró la tarea a eliminar.";
+                    return RedirectToAction("GestionarProyecto");
+                }
+
+                if (tarea.Fase == null)
+                {
+                    TempData["MensajeError"] = "La tarea no está asociada a una fase válida.";
+                    return RedirectToAction("GestionarProyecto");
+                }
+
+                int proyectoId = tarea.Fase.ProyectoId;
+
+                // Eliminar la tarea
+                _dbContext.Tareas.Remove(tarea);
+                _dbContext.SaveChanges();
+
+                TempData["MensajeExito"] = $"La tarea '{tarea.Nombre}' se eliminó correctamente.";
+
+                // Redirigir a la vista de gestión del proyecto
+                return RedirectToAction("GestionarProyecto", new { id = proyectoId });
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = "Ocurrió un error al intentar eliminar la tarea.";
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("GestionarProyecto");
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GestionarProyecto(int id)
         {

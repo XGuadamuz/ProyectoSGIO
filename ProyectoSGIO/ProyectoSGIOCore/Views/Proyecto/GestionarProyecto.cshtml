@@ -63,11 +63,18 @@
                 <ul>
                     @foreach (var tarea in fase.Tareas)
                     {
-                        <li class="tarea-item">
-                            <div class="tarea-info">
+                        <li class="tarea-item d-flex align-items-center">
+
+                            <div class="tarea-info flex-grow-1">
                                 <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
                             </div>
-                            <label class="checkbox-btn">
+
+                            <!-- Botón de Eliminar Tarea -->
+                            <button type="button" class="btn btn-danger btn-sm eliminar-tarea-btn" data-tarea-id="@tarea.Id" data-tarea-nombre="@tarea.Nombre" data-bs-toggle="modal" data-bs-target="#modalEliminarTarea">
+                                <i class="bi bi-trash"></i>
+                            </button>
+
+                            <label class="checkbox-btn ms-2">
                                 <input id="checkbox_@tarea.Id" type="checkbox" @(tarea.Completada ? "checked" : "") />
                                 <span class="checkmark"></span>
                             </label>
@@ -100,6 +107,28 @@
             </div>
         </div>
     }
+
+    <!-- Modal único reutilizable para eliminar tareas -->
+    <div class="modal fade" id="modalEliminarTarea" tabindex="-1" aria-labelledby="modalEliminarTareaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarTareaLabel">Eliminar Tarea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar la tarea "<strong id="tareaNombre"></strong>"?
+                </div>
+                <div class="modal-footer">
+                    <form method="post" action="@Url.Action("EliminarTarea", "Proyecto")">
+                        <input type="hidden" name="tareaId" id="tareaId" value="" />
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Sección: Modales -->
@@ -290,11 +319,28 @@
         function mostrarAlertaEnModal(mensaje, tipo = "danger") {
             const alertContainer = document.getElementById("alertContainer");
             alertContainer.innerHTML = `
-                    <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-                        ${mensaje}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        `;
+                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                ${mensaje}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                                                                                        `;
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const eliminarTareaBtns = document.querySelectorAll(".eliminar-tarea-btn");
+            const modalEliminarTarea = document.getElementById("modalEliminarTarea");
+            const tareaNombre = document.getElementById("tareaNombre");
+            const tareaIdInput = document.getElementById("tareaId");
+
+            eliminarTareaBtns.forEach(btn => {
+                btn.addEventListener("click", function () {
+                    const tareaId = btn.getAttribute("data-tarea-id");
+                    const tareaNombreTexto = btn.getAttribute("data-tarea-nombre");
+
+                    tareaNombre.textContent = tareaNombreTexto;
+                    tareaIdInput.value = tareaId;
+                });
+            });
+        });
     </script>
 }
