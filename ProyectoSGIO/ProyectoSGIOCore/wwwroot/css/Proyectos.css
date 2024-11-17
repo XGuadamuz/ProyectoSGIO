@@ -13,6 +13,24 @@ h3 {
     font-size: 24px;
 }
 
+.section-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #007BFF;
+    padding-bottom: 5px;
+}
+
+.project-name {
+    font-weight: bold;
+    color: #007BFF;
+}
+
+.project-details {
+    font-size: 14px;
+    color: #666;
+}
+
 /* Labels */
 .mb-3 label {
     font-weight: bold;
@@ -237,6 +255,9 @@ h3 {
 
 .table-container {
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 1000px;
+    margin-bottom: 20px;
 }
 
     .table-container .styled-table td a.btn {

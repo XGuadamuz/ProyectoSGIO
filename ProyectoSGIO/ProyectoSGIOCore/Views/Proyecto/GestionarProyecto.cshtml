@@ -34,8 +34,9 @@
 </div>
 
 <!-- Sección: Encabezado del Proyecto -->
-<h2>Gestionar Proyecto: @Model.Nombre</h2>
-<p class="project-details">Fecha de Creación: @Model.FechaCreacion.ToShortDateString()</p>
+<h2 class="section-title">Gestionar Proyecto: <span class="project-name">@Model.Nombre</span></h2>
+<p class="project-details">Fecha de Creación: <span class="creation-date">@Model.FechaCreacion.ToShortDateString()</span></p>
+
 
 <!-- Sección: Lista de Fases -->
 <div class="content-scroll-container">

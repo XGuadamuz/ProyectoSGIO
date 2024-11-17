@@ -5,8 +5,6 @@
     Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
-<h2>Proyectos</h2>
-
 @if (TempData["MensajeExito"] != null)
 {
     <div class="alert alert-success text-center mt-3" role="alert">
@@ -14,6 +12,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
+
+<!-- Sección: Encabezado del Proyecto -->
+<h2 class="section-title">Proyectos</h2>
+
 
 <div class="header-actions">
     <a asp-action="CrearProyecto" asp-controller="Proyecto" class="btn btn-primary">Crear Proyecto</a>
