@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoSGIOCore.Data;
 
@@ -11,9 +12,11 @@ using ProyectoSGIOCore.Data;
 namespace ProyectoSGIOCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241114032725_AddIdUsuarioToProyecto")]
+    partial class AddIdUsuarioToProyecto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,15 +206,15 @@ namespace ProyectoSGIOCore.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdUsuario")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UsuarioIdUsuario")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IdUsuario");
+                    b.HasIndex("UsuarioIdUsuario");
 
                     b.ToTable("Proyectos");
                 });
@@ -398,7 +401,7 @@ namespace ProyectoSGIOCore.Migrations
                 {
                     b.HasOne("ProyectoSGIOCore.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("IdUsuario");
+                        .HasForeignKey("UsuarioIdUsuario");
 
                     b.Navigation("Usuario");
                 });

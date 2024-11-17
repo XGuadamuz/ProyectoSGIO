@@ -133,7 +133,7 @@ namespace ProyectoSGIOCore.Controllers
                 return RedirectToAction("CambiarContraseña", "Acceso");
             }
 
-            if (usuario_encontrado.TwoFA) 
+            if (usuario_encontrado.TwoFA)
             {
                 string ruta = Path.Combine(_hostEnvironment.ContentRootPath, "FormatoTwoFA.html");
                 string htmlBody = System.IO.File.ReadAllText(ruta);
@@ -190,7 +190,8 @@ namespace ProyectoSGIOCore.Controllers
                 ViewData["Mensaje"] = "Error al editar contraseña. Contacta al administrador para más información.";
                 return View();
             }
-            else {
+            else
+            {
                 return RedirectToAction("IniciarSesion", "Acceso");
             }
         }
@@ -242,14 +243,15 @@ namespace ProyectoSGIOCore.Controllers
             {
                 ViewData["Mensaje"] = "Error al editar contraseña. Contacta al administrador para más información.";
                 return View();
-            }else
+            }
+            else
             {
                 return RedirectToAction("IniciarSesion", "Acceso");
             }
         }
 
 
-            [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> TwoFA(IniciarSesionVM modelo)
         {
             var pin = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Authentication)?.Value;
@@ -257,7 +259,8 @@ namespace ProyectoSGIOCore.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            else {
+            else
+            {
                 ViewData["Mensaje"] = "El Pin es incorrecto, intente de nuevo.";
                 return View();
             }
@@ -265,7 +268,7 @@ namespace ProyectoSGIOCore.Controllers
 
 
 
-            [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> RecuperarCuenta(IniciarSesionVM modelo)
         {
             // Buscar el usuario en la base de datos
@@ -315,8 +318,8 @@ namespace ProyectoSGIOCore.Controllers
                 return RedirectToAction("IniciarSesion", "Acceso");
             }
         }
-            public async Task<IActionResult> CerrarSesion()
-        {       
+        public async Task<IActionResult> CerrarSesion()
+        {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("IniciarSesion", "Acceso");
         }
