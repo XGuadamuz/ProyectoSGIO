@@ -67,7 +67,7 @@
                         <li class="tarea-item d-flex align-items-center">
 
                             <div class="tarea-info flex-grow-1">
-                                <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString()
+                                <strong>@tarea.Nombre</strong> - Inicio: @tarea.FechaInicio.ToShortDateString() - Fin: @tarea.FechaFin.ToShortDateString() - Costo: $@tarea.Costo
                             </div>
 
                             <!-- Botón de Eliminar Tarea -->
@@ -82,6 +82,7 @@
                         </li>
                     }
                 </ul>
+                <div><strong>Total Fase: $@fase.Tareas.Sum(t => t.Costo)</strong></div>
                 <a class="btn btn-outline-primary agregar-tareas-btn" data-fase-id="@fase.Id">Agregar Tareas</a>
             </div>
         </div>
@@ -182,9 +183,13 @@
                         <label for="fechaFin">Fecha de Fin</label>
                         <input type="date" class="form-control" id="fechaFin" name="tareas[0].FechaFin" required />
                     </div>
+                    <div class="mb-3">
+                        <label for="tareaCosto">Costo</label>
+                        <input type="number" class="form-control" id="tareaCosto" name="tareas[0].Costo" />
+                    </div>
                     <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="btnAgregarTarea">Agregar Tarea</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Agregar</button>
                     </div>
                 </form>
             </div>
@@ -320,11 +325,11 @@
         function mostrarAlertaEnModal(mensaje, tipo = "danger") {
             const alertContainer = document.getElementById("alertContainer");
             alertContainer.innerHTML = `
-                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-                ${mensaje}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                                                                                        `;
+                                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                                ${mensaje}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                                                                                        `;
         }
 
         document.addEventListener("DOMContentLoaded", function () {

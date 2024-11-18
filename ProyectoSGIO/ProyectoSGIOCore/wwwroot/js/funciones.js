@@ -86,33 +86,33 @@ function eliminarTarea(button) {
 }
 
 // Función para actualizar los totales de cada fase y del proyecto
-function actualizarTotales() {
-    let totalProyecto = 0;
-    const totalesFases = document.getElementById('totalesFases');
-    totalesFases.innerHTML = '';
+    function actualizarTotales() {
+        let totalProyecto = 0;
+        const totalesFases = document.getElementById('totalesFases');
+        totalesFases.innerHTML = '';
 
-    document.querySelectorAll('.fase-card').forEach((fase, phaseIndex) => {
-        let totalFase = 0;
+        document.querySelectorAll('.fase-card').forEach((fase, phaseIndex) => {
+            let totalFase = 0;
 
-        fase.querySelectorAll('input[name^="fases[' + phaseIndex + '].Tareas"]').forEach(tarea => {
-            if (tarea.name.endsWith('.Costo')) {
-                const costo = parseFloat(tarea.value) || 0;
-                totalFase += costo;
-            }
+            fase.querySelectorAll('input[name^="fases[' + phaseIndex + '].Tareas"]').forEach(tarea => {
+                if (tarea.name.endsWith('.Costo')) {
+                    const costo = parseFloat(tarea.value) || 0;
+                    totalFase += costo;
+                }
+            });
+
+            totalProyecto += totalFase;
+
+            const faseTotalItem = document.createElement('li');
+            faseTotalItem.textContent = `Fase ${phaseIndex + 1}: ${totalFase.toFixed(2)}`;
+            totalesFases.appendChild(faseTotalItem);
         });
 
-        totalProyecto += totalFase;
-
-        const faseTotalItem = document.createElement('li');
-        faseTotalItem.textContent = `Fase ${phaseIndex + 1}: ${totalFase.toFixed(2)}`;
-        totalesFases.appendChild(faseTotalItem);
-    });
-
-    document.getElementById('proyectoTotal').textContent = totalProyecto.toFixed(2);
-}
-
-document.addEventListener('input', function (event) {
-    if (event.target.matches('input[name$=".Costo"]')) {
-        actualizarTotales();
+        document.getElementById('proyectoTotal').textContent = totalProyecto.toFixed(2);
     }
-});
+
+    document.addEventListener('input', function (event) {
+        if (event.target.matches('input[name$=".Costo"]')) {
+            actualizarTotales();
+        }
+    });

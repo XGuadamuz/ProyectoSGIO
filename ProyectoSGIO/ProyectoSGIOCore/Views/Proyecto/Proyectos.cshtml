@@ -16,7 +16,6 @@
 <!-- Sección: Encabezado del Proyecto -->
 <h2 class="section-title">Proyectos</h2>
 
-
 <div class="header-actions">
     <a asp-action="CrearProyecto" asp-controller="Proyecto" class="btn btn-primary">Crear Proyecto</a>
 </div>
@@ -28,6 +27,7 @@
                 <th>Nombre del Proyecto</th>
                 <th>Fecha de Creación</th>
                 <th>Cliente Asignado</th>
+                <th>Costo</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -45,6 +45,16 @@
                         else
                         {
                             <span>Usuario sin asignar</span>
+                        }
+                    </td>
+                    <td>
+                        @if (proyecto.CostoTotal != null)
+                        {
+                            <span>@proyecto.CostoTotal.ToString("C2")</span>
+                        }
+                        else
+                        {
+                            <span>No disponible</span>
                         }
                     </td>
                     <td>
