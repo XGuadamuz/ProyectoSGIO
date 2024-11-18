@@ -3,7 +3,7 @@
     ViewBag.Title = "CrearProyecto Proyecto";
     Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 @if (TempData["MensajeError"] != null)
 {
     <div class="alert alert-danger text-center mt-3" role="alert">
@@ -15,8 +15,8 @@
 <!-- Sección: Encabezado del Proyecto -->
 <h2 class="section-title">Crear Proyecto</h2>
 
-
 <form asp-action="CrearProyecto" method="post">
+    <!-- Campo para el nombre del proyecto -->
     <div class="mb-3">
         <label class="form-label">Nombre del Proyecto</label>
         <input asp-for="Nombre" class="form-control" placeholder="Ingrese el nombre del proyecto" />
@@ -27,11 +27,19 @@
 
     <h3>Fases</h3>
     <!-- Contenedor con desplazamiento para las fases -->
-
     <div class="crear-proyecto-container">
         <div class="fases-scroll-container">
             <div id="fases-container">
-                <!-- Aquí se añadirán los contenedores de fase en formato de "card" -->
+                <!-- Aquí se añadirán dinámicamente las fases como "cards" -->
+            </div>
+
+            <!-- Totales por fase y total del proyecto -->
+            <div class="mt-4">
+                <h4>Total por Fase:</h4>
+                <ul id="totalesFases">
+                    <!-- Aquí se agregarán dinámicamente los totales por fase -->
+                </ul>
+                <h4>Total del Proyecto: <span id="proyectoTotal">0.00</span></h4>
             </div>
         </div>
     </div>
@@ -39,3 +47,10 @@
     <button type="button" class="btn btn-primary mt-3" onclick="addPhase()">Agregar Fase</button>
     <button type="submit" class="btn btn-success mt-3">Crear Proyecto</button>
 </form>
+
+<!-- Validaciones para el modelo -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

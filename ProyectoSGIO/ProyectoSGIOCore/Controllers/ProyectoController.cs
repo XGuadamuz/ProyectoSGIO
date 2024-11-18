@@ -68,40 +68,69 @@ namespace ProyectoSGIOCore.Controllers
                 }
             }
 
-            // Guardar el proyecto y sus fases/tareas si todo está correcto
             if (ModelState.IsValid)
             {
-                proyecto.FechaCreacion = DateTime.Now;
-                _dbContext.Proyectos.Add(proyecto);
-                await _dbContext.SaveChangesAsync();
-
-                // Guardar fases y tareas relacionadas
-                foreach (var fase in fases)
+                try
                 {
-                    if (!_dbContext.Fases.Any(f => f.Nombre == fase.Nombre && f.ProyectoId == proyecto.Id))
+                    proyecto.FechaCreacion = DateTime.Now;
+
+                    // Comprobar si ya existe un proyecto con el mismo nombre (opcional)
+                    var proyectoExistente = await _dbContext.Proyectos
+                        .Include(p => p.Fases)
+                        .ThenInclude(f => f.Tareas)
+                        .FirstOrDefaultAsync(p => p.Nombre == proyecto.Nombre);
+
+                    if (proyectoExistente != null)
                     {
+                        TempData["MensajeError"] = "Ya existe un proyecto con ese nombre.";
+                        return View(proyecto);
+                    }
+
+                    _dbContext.Proyectos.Add(proyecto);
+                    await _dbContext.SaveChangesAsync();
+
+                    var nombresFasesProcesadas = new HashSet<string>();
+
+                    foreach (var fase in fases)
+                    {
+                        // Validar si la fase ya existe en el proyecto
+                        bool faseExiste = await _dbContext.Fases
+                            .AnyAsync(f => f.ProyectoId == proyecto.Id && f.Nombre == fase.Nombre);
+
+                        if (faseExiste || nombresFasesProcesadas.Contains(fase.Nombre))
+                        {
+                            TempData["MensajeError"] = $"La fase '{fase.Nombre}' ya existe en este proyecto.";
+                            continue;
+                        }
+
+                        nombresFasesProcesadas.Add(fase.Nombre);
+
                         fase.Id = 0;
                         fase.ProyectoId = proyecto.Id;
                         _dbContext.Fases.Add(fase);
+                        await _dbContext.SaveChangesAsync();
 
                         foreach (var tarea in fase.Tareas)
                         {
-                            if (!_dbContext.Tareas.Any(t => t.Nombre == tarea.Nombre && t.FaseId == fase.Id))
-                            {
-                                tarea.Id = 0;
-                                tarea.FaseId = fase.Id;
-                                _dbContext.Tareas.Add(tarea);
-                            }
+                            tarea.Id = 0;
+                            tarea.FaseId = fase.Id;
+                            _dbContext.Tareas.Add(tarea);
                         }
                     }
-                }
 
-                await _dbContext.SaveChangesAsync();
-                TempData["MensajeExito"] = "Proyecto creado correctamente.";
-                return RedirectToAction("Proyectos");
+                    await _dbContext.SaveChangesAsync();
+
+                    TempData["MensajeExito"] = $"Proyecto creado correctamente. Costo total: {proyecto.CostoTotal:C}";
+                    return RedirectToAction("Proyectos");
+                }
+                catch (Exception ex)
+                {
+                    TempData["MensajeError"] = $"Ocurrió un error al crear el proyecto: {ex.Message}";
+                    return View(proyecto);
+                }
             }
 
-            TempData["MensajeError"] = "Ocurrió un error al crear el proyecto.";
+            TempData["MensajeError"] = "El modelo no es válido. Por favor, verifica los datos ingresados.";
             return View(proyecto);
         }
 
