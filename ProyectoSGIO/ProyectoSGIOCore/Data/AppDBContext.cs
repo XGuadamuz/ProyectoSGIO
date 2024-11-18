@@ -12,15 +12,13 @@ namespace ProyectoSGIOCore.Data
         }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
-
         public DbSet<Empleado> Empleados { get; set; }
-
         public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Inventario> Inventarios { get; set; }
-
         public DbSet<FacturaProveedor> Facturas { get; set; }
-
-        public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
+        public DbSet<Proyecto> Proyectos { get; set; }
+        public DbSet<Fase> Fases { get; set; }
+        public DbSet<Tarea> Tareas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -90,7 +88,7 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(u => u.Correo).HasMaxLength(50).IsRequired();
 
             });
-
+            
             // Tablas
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
             modelBuilder.Entity<Rol>().ToTable("Rol");

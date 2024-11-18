@@ -12,6 +12,7 @@ namespace ProyectoSGIOCore.Models
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public bool Completada { get; set; } = false;
+        public decimal? Costo { get; set; }
 
         // Relación con el Proyecto
         public int FaseId { get; set; }
