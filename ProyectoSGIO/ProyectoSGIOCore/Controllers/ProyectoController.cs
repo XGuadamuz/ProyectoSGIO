@@ -328,7 +328,7 @@ namespace ProyectoSGIOCore.Controllers
             }
 
             await _dbContext.SaveChangesAsync();
-            return Json(new { exito = true, mensaje = "Tareas agregadas correctamente." });
+            return Json(new { exito = true, mensaje = "Tarea agregada correctamente." });
         }
 
         [HttpPost]

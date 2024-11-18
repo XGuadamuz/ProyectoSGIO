@@ -86,9 +86,11 @@ function eliminarTarea(button) {
 }
 
 // Función para actualizar los totales de cada fase y del proyecto
-    function actualizarTotales() {
-        let totalProyecto = 0;
-        const totalesFases = document.getElementById('totalesFases');
+function actualizarTotales() {
+    let totalProyecto = 0;
+    const totalesFases = document.getElementById('totalesFases');
+
+    if (totalesFases) {
         totalesFases.innerHTML = '';
 
         document.querySelectorAll('.fase-card').forEach((fase, phaseIndex) => {
@@ -109,10 +111,13 @@ function eliminarTarea(button) {
         });
 
         document.getElementById('proyectoTotal').textContent = totalProyecto.toFixed(2);
+    } else {
+        console.warn('El elemento "totalesFases" no se encuentra en el DOM');
     }
+}
 
-    document.addEventListener('input', function (event) {
-        if (event.target.matches('input[name$=".Costo"]')) {
-            actualizarTotales();
-        }
-    });
+document.addEventListener('input', function (event) {
+    if (event.target.matches('input[name$=".Costo"]')) {
+        actualizarTotales();
+    }
+});
