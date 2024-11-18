@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoSGIOCore.Data;
 
@@ -11,9 +12,11 @@ using ProyectoSGIOCore.Data;
 namespace ProyectoSGIOCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241118114550_AgregarCamposCierreFinanciero")]
+    partial class AgregarCamposCierreFinanciero
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,16 +39,19 @@ namespace ProyectoSGIOCore.Migrations
                     b.Property<DateTime>("FechaCierre")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("MargenUtilidad")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("Mes")
                         .HasColumnType("int");
 
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TipoCierre")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("TotalEgresos")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalImpuestos")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalIngresos")

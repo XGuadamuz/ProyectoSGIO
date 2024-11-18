@@ -10,6 +10,8 @@ namespace ProyectoSGIOCore.Models
         [Required]
         public int Anio { get; set; } // Año del cierre
 
+        public int Mes { get; set; } // Mes del cierre
+
         [Required]
         public DateTime FechaCierre { get; set; } = DateTime.Now;
 
@@ -26,5 +28,7 @@ namespace ProyectoSGIOCore.Models
         public decimal Utilidad { get; set; } // TotalIngresos - TotalEgresos
 
         public string Observaciones { get; set; }
+
+        public string TipoCierre { get; set; }
     }
 }

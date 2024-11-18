@@ -54,8 +54,8 @@ namespace ProyectoSGIOCore.Migrations
             migrationBuilder.DropTable(
                 name: "CierresFinancieros");
 
-            migrationBuilder.DropTable(
-                name: "Inventarios");
+           // migrationBuilder.DropTable(
+               // name: "Inventarios");
         }
     }
 }

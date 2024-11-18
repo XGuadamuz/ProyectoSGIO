@@ -55,5 +55,48 @@ namespace ProyectoSGIOCore.Controllers
 
             return View("~/Views/Facturas/VisualizarCierres.cshtml", cierres);
         }
+
+        public IActionResult RegistrarCierreMensual()
+        {
+            return View("~/Views/Facturas/RegistrarCierreMensual.cshtml");
+        }
+
+        [HttpPost]
+        public IActionResult RegistrarCierreMensual(int anio, int mes, string observaciones)
+        {
+            var ingresos = _dbContext.Facturas
+                .Where(f => f.FechaEmision.Year == anio && f.FechaEmision.Month == mes && f.MontoTotal > 0)
+                .Sum(f => f.MontoTotal);
+
+            var egresos = _dbContext.Facturas
+                .Where(f => f.FechaEmision.Year == anio && f.FechaEmision.Month == mes && f.MontoTotal < 0)
+                .Sum(f => f.MontoTotal);
+
+            var cierre = new CierreFinanciero
+            {
+                Anio = anio,
+                Mes = mes,
+                FechaCierre = DateTime.Now,
+                TotalIngresos = ingresos,
+                TotalEgresos = Math.Abs(egresos),
+                Utilidad = ingresos - Math.Abs(egresos),
+                Observaciones = observaciones
+            };
+
+            _dbContext.CierresFinancieros.Add(cierre);
+            _dbContext.SaveChanges();
+
+            return RedirectToAction("VisualizarCierresMensuales");
+        }
+
+        [HttpGet]
+        public IActionResult VisualizarCierresMensuales()
+        {
+            var cierresMensuales = _dbContext.CierresFinancieros
+                .Where(c => c.Mes > 0) // Filtrar por cierres mensuales
+                .ToList();
+
+            return View("~/Views/Facturas/VisualizarCierresMensuales.cshtml", cierresMensuales);
+        }
     }
 }

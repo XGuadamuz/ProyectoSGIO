@@ -39,9 +39,16 @@ namespace ProyectoSGIOCore.Controllers
                     return View(factura);
                 }
 
+                // Calcular el impuesto (16% de IVA)
+                decimal porcentajeImpuesto = 0.16m; // 16% de IVA
+                decimal impuesto = factura.MontoTotal * porcentajeImpuesto;
+
                 factura.Proveedor = proveedor; // Asignar la relación
                 _dbContext.Facturas.Add(factura);
                 _dbContext.SaveChanges();
+
+                ViewBag.ImpuestoCalculado = impuesto;
+
                 return RedirectToAction("VisualizarFacturas");
             }
 
@@ -55,6 +62,16 @@ namespace ProyectoSGIOCore.Controllers
             var facturas = _dbContext.Facturas
                 .Include(f => f.Proveedor) // Cargar la información del proveedor relacionado
                 .ToList();
+
+            // Calcular métricas personalizadas
+            var totalFacturas = facturas.Sum(f => f.MontoTotal);
+            var totalImpuestos = facturas.Sum(f => f.MontoTotal * 0.16m);
+            var promedioFactura = facturas.Count > 0 ? facturas.Average(f => f.MontoTotal) : 0;
+
+            // Pasar las métricas a la vista
+            ViewBag.TotalFacturas = totalFacturas;
+            ViewBag.TotalImpuestos = totalImpuestos;
+            ViewBag.PromedioFactura = promedioFactura;
 
             return View(facturas);
         }
@@ -150,6 +167,10 @@ namespace ProyectoSGIOCore.Controllers
                     return NotFound("Factura no encontrada.");
                 }
 
+                // Calcular el impuesto (por ejemplo, 16% de IVA)
+                decimal porcentajeImpuesto = 0.16m; // 16% de IVA
+                decimal impuesto = factura.MontoTotal * porcentajeImpuesto;
+
                 // Actualizar los valores de la factura
                 facturaExistente.IdProveedor = factura.IdProveedor;
                 facturaExistente.FechaEmision = factura.FechaEmision;
@@ -168,6 +189,10 @@ namespace ProyectoSGIOCore.Controllers
 
                 _dbContext.Facturas.Update(facturaExistente);
                 _dbContext.SaveChanges();
+
+                // Agregar el impuesto calculado como propiedad adicional en la vista
+                ViewBag.ImpuestoCalculado = impuesto;
+
                 return RedirectToAction("VisualizarFacturas");
             }
 

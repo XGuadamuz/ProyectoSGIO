@@ -20,6 +20,8 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Fase> Fases { get; set; }
         public DbSet<Tarea> Tareas { get; set; }
 
+        public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
