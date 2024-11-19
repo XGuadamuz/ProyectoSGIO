@@ -28,6 +28,7 @@
                 <th>Fecha de Creación</th>
                 <th>Cliente Asignado</th>
                 <th>Costo</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -56,6 +57,10 @@
                         {
                             <span>No disponible</span>
                         }
+                    </td>
+                    <td>
+                        <!-- Mostrar el estado del proyecto -->
+                        @proyecto.Estado.ToString()
                     </td>
                     <td>
                         <a href="@Url.Action("GestionarProyecto", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-primary btn-sm">Gestionar</a>

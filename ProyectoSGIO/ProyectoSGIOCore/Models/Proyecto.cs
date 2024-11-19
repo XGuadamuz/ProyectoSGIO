@@ -19,5 +19,15 @@ namespace ProyectoSGIOCore.Models
 
         [ForeignKey("IdUsuario")]
         public Usuario Usuario { get; set; }
+
+        public EstadoProyecto Estado { get; set; } //Estado del proyecto
+    }
+
+    public enum EstadoProyecto
+    {
+        EnPlanificacion = 1,
+        EnProgreso = 2,
+        Completado = 3,
+        Pendiente = 4
     }
 }

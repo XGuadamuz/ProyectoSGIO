@@ -389,7 +389,7 @@ namespace ProyectoSGIOCore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GuardarCambios(int proyectoId, List<int> tareasCompletadas)
+        public async Task<IActionResult> GuardarCambios(int proyectoId, EstadoProyecto Estado, List<int> tareasCompletadas)
         {
             var proyecto = await _dbContext.Proyectos
                 .Include(p => p.Fases)
@@ -404,6 +404,8 @@ namespace ProyectoSGIOCore.Controllers
 
             try
             {
+                proyecto.Estado = Estado;
+
                 foreach (var fase in proyecto.Fases)
                 {
                     foreach (var tarea in fase.Tareas)

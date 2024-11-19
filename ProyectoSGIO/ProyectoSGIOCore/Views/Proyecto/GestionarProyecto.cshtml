@@ -37,6 +37,31 @@
 <h2 class="section-title">Gestionar Proyecto: <span class="project-name">@Model.Nombre</span></h2>
 <p class="project-details">Fecha de Creación: <span class="creation-date">@Model.FechaCreacion.ToShortDateString()</span></p>
 
+<!-- Formulario para seleccionar el estado -->
+
+<form asp-action="GuardarCambios" method="post">
+    <input type="hidden" name="proyectoId" value="@Model.Id" />
+
+    <!-- Campo Estado del Proyecto -->
+    <div class="mb-3">
+        <label for="EstadoProyecto" class="form-label">Estado del Proyecto</label>
+        @Html.DropDownListFor(
+                 model => model.Estado, // Vincula al campo 'Estado' del modelo
+                 new SelectList(Enum.GetValues(typeof(ProyectoSGIOCore.Models.EstadoProyecto))),
+                 new { @class = "form-select", id = "EstadoProyecto" })
+    </div>
+
+    <!-- Botón para guardar cambios -->
+    <div class="d-flex justify-content-center mt-4">
+        <button type="submit" class="btn btn-primary">Guardar Estado</button>
+    </div>
+</form>
+
+<script>
+    // Obtener el estado del proyecto desde el ViewData y establecerlo en el select
+    var estadoProyecto = "@ViewData["EstadoProyecto"]";  // Valor pasado desde el controlador
+    document.getElementById('EstadoProyecto').value = estadoProyecto;
+</script>
 
 <!-- Sección: Lista de Fases -->
 <div class="content-scroll-container">
