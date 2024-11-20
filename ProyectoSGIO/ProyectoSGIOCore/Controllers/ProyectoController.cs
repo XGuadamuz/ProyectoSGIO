@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 using ProyectoSGIOCore.ViewModels;
+using Newtonsoft.Json;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -34,6 +35,81 @@ namespace ProyectoSGIOCore.Controllers
         [HttpGet]
         public IActionResult CrearProyecto()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Dashboard(int id)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .Include(p => p.Hitos)
+                .ThenInclude(h => h.Usuario)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (proyecto == null) return NotFound();
+
+            var usuarios = await _dbContext.Usuarios
+                .Where(u => u.Rol.Nombre == "Empleado")
+                .ToListAsync();
+
+            var estadosHitos = new List<EstadoHitoVM>
+    {
+        new EstadoHitoVM { Id = 1, Nombre = "Completo" },
+        new EstadoHitoVM { Id = 2, Nombre = "Pendiente" },
+        new EstadoHitoVM { Id = 3, Nombre = "En Progreso" }
+    };
+
+            var hitoData = proyecto.Hitos
+                .GroupBy(h => h.estado)
+                .Select(g => new
+                {
+                    Estado = g.Key,
+                    Nombre = estadosHitos.FirstOrDefault(e => e.Id == g.Key)?.Nombre,
+                    Count = g.Count(),
+                    CountP = g.Count() * 10
+                })
+                .ToList();
+
+            var tareaData = proyecto.Fases
+                .SelectMany(f => f.Tareas)
+                .GroupBy(t => t.Completada)
+                .Select(g => new
+                {
+                    Completada = g.Key,
+                    Nombre = g.Key ? "Completadas" : "No Completadas",
+                    Count = g.Count(),
+                    CountP = g.Count() *10
+                })
+                .ToList();
+
+            var faseData = proyecto.Fases
+                .Select(f => new
+                {
+                    f.Nombre,
+                    PorcentajeCompletadas = f.Tareas.Count == 0
+                        ? 0
+                        : (f.Tareas.Count(t => t.Completada) * 100 / f.Tareas.Count())
+                })
+                .ToList();
+
+            // Calcular el progreso total del proyecto
+            var totalTareas = proyecto.Fases.SelectMany(f => f.Tareas).Count();
+            var tareasCompletadas = proyecto.Fases.SelectMany(f => f.Tareas).Count(t => t.Completada);
+            var progresoGeneral = totalTareas == 0 ? 0 : (tareasCompletadas * 100 / totalTareas);
+
+            ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
+            ViewBag.ProyectoId = id;
+            ViewBag.EstadosHito = new SelectList(estadosHitos, "Id", "Nombre");
+            ViewBag.HitoData = hitoData;
+            ViewBag.TareaData = tareaData;
+            ViewBag.FaseData = faseData;
+            ViewBag.HitoDataJson = JsonConvert.SerializeObject(hitoData);
+            ViewBag.TareaDataJson = JsonConvert.SerializeObject(tareaData);
+            ViewBag.FaseDataJson = JsonConvert.SerializeObject(faseData);
+            ViewBag.ProgresoGeneral = progresoGeneral; // Pasar el progreso general a la vista
+
             return View();
         }
 
