@@ -40,6 +40,40 @@ function addPhase() {
     actualizarTotales(); // Actualizar totales al agregar una nueva fase
 }
 
+
+// Función para agregar Hitos Proyecto
+function addHito() {
+    const phaseIndex = document.querySelectorAll('.fase-card').length;
+    const phaseHtml = `
+        <div class="fase-card" data-phase-index="${phaseIndex}">
+            <div class="fase-header">
+                <label>Ingrese una descripción para este Hito</label>
+                <input type="text" name="hitos[${phaseIndex}].Descripcion" placeholder="Descripción del Hito" />
+                
+                <!-- Botón de eliminación del hito -->
+                <button type="button" class="btn-delete-phase" onclick="deleteHito(${phaseIndex})">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+
+           <div class="mb-3">
+        <label class="form-label">Empleado</label>
+        <select  name="hitos[${phaseIndex}].IdEmpleado" asp-items="ViewBag.Usuarios" class="form-select">
+            <option value="">Seleccione un usuario</option>
+        </select>
+        <span class="text-danger"></span>
+    </div>
+             <div class="mb-3">
+            <label>Fecha de Inicio</label>
+            <input type="date" name="hitos[${phaseIndex}].Fecha" />
+            </div>
+            <hr />
+        </div>
+    `;
+    document.getElementById('fases-container').insertAdjacentHTML('beforeend', phaseHtml);
+    actualizarTotales(); // Actualizar totales al agregar una nueva fase
+}
+
 // Función para agregar Tareas a un Proyecto
 function addTask(phaseIndex) {
     const tareasContainer = document.querySelector(`.tareas-container[data-phase-index="${phaseIndex}"]`);
@@ -75,6 +109,12 @@ function deletePhase(phaseIndex) {
         actualizarTotales(); // Actualizar totales al eliminar una fase
     }
 }
+function deleteHito(phaseIndex) {
+    const phaseCard = document.querySelector(`.fase-card[data-phase-index="${phaseIndex}"]`);
+    if (phaseCard) {
+        phaseCard.remove();
+    }
+}
 
 // Función para eliminar una Tarea
 function eliminarTarea(button) {
@@ -85,6 +125,19 @@ function eliminarTarea(button) {
     }
 }
 
+function obtenerNombreEstado(estado) {
+    if (estado == 1) {
+        return "Completo"
+    }
+    if (estado == 2) {
+        return "Completo"
+    }
+    if (estado == 3) {
+        return "En Proceso"
+    }
+
+    return ""
+}
 // Función para actualizar los totales de cada fase y del proyecto
 function actualizarTotales() {
     let totalProyecto = 0;

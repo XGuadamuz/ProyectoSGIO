@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoSGIOCore.Data;
 
@@ -11,9 +12,11 @@ using ProyectoSGIOCore.Data;
 namespace ProyectoSGIOCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241120153508_Hitos Usuario")]
+    partial class HitosUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,20 +160,20 @@ namespace ProyectoSGIOCore.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdUsuario")
+                    b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
                     b.Property<int>("ProyectoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("estado")
+                    b.Property<int?>("UsuarioIdUsuario")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("IdUsuario");
-
                     b.HasIndex("ProyectoId");
+
+                    b.HasIndex("UsuarioIdUsuario");
 
                     b.ToTable("Hitos");
                 });
@@ -472,15 +475,15 @@ namespace ProyectoSGIOCore.Migrations
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Hito", b =>
                 {
-                    b.HasOne("ProyectoSGIOCore.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("IdUsuario");
-
                     b.HasOne("ProyectoSGIOCore.Models.Proyecto", "Proyecto")
                         .WithMany("Hitos")
                         .HasForeignKey("ProyectoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ProyectoSGIOCore.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioIdUsuario");
 
                     b.Navigation("Proyecto");
 

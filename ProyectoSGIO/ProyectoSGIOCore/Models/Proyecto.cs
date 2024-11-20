@@ -11,6 +11,8 @@ namespace ProyectoSGIOCore.Models
         // Relación con Fases
         public ICollection<Fase> Fases { get; set; } = new List<Fase>();
 
+        public ICollection<Hito> Hitos { get; set; } = new List<Hito>();
+
         // Propiedad calculada para el costo total del proyecto
         public decimal CostoTotal => Fases?.Sum(f => f.CostoTotal) ?? 0;
 

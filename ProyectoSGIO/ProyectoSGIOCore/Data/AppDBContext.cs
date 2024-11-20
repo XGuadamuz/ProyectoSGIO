@@ -19,6 +19,7 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Proyecto> Proyectos { get; set; }
         public DbSet<Fase> Fases { get; set; }
         public DbSet<Tarea> Tareas { get; set; }
+        public DbSet<Hito> Hitos { get; set; }
 
         public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
 
@@ -90,7 +91,7 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(u => u.Correo).HasMaxLength(50).IsRequired();
 
             });
-            
+
             // Tablas
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
             modelBuilder.Entity<Rol>().ToTable("Rol");

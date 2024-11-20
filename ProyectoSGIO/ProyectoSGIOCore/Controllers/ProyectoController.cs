@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using ProyectoSGIOCore.ViewModels;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -32,6 +34,27 @@ namespace ProyectoSGIOCore.Controllers
         [HttpGet]
         public IActionResult CrearProyecto()
         {
+            return View();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> AsignarHito(int id)
+        {
+            var proyecto = await _dbContext.Proyectos.FindAsync(id);
+            if (proyecto == null) return NotFound();
+
+            var usuarios = await _dbContext.Usuarios
+                .Where(u => u.Rol.Nombre == "Empleado")
+                .ToListAsync();
+            var estadosHitos = new List<EstadoHitoVM> 
+            { new EstadoHitoVM { Id = 1, Nombre = "Completo" }, 
+             new EstadoHitoVM { Id = 2, Nombre = "Pendiente" },
+             new EstadoHitoVM { Id = 3, Nombre = "En Progreso" } };
+            ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
+            ViewBag.ProyectoId = id;
+            ViewBag.EstadosHito = new SelectList(estadosHitos, "Id","Nombre");
+
             return View();
         }
 
@@ -155,6 +178,8 @@ namespace ProyectoSGIOCore.Controllers
                     // Eliminar fases
                     _dbContext.Fases.RemoveRange(proyecto.Fases);
 
+                    _dbContext.Hitos.RemoveRange(proyecto.Hitos);
+
                     // Eliminar proyecto
                     _dbContext.Proyectos.Remove(proyecto);
                     _dbContext.SaveChanges();
@@ -220,6 +245,40 @@ namespace ProyectoSGIOCore.Controllers
             return RedirectToAction("Proyectos");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AsignarHito(int id, int usuarioId, int estadoId, string Descripcion, DateTime Fecha)
+        {
+            var proyecto = await _dbContext.Proyectos.FindAsync(id);
+            if (proyecto == null) return NotFound();
+
+            // Verificar si se seleccionó un usuario
+            if (usuarioId == 0)
+            {
+                TempData["MensajeError"] = "Debe seleccionar un empleado para asignar al proyecto.";
+                ViewBag.ProyectoId = id;
+
+                // Volver a cargar los usuarios para que se muestren en el dropdown
+                var usuarios = await _dbContext.Usuarios
+                    .Where(u => u.Rol.Nombre == "Usuario")
+                    .ToListAsync();
+                ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
+
+                return View(proyecto);
+            }
+
+            var hito = new Hito();
+            hito.Fecha = Fecha;
+            hito.IdUsuario = usuarioId;
+            hito.Descripcion = Descripcion;
+            hito.ProyectoId = id;
+            hito.estado = estadoId;
+
+            _dbContext.Hitos.Add(hito);
+            _dbContext.SaveChanges();
+
+            TempData["MensajeExito"] = "Hito asignado correctamente.";
+            return RedirectToAction("Proyectos");
+        }
         [HttpPost]
         public IActionResult AgregarFase(int proyectoId, string Nombre)
         {
@@ -289,6 +348,34 @@ namespace ProyectoSGIOCore.Controllers
             }
 
             return RedirectToAction("GestionarProyecto", new { id = fase.ProyectoId });
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarHito(int hitoId)
+        {
+            var hito = await _dbContext.Hitos
+                .FirstOrDefaultAsync(h => h.ID == hitoId);
+
+            if (hito == null)
+            {
+                TempData["MensajeError"] = "El Hito no fue encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            try
+            {
+                _dbContext.Hitos.Remove(hito);
+
+                await _dbContext.SaveChangesAsync();
+                TempData["MensajeExito"] = "Hito eliminado correctamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = $"Error al eliminar el hito: {ex.Message}";
+            }
+
+            return RedirectToAction("GestionarProyecto", new { id = hito.ProyectoId });
         }
 
         [HttpGet]
@@ -377,7 +464,19 @@ namespace ProyectoSGIOCore.Controllers
             var proyecto = await _dbContext.Proyectos
                 .Include(p => p.Fases)
                 .ThenInclude(f => f.Tareas)
+                .Include(h => h.Hitos)
+                .ThenInclude(u=>u.Usuario)
                 .FirstOrDefaultAsync(p => p.Id == id);
+            var usuarios = await _dbContext.Usuarios
+                .Where(u => u.Rol.Nombre == "Empleado")
+                .ToListAsync();
+            var estadosHitos = new List<EstadoHitoVM>
+            { new EstadoHitoVM { Id = 1, Nombre = "Completo" },
+             new EstadoHitoVM { Id = 2, Nombre = "Pendiente" },
+             new EstadoHitoVM { Id = 3, Nombre = "En Progreso" } };
+            ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
+            ViewBag.ProyectoId = id;
+            ViewBag.EstadosHito = new SelectList(estadosHitos, "Id", "Nombre");
 
             if (proyecto == null)
             {
