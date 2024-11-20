@@ -50,11 +50,6 @@
                  new SelectList(Enum.GetValues(typeof(ProyectoSGIOCore.Models.EstadoProyecto))),
                  new { @class = "form-select", id = "EstadoProyecto" })
     </div>
-
-    <!-- Botón para guardar cambios -->
-    <div class="d-flex justify-content-center mt-4">
-        <button type="submit" class="btn btn-primary">Guardar Estado</button>
-    </div>
 </form>
 
 <script>
@@ -243,7 +238,8 @@
 
 <!-- Sección: Botones de Navegación -->
 <div class="return-button">
-    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-primary">Volver a Proyectos</a>
+    <a asp-action="Proyectos" asp-controller="Proyecto" class="btn btn-dark">Volver a Proyectos</a>
+    <button type="submit" class="btn btn-primary">Guardar Estado</button>
     <button id="saveChangesBtn" class="btn btn-success">Guardar Cambios</button>
 </div>
 
@@ -350,11 +346,11 @@
         function mostrarAlertaEnModal(mensaje, tipo = "danger") {
             const alertContainer = document.getElementById("alertContainer");
             alertContainer.innerHTML = `
-                                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-                                ${mensaje}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                                                                                                        `;
+                                        <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                                        ${mensaje}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                                                                                                `;
         }
 
         document.addEventListener("DOMContentLoaded", function () {
