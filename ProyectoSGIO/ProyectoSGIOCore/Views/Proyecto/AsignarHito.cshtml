@@ -1,0 +1,52 @@
+﻿@model ProyectoSGIOCore.Models.Proyecto
+@{
+    ViewData["Title"] = "Asignar Cliente";
+    Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
+}
+
+@if (TempData["MensajeError"] != null)
+{
+    <div class="alert alert-danger text-center mt-3" role="alert">
+        @TempData["MensajeError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- Sección: Encabezado del Proyecto -->
+<h2 class="section-title">Asignar Cliente</h2>
+
+
+<form asp-action="AsignarHito" method="post">
+    <input type="hidden" name="id" value="@ViewBag.ProyectoId" />
+    <div class="mb-12" style="display:flex; flex-direction:column;">
+    <div class="mb-3">
+        <label>Ingrese una descripción para este Hito</label>
+            <textarea style="width:100%" name="Descripcion" placeholder="Descripción del Hito">
+            </textarea>
+        <span class="text-danger"
+        ></span>
+    </div>
+   
+        <div style="display:flex; flex-direction:row; justify-content:space-between;">
+            <div class="mb-3" style="display:flex; flex-direction:column;">
+                <label class="form-label">Empleado</label>
+                <select name="usuarioId" asp-items="ViewBag.Usuarios" class="form-select">
+                    <option value="">Seleccione un empleado</option>
+                </select>
+                <span class="text-danger"></span>
+            </div>
+            <div class="mb-3" style="display:flex; flex-direction:column;">
+                <label>Estado</label>
+                <select name="estadoId" asp-items="ViewBag.EstadosHito" class="form-select">
+                    <option value="">Seleccione un estado</option>
+                </select>
+            </div>
+            <div class="mb-3" style="display:flex; flex-direction:column;">
+                <label>Fecha de Inicio</label>
+                <input type="date" name="Fecha" />
+            </div>
+       </div>
+       
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Asignar Hito</button>
+</form>

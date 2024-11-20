@@ -3,7 +3,7 @@
     ViewData["Title"] = "Detalles del Proyecto";
     Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <!-- Sección: Mensajes de Éxito y Error -->
 <div class="alert-messages">
     <!-- Mensaje Exito -->
@@ -158,6 +158,94 @@
     </div>
 </div>
 
+<!-- Sección: Lista de Hitos -->
+<div class="content-scroll-container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Hitos</h3>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarHito">
+            Agregar Hito
+        </button>
+    </div>
+
+    @foreach (var hito in Model.Hitos)
+    {
+        <div class="fase-card">
+            <!-- Encabezado de la Fase -->
+            <div class="fase-header d-flex justify-content-between align-items-center">
+                <h4>Descripción: </h4><h5>@hito.Descripcion</h5>
+                <h4>Responsable: </h4> <h5>@hito.Usuario.Nombre @hito.Usuario.Apellido</h5>
+                <h4>Fecha: </h4> <h5>@hito.Fecha.ToShortDateString()</h5>
+                <h4>Estado: @if (@hito.estado == 1)
+                    {
+                        <span class="btn btn-success btn-sm">
+                            Completo
+                        </span>
+                    }
+                    @if (@hito.estado == 2)
+                    {
+                        <span class=" btn btn-danger btn-sm">
+                            Pendiente
+                        </span>
+                    }
+                    @if (@hito.estado == 3)
+                    {
+                        <span class="btn btn-warning btn-sm">
+                            En Proceso
+                        </span>
+                    }
+                </h4>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarHito_@hito.ID">
+                    Eliminar Hito
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmación para Eliminar Fase -->
+        <div class="modal fade" id="modalEliminarHito_@hito.ID" tabindex="-1" aria-labelledby="modalEliminarHitoLabel_@hito.ID" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEliminarHitoLabel_@hito.ID">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Está seguro de eliminar el hito <strong>@hito.Descripcion</strong>? Esta acción no se puede deshacer.
+                    </div>
+                    <div class="modal-footer">
+                        <form asp-action="EliminarHito" asp-controller="Proyecto" method="post">
+                            <input type="hidden" name="hitoId" value="@hito.ID" />
+                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Modal único reutilizable para eliminar tareas -->
+    <div class="modal fade" id="modalEliminarTarea" tabindex="-1" aria-labelledby="modalEliminarTareaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarTareaLabel">Eliminar Tarea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar la tarea "<strong id="tareaNombre"></strong>"?
+                </div>
+                <div class="modal-footer">
+                    <form method="post" action="@Url.Action("EliminarTarea", "Proyecto")">
+                        <input type="hidden" name="tareaId" id="tareaId" value="" />
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Sección: Modales -->
 <!-- Modal para Agregar Fase -->
 <div class="modal fade" id="modalAgregarFase" tabindex="-1" aria-labelledby="modalAgregarFaseLabel" aria-hidden="true">
@@ -173,6 +261,53 @@
                     <div class="mb-3">
                         <label for="NombreFase" class="form-label">Nombre de la Fase</label>
                         <input type="text" class="form-control" id="NombreFase" name="Nombre" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Agregar Hitos -->
+<div class="modal fade" id="modalAgregarHito" tabindex="-1" aria-labelledby="modalAgregarHitoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarHitoLabel">Agregar Nuevo Hito</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form asp-action="AsignarHito" method="post">
+                <input type="hidden" name="id" value="@ViewBag.ProyectoId" />
+                <div class="modal-body">
+                    <div style="display:flex; flex-direction:column; justify-content:space-between;">
+                        <div class="mb-3">
+                            <label>Ingrese una descripción para este Hito</label>
+                            <textarea style="width:100%" name="Descripcion" placeholder="Descripción del Hito">
+                            </textarea>
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:flex; flex-direction:column;">
+                            <label class="form-label">Empleado</label>
+                            <select name="usuarioId" asp-items="ViewBag.Usuarios" class="form-select">
+                                <option value="">Seleccione un empleado</option>
+                            </select>
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:flex; flex-direction:column;">
+                            <label>Estado</label>
+                            <select name="estadoId" asp-items="ViewBag.EstadosHito" class="form-select">
+                                <option value="">Seleccione un estado</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" style="display:flex; flex-direction:column;">
+                            <label>Fecha de Inicio</label>
+                            <input type="date" name="Fecha" />
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
