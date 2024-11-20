@@ -18,7 +18,9 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Proveedor> Proveedores { get; set; }
         public DbSet<Inventario> Inventarios { get; set; }
 
-        public DbSet<FacturaProveedor> Facturas { get; set; }        
+        public DbSet<FacturaProveedor> Facturas { get; set; }  
+        
+        public DbSet<HorasExtra> HorasExtras { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,6 +89,33 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(u => u.Apellido).HasMaxLength(50).IsRequired();
                 tb.Property(u => u.Correo).HasMaxLength(50).IsRequired();
 
+            });
+
+            // Configuración de HorasExtra
+            modelBuilder.Entity<HorasExtra>(tb =>
+            {
+                tb.HasKey(h => h.IdHorasExtra);
+                tb.Property(h => h.IdHorasExtra)
+                  .UseIdentityColumn()
+                  .ValueGeneratedOnAdd();
+
+                tb.Property(h => h.Fecha).IsRequired();
+                tb.Property(h => h.CantidadHoras).IsRequired();
+                tb.Property(h => h.Estado).IsRequired();
+                tb.Property(h => h.TipoCompensacion).IsRequired();
+
+                tb.HasOne(h => h.Empleado)
+                  .WithMany()
+                  .HasForeignKey(h => h.IdEmpleado)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+                tb.HasOne(h => h.Supervisor)
+                  .WithMany()
+                  .HasForeignKey(h => h.IdSupervisor)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+                tb.Property(h => h.Descripcion).HasMaxLength(500);
             });
 
             // Tablas
