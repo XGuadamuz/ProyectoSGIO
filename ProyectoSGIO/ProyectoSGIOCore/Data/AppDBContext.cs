@@ -20,6 +20,7 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Fase> Fases { get; set; }
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<Hito> Hitos { get; set; }
+        public DbSet<HorasExtra> HorasExtras { get; set; }
 
         public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
 
@@ -91,6 +92,30 @@ namespace ProyectoSGIOCore.Data
                 tb.Property(u => u.Correo).HasMaxLength(50).IsRequired();
 
             });
+
+            // Configuración de HorasExtra
+            modelBuilder.Entity<HorasExtra>(tb =>
+            {
+                tb.HasKey(h => h.IdHorasExtra);
+                tb.Property(h => h.IdHorasExtra)
+                  .UseIdentityColumn()
+                  .ValueGeneratedOnAdd();
+                tb.Property(h => h.Fecha).IsRequired();
+                tb.Property(h => h.CantidadHoras).IsRequired();
+                tb.Property(h => h.Estado).IsRequired();
+                tb.Property(h => h.TipoCompensacion).IsRequired();
+                tb.HasOne(h => h.Empleado)
+                  .WithMany()
+                  .HasForeignKey(h => h.IdEmpleado)
+                  .OnDelete(DeleteBehavior.Restrict);
+                tb.HasOne(h => h.Supervisor)
+                  .WithMany()
+                  .HasForeignKey(h => h.IdSupervisor)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.Restrict);
+                tb.Property(h => h.Descripcion).HasMaxLength(500);
+            });
+
 
             // Tablas
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
