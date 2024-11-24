@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/Menu.css" rel="stylesheet" />
+<link href="~/css/Proyectos.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="d-flex" style="height:100%">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="col-lg-2 bg-dark text-light">
+        <div class="position-sticky">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 @(ViewContext.RouteData.Values["action"].ToString() == "Proyectos" ? "active" : "")"
+                       asp-controller="Proyecto" asp-action="Proyectos">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                            <path d="M9.828 4a.5.5 0 0 1 .354.146l.5.5H13a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4a.5.5 0 0 1 .354.146l.5.5H13a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h7.828ZM3 3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7h-4a1 1 0 0 1-.707-.293l-.5-.5H3Z" />
+                        </svg>
+                        Ver Proyectos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 @(ViewContext.RouteData.Values["action"].ToString() == "CrearProyecto" ? "active" : "")"
+                       asp-controller="Proyecto" asp-action="CrearProyecto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                            <path d="M8 0a8 8 0 1 0 8 8A8 8 0 0 0 8 0ZM8 15a7 7 0 1 1 7-7 7 7 0 0 1-7 7Z" />
+                            <path d="M8 4.5a.5.5 0 0 1 .5.5V7h2a.5.5 0 0 1 0 1H8.5v2a.5.5 0 0 1-1 0V8H5.5a.5.5 0 0 1 0-1H7.5V5a.5.5 0 0 1 .5-.5Z" />
+                        </svg>
+                        Crear Proyecto
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="main-content2">
+        @RenderBody()
+    </div>
+</div>
+
+<!-- Agregar RenderSection para scripts opcionales -->
+@RenderSection("Scripts", required: false)
+
+<script src="~/js/menu.js"></script>
+<script src="~/js/funciones.js"></script>

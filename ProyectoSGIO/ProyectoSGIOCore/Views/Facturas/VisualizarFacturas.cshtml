@@ -11,6 +11,21 @@
     <div class="text-end mb-3">
         <a href="~/Facturas/RegistroFactura" class="btn btn-primary">Registrar Nueva Factura</a>
         <a asp-action="DescargarFacturasHTML" class="btn btn-danger">Descargar HTML</a>
+        <a href="~/CierresFinancieros/VisualizarCierres" class="btn btn-secondary">Visualizar Cierres Financieros Anuales</a>
+        <a href="~/CierresFinancieros/VisualizarCierresMensuales" class="btn btn-secondary">Visualizar Cierres Financieros Mensuales</a>
+    </div>
+
+    <!-- Mostrar las métricas personalizadas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <h4>Total de Facturas: @ViewBag.TotalFacturas.ToString("C")</h4>
+        </div>
+        <div class="col-md-4">
+            <h4>Total de Impuestos: @ViewBag.TotalImpuestos.ToString("C")</h4>
+        </div>
+        <div class="col-md-4">
+            <h4>Promedio de Factura: @ViewBag.PromedioFactura.ToString("C")</h4>
+        </div>
     </div>
 
     <div class="table-responsive">
@@ -23,11 +38,14 @@
                     <th>Fecha de Emisión</th>
                     <th>Monto Total</th>
                     <th>Descripción</th>
+                    <th>Impuesto</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var factura in Model)
                 {
+                    decimal impuesto = factura.MontoTotal * 0.16m;
                     <tr>
                         <td>@factura.IdFactura</td>
                         <td>@(factura.Proveedor != null ? factura.Proveedor.Nombre : "Proveedor no encontrado")</td>
@@ -35,6 +53,10 @@
                         <td>@factura.FechaEmision.ToShortDateString()</td>
                         <td>@factura.MontoTotal</td>
                         <td>@factura.Descripcion</td>
+                        <td>@impuesto.ToString("C")</td>
+                        <td>
+                            <a asp-action="EditarFactura" asp-route-id="@factura.IdFactura" class="btn btn-warning btn-sm">Editar</a>
+                        </td>
                     </tr>
                 }
             </tbody>

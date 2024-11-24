@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ProyectoSGIOCore.Models.Proyecto>
+
+@{
+    ViewData["Title"] = "Lista de Proyectos";
+    Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
+}
+
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success text-center mt-3" role="alert">
+        @TempData["MensajeExito"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- Sección: Encabezado del Proyecto -->
+<h2 class="section-title">Proyectos</h2>
+
+<div class="header-actions">
+    <a asp-action="CrearProyecto" asp-controller="Proyecto" class="btn btn-primary">Crear Proyecto</a>
+</div>
+
+<div class="table-container">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Nombre del Proyecto</th>
+                <th>Fecha de Creación</th>
+                <th>Cliente Asignado</th>
+                <th>Costo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var proyecto in Model)
+            {
+                <tr>
+                    <td>@proyecto.Nombre</td>
+                    <td>@proyecto.FechaCreacion.ToShortDateString()</td>
+                    <td>
+                        @if (proyecto.Usuario != null)
+                        {
+                            <span>@proyecto.Usuario.Nombre @proyecto.Usuario.Apellido</span>
+                        }
+                        else
+                        {
+                            <span>Usuario sin asignar</span>
+                        }
+                    </td>
+                    <td>
+                        @if (proyecto.CostoTotal != null)
+                        {
+                            <span>@proyecto.CostoTotal.ToString("C2")</span>
+                        }
+                        else
+                        {
+                            <span>No disponible</span>
+                        }
+                    </td>
+                    <td>
+                        <!-- Mostrar el estado del proyecto -->
+                        @proyecto.Estado.ToString()
+                    </td>
+                    <td>
+                        <a href="@Url.Action("GestionarProyecto", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-primary btn-sm">Gestionar</a>
+                        <a href="@Url.Action("AsignarCliente", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-dark btn-sm">Asignar Cliente</a>
+                        <a href="@Url.Action("AsignarHito", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-dark btn-sm">Asignar Hitos</a>
+                        <a href="@Url.Action("Dashboard", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-dark btn-sm">Ver Dashboard</a>
+                        <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarProyecto_@proyecto.Id">Eliminar</button>
+                    </td>
+                </tr>
+                <!-- Modal de confirmación de eliminación -->
+                <div class="modal fade modal-lg" id="modalEliminarProyecto_@proyecto.Id" tabindex="-1" aria-labelledby="modalEliminarProyectoLabel_@proyecto.Id" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEliminarProyectoLabel_@proyecto.Id">Confirmar Eliminación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Estás seguro de que deseas eliminar el proyecto <strong>@proyecto.Nombre</strong> junto con todas sus fases y tareas? Esta acción no se puede deshacer.
+                            </div>
+                            <div class="modal-footer">
+                                <form asp-action="EliminarProyecto" asp-controller="Proyecto" method="post">
+                                    <input type="hidden" name="proyectoId" value="@proyecto.Id" />
+                                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                                </form>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>

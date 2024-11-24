@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoSGIOCore.Data;
 
@@ -11,9 +12,11 @@ using ProyectoSGIOCore.Data;
 namespace ProyectoSGIOCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241120034847_Hios")]
+    partial class Hios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,20 +160,23 @@ namespace ProyectoSGIOCore.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("IdUsuario")
+                    b.Property<int>("IdEmpleado")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProyectoId")
+                    b.Property<int>("IdProyecto")
                         .HasColumnType("int");
 
-                    b.Property<int>("estado")
+                    b.Property<int?>("ProyectoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ResponsableIdEmpleado")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("IdUsuario");
-
                     b.HasIndex("ProyectoId");
+
+                    b.HasIndex("ResponsableIdEmpleado");
 
                     b.ToTable("Hitos");
                 });
@@ -472,19 +478,15 @@ namespace ProyectoSGIOCore.Migrations
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Hito", b =>
                 {
-                    b.HasOne("ProyectoSGIOCore.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("IdUsuario");
-
-                    b.HasOne("ProyectoSGIOCore.Models.Proyecto", "Proyecto")
+                    b.HasOne("ProyectoSGIOCore.Models.Proyecto", null)
                         .WithMany("Hitos")
-                        .HasForeignKey("ProyectoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProyectoId");
 
-                    b.Navigation("Proyecto");
+                    b.HasOne("ProyectoSGIOCore.Models.Empleado", "Responsable")
+                        .WithMany()
+                        .HasForeignKey("ResponsableIdEmpleado");
 
-                    b.Navigation("Usuario");
+                    b.Navigation("Responsable");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Proyecto", b =>

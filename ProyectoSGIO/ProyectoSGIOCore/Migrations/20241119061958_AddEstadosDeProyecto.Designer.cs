@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoSGIOCore.Data;
 
@@ -11,9 +12,11 @@ using ProyectoSGIOCore.Data;
 namespace ProyectoSGIOCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241119061958_AddEstadosDeProyecto")]
+    partial class AddEstadosDeProyecto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,39 +143,6 @@ namespace ProyectoSGIOCore.Migrations
                     b.HasIndex("ProyectoId");
 
                     b.ToTable("Fases");
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.Hito", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("IdUsuario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProyectoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("estado")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("IdUsuario");
-
-                    b.HasIndex("ProyectoId");
-
-                    b.ToTable("Hitos");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Inventario", b =>
@@ -470,23 +440,6 @@ namespace ProyectoSGIOCore.Migrations
                     b.Navigation("Proyecto");
                 });
 
-            modelBuilder.Entity("ProyectoSGIOCore.Models.Hito", b =>
-                {
-                    b.HasOne("ProyectoSGIOCore.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("IdUsuario");
-
-                    b.HasOne("ProyectoSGIOCore.Models.Proyecto", "Proyecto")
-                        .WithMany("Hitos")
-                        .HasForeignKey("ProyectoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Proyecto");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("ProyectoSGIOCore.Models.Proyecto", b =>
                 {
                     b.HasOne("ProyectoSGIOCore.Models.Usuario", "Usuario")
@@ -526,8 +479,6 @@ namespace ProyectoSGIOCore.Migrations
             modelBuilder.Entity("ProyectoSGIOCore.Models.Proyecto", b =>
                 {
                     b.Navigation("Fases");
-
-                    b.Navigation("Hitos");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Rol", b =>

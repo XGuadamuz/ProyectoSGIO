@@ -1,0 +1,42 @@
+﻿@model IEnumerable<ProyectoSGIOCore.Models.CierreFinanciero>
+
+@{
+    ViewBag.Title = "Visualizar Cierres Financieros";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Cierres Financieros Anuales</h2>
+
+    <div class="text-end mb-3">
+        <a href="~/CierresFinancieros/RegistrarCierre" class="btn btn-secondary">Registrar Cierres Financieros</a>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Año</th>
+                <th>Fecha Cierre</th>
+                <th>Total Ingresos</th>
+                <th>Total Egresos</th>
+                <th>Utilidad</th>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cierre in Model)
+            {
+                <tr>
+                    <td>@cierre.IdCierre</td>
+                    <td>@cierre.Anio</td>
+                    <td>@cierre.FechaCierre.ToShortDateString()</td>
+                    <td>@cierre.TotalIngresos.ToString("C")</td>
+                    <td>@cierre.TotalEgresos.ToString("C")</td>
+                    <td>@cierre.Utilidad.ToString("C")</td>
+                    <td>@cierre.Observaciones</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

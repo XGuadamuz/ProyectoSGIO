@@ -39,9 +39,16 @@ namespace ProyectoSGIOCore.Controllers
                     return View(factura);
                 }
 
+                // Calcular el impuesto (16% de IVA)
+                decimal porcentajeImpuesto = 0.16m; // 16% de IVA
+                decimal impuesto = factura.MontoTotal * porcentajeImpuesto;
+
                 factura.Proveedor = proveedor; // Asignar la relación
                 _dbContext.Facturas.Add(factura);
                 _dbContext.SaveChanges();
+
+                ViewBag.ImpuestoCalculado = impuesto;
+
                 return RedirectToAction("VisualizarFacturas");
             }
 
@@ -55,6 +62,16 @@ namespace ProyectoSGIOCore.Controllers
             var facturas = _dbContext.Facturas
                 .Include(f => f.Proveedor) // Cargar la información del proveedor relacionado
                 .ToList();
+
+            // Calcular métricas personalizadas
+            var totalFacturas = facturas.Sum(f => f.MontoTotal);
+            var totalImpuestos = facturas.Sum(f => f.MontoTotal * 0.16m);
+            var promedioFactura = facturas.Count > 0 ? facturas.Average(f => f.MontoTotal) : 0;
+
+            // Pasar las métricas a la vista
+            ViewBag.TotalFacturas = totalFacturas;
+            ViewBag.TotalImpuestos = totalImpuestos;
+            ViewBag.PromedioFactura = promedioFactura;
 
             return View(facturas);
         }
@@ -118,6 +135,70 @@ namespace ProyectoSGIOCore.Controllers
 
             // Devolver el archivo HTML para descarga
             return File(bytes, "text/html", "ReporteFacturas.html");
+        }
+
+        [HttpGet]
+        public IActionResult EditarFactura(int id)
+        {
+            var factura = _dbContext.Facturas
+                .Include(f => f.Proveedor) // Incluye la relación con el proveedor
+                .FirstOrDefault(f => f.IdFactura == id);
+
+            if (factura == null)
+            {
+                return NotFound("Factura no encontrada.");
+            }
+
+            ViewBag.Proveedores = new SelectList(_dbContext.Proveedores, "IdProveedor", "Nombre", factura.IdProveedor);
+            return View(factura);
+        }
+
+        [HttpPost]
+        public IActionResult EditarFactura(FacturaProveedor factura)
+        {
+            if (ModelState.IsValid)
+            {
+                var facturaExistente = _dbContext.Facturas
+                    .Include(f => f.Proveedor)
+                    .FirstOrDefault(f => f.IdFactura == factura.IdFactura);
+
+                if (facturaExistente == null)
+                {
+                    return NotFound("Factura no encontrada.");
+                }
+
+                // Calcular el impuesto (por ejemplo, 16% de IVA)
+                decimal porcentajeImpuesto = 0.16m; // 16% de IVA
+                decimal impuesto = factura.MontoTotal * porcentajeImpuesto;
+
+                // Actualizar los valores de la factura
+                facturaExistente.IdProveedor = factura.IdProveedor;
+                facturaExistente.FechaEmision = factura.FechaEmision;
+                facturaExistente.MontoTotal = factura.MontoTotal;
+                facturaExistente.NumeroFactura = factura.NumeroFactura;
+                facturaExistente.Descripcion = factura.Descripcion;
+
+                // Reasignar el proveedor relacionado
+                facturaExistente.Proveedor = _dbContext.Proveedores.Find(factura.IdProveedor);
+                if (facturaExistente.Proveedor == null)
+                {
+                    ModelState.AddModelError("", "El proveedor seleccionado no existe.");
+                    ViewBag.Proveedores = new SelectList(_dbContext.Proveedores, "IdProveedor", "Nombre", factura.IdProveedor);
+                    return View(factura);
+                }
+
+                _dbContext.Facturas.Update(facturaExistente);
+                _dbContext.SaveChanges();
+
+                // Agregar el impuesto calculado como propiedad adicional en la vista
+                ViewBag.ImpuestoCalculado = impuesto;
+
+                return RedirectToAction("VisualizarFacturas");
+            }
+
+            // Si hay errores de validación, recargar la lista de proveedores
+            ViewBag.Proveedores = new SelectList(_dbContext.Proveedores, "IdProveedor", "Nombre", factura.IdProveedor);
+            return View(factura);
         }
     }
 }
