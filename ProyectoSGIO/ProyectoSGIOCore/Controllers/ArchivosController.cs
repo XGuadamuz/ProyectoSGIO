@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProyectoSGIOCore.Data;
 using ProyectoSGIOCore.Models;
 using System.IO;
@@ -80,6 +81,53 @@ namespace ProyectoSGIOCore.Controllers
             }
             
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> VerArchivosRecientes()
+        {
+            var archivosRecientes = await _dbContext.Archivos
+                .Include(a => a.Usuario)
+                .OrderByDescending(a => a.FechaSubida)
+                .Take(10) // Mostrar los 10 archivos más recientes
+                .ToListAsync();
+            return View(archivosRecientes); 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarArchivo(int id)
+        {
+            var archivo = await _dbContext.Archivos.FindAsync(id);
+            if (archivo == null)
+            {
+                ViewData["Mensaje"] = "Archivo no encontrado.";
+                return RedirectToAction(nameof(VerArchivosRecientes));
+            } 
+            
+            // Eliminar el archivo del sistema de archivos
+            string rutaArchivo = Path.Combine(Directory.GetCurrentDirectory(), "ArchivosSubidos", archivo.Nombre);
+            if (System.IO.File.Exists(rutaArchivo)) 
+            { 
+                System.IO.File.Delete(rutaArchivo);
+            } 
+            
+            // Eliminar la entrada de la base de datos
+            _dbContext.Archivos.Remove(archivo);
+            await _dbContext.SaveChangesAsync();
+            ViewData["Mensaje"] = "Archivo eliminado exitosamente.";
+            return RedirectToAction(nameof(VerArchivosRecientes));
+        }
+
+        [HttpGet] public async Task<IActionResult> BuscarArchivos(string criterio)
+        {
+            var archivos = await _dbContext.Archivos
+                .Include(a => a.Usuario)
+                .Where(a => a.Nombre.Contains(criterio) || 
+                a.Usuario.Nombre.Contains(criterio) || 
+                a.FechaSubida.ToString().Contains(criterio) || 
+                a.IdArchivo.ToString().Contains(criterio))
+                .ToListAsync();
+            return View(archivos);
         }
     }
 }

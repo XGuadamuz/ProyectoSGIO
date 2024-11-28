@@ -14,7 +14,10 @@
 
         // Clave foránea para el Rol
         public int IdRol { get; set; }
-        public Rol Rol { get; set; } 
+        public Rol Rol { get; set; }
+        
+        // Relación con Archivos
+        public ICollection<Archivo> Archivos { get; set; }
 
     }
 }

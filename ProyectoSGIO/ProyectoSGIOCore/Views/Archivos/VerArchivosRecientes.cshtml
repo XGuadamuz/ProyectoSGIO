@@ -1,0 +1,32 @@
+﻿List<ProyectoSGIOCore.Models.Archivo>
+@{
+    ViewBag.Title = "Archivos Recientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-5">
+    <h2 class="text-center">Archivos Subidos Recientemente</h2>
+    <table class="table"> 
+        <thead>
+            <tr> <
+                th>Nombre</th>
+                <th>Fecha de Subida</th>
+                <th>Usuario</th> </tr>
+        </thead>
+        <tbody>
+            @foreach (var archivo in Model)
+            {
+                <tr>
+                    <td>@archivo.Nombre</td>
+                    <td>@archivo.FechaSubida</td>
+                    <td>@archivo.Usuario.Nombre</td>
+                    <td>
+                        <form asp-action="EliminarArchivo" method="post">
+                            <input type="hidden" name="id" value="@archivo.IdArchivo" />
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de que desea eliminar este archivo?');">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            } 
+         </tbody>
+    </table>
+</div>
