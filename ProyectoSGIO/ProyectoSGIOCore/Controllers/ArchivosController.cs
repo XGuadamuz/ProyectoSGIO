@@ -129,5 +129,55 @@ namespace ProyectoSGIOCore.Controllers
                 .ToListAsync();
             return View(archivos);
         }
+
+        [HttpGet] public async Task<IActionResult> DescargarArchivo(int id)
+        {
+            var archivo = await _dbContext.Archivos.FindAsync(id);
+            if (archivo == null)
+            {
+                ViewData["Mensaje"] = "Archivo no encontrado.";
+                return RedirectToAction(nameof(VerArchivosRecientes));
+            } 
+            
+            string rutaArchivo = Path.Combine(Directory.GetCurrentDirectory(), "ArchivosSubidos", archivo.Nombre);
+            if (!System.IO.File.Exists(rutaArchivo))
+            {
+                ViewData["Mensaje"] = "El archivo no existe en el sistema de archivos.";
+                return RedirectToAction(nameof(VerArchivosRecientes));
+            }
+            
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(rutaArchivo, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            
+            memory.Position = 0; return File(memory, GetContentType(rutaArchivo), archivo.Nombre);
+        }
+
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                { ".txt", "text/plain" },
+                { ".pdf", "application/pdf" },
+                { ".doc", "application/vnd.ms-word" },
+                { ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+                { ".xls", "application/vnd.ms-excel" },
+                { ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+                { ".png", "image/png" },
+                { ".jpg", "image/jpeg" },
+                { ".jpeg", "image/jpeg" },
+                { ".gif", "image/gif" },
+                { ".csv", "text/csv" }
+            };
+        }
     }
 }

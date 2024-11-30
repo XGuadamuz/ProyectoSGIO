@@ -6,6 +6,12 @@
 
 <div class="container mt-5">
     <h2 class="text-center">Resultados de la Búsqueda</h2>
+
+    <div class="text-end mb-3">
+        <a href="~/Archivos/SubirArchivo" class="btn btn-primary">Subir nuevo archivo</a>
+        <a href="~/Archivos/VerArchivosRecientes" class="btn btn-secondary">Ver archivos recientes</a>
+    </div>
+
     <form asp-action="BuscarArchivos" method="get">
         <div class="mb-3">
             <label for="criterio" class="form-label">Criterio de Búsqueda:</label>
@@ -14,24 +20,23 @@
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
 
-    <table class="table mt-4">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Fecha de Subida</th>
-                <th>Usuario</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var archivo in Model)
-            {
-                <tr>
-                    <td>@archivo.Nombre</td>
-                    <td>@archivo.FechaSubida</td>
-                    <td>@archivo.Usuario?.Nombre</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Fecha de Subida</th>
+                        <th>Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var archivo in Model)
+                    {
+                        <tr>
+                            <td>@archivo.Nombre</td>
+                            <td>@archivo.FechaSubida</td>
+                            <td>@archivo.Usuario?.Nombre</td>
+                        </tr>
+                    }
+                </tbody>
+        </table>
 </div>
-

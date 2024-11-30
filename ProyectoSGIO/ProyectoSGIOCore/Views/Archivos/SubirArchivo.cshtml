@@ -6,6 +6,12 @@
 
 <div class="container mt-5">
     <h2 class="text-center">Subir Archivo</h2>
+
+    <div class="text-end mb-3">
+        <a href="~/Archivos/VerArchivosRecientes" class="btn btn-secondary">Ver archivos recientes</a>
+        <a href="~/Archivos/BuscarArchivos" class="btn btn-secondary">Buscar archivos</a>
+    </div>
+
     <form method="post" enctype="multipart/form-data" asp-action="SubirArchivo">
         <div class="mb-3">
             <label for="archivo" class="form-label">Seleccione un archivo:</label>

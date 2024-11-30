@@ -1,32 +1,66 @@
-﻿List<ProyectoSGIOCore.Models.Archivo>
+﻿@model List<ProyectoSGIOCore.Models.Archivo>
 @{
     ViewBag.Title = "Archivos Recientes";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container mt-5">
-    <h2 class="text-center">Archivos Subidos Recientemente</h2>
-    <table class="table"> 
-        <thead>
-            <tr> <
-                th>Nombre</th>
-                <th>Fecha de Subida</th>
-                <th>Usuario</th> </tr>
-        </thead>
-        <tbody>
-            @foreach (var archivo in Model)
-            {
-                <tr>
-                    <td>@archivo.Nombre</td>
-                    <td>@archivo.FechaSubida</td>
-                    <td>@archivo.Usuario.Nombre</td>
-                    <td>
-                        <form asp-action="EliminarArchivo" method="post">
-                            <input type="hidden" name="id" value="@archivo.IdArchivo" />
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de que desea eliminar este archivo?');">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-            } 
-         </tbody>
-    </table>
-</div>
+    <h2 class="text-center mb-4">Archivos Subidos Recientemente</h2>
+
+    <div class="text-end mb-3">
+        <a href="~/Archivos/SubirArchivo" class="btn btn-primary">Subir nuevo archivo</a>
+        <a href="~/Archivos/BuscarArchivos" class="btn btn-secondary">Buscar archivos</a>
+    </div>
+        
+        <div class="table-responsive">
+            <table id="archivosTable" class="table table-striped table-hover table-bordered table-custom">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Fecha de Subida</th>
+                        <th>Usuario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var archivo in Model)
+                    {
+                        <tr class="text-center">
+                            <td>@archivo.IdArchivo</td>
+                            <td>@archivo.Nombre</td>
+                            <td>@archivo.FechaSubida</td>
+                            <td>@archivo.Usuario?.Nombre</td>
+                            <td>
+                                <!-- Botón de eliminar -->
+                                <form asp-action="EliminarArchivo" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@archivo.IdArchivo" />
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de que desea eliminar este archivo?');">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </form>
+                                <!-- Botón de descargar -->
+                                <form asp-action="DescargarArchivo" method="get" style="display:inline;">
+                                    <input type="hidden" name="id" value="@archivo.IdArchivo" />
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-download"></i> Descargar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+</div> 
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#archivosTable").DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
+                }
+            });
+        });
+    </script>
+}
