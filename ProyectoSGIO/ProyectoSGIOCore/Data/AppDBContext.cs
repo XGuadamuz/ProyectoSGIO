@@ -21,6 +21,7 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<Hito> Hitos { get; set; }
         public DbSet<Archivo> Archivos { get; set; }
+        public DbSet<Reporte> Reportes { get; set; }
 
         public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
 

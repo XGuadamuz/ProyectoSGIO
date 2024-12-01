@@ -1,0 +1,30 @@
+﻿@model ProyectoSGIOCore.Models.Reporte
+@{
+    ViewBag.Title = "Subir Reporte";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Subir Reporte</h2>
+    
+    <div class="text-end mb-3">
+        <a href="~/Reportes/VerReportesRecientes" class="btn btn-secondary">Ver reportes recientes</a>
+        <a href="~/Reportes/BuscarReporte" class="btn btn-secondary">Buscar reportes</a>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" asp-action="SubirReporte">
+        <div class="mb-3">
+            <label for="reporte" class="form-label">Seleccione un archivo(PDF, Word o Excel):</label>
+            <input type="file" class="form-control" id="reporte" name="reporte" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Subir</button>
+    </form> 
+    
+    @if (ViewData["Mensaje"] != null)
+    {
+        <div class="alert alert-info mt-3"> 
+            @ViewData["Mensaje"] 
+        </div>
+    } 
+</div>
