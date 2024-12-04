@@ -519,6 +519,7 @@ namespace ProyectoSGIOCore.Migrations
                     b.Navigation("Usuario");
                 });
 
+
             modelBuilder.Entity("ProyectoSGIOCore.Models.FacturaProveedor", b =>
                 {
                     b.HasOne("ProyectoSGIOCore.Models.Proveedor", "Proveedor")
