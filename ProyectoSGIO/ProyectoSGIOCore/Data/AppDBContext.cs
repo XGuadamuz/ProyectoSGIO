@@ -22,7 +22,13 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Hito> Hitos { get; set; }
         public DbSet<Archivo> Archivos { get; set; }
         public DbSet<Reporte> Reportes { get; set; }
-
+        public DbSet<PlanInicial> PlanesIniciales { get; set; }
+        public DbSet<FaseInicial> FasesIniciales { get; set; }
+        public DbSet<TareaInicial> TareasIniciales { get; set; }
+        public DbSet<PuntoControl> PuntosControl { get; set; }
+        public DbSet<FaseControl> FasesControl { get; set; }
+        public DbSet<TareaControl> TareasControl { get; set; }
+        public DbSet<ImpactoMedidaCorrectiva> ImpactosMedidasCorrectivas { get; set; }
         public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

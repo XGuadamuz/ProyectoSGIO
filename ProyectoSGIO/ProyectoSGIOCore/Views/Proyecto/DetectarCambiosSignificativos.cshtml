@@ -1,0 +1,30 @@
+﻿@model ProyectoSGIOCore.ViewModels.DashboardComparacionVM
+
+@{
+    ViewBag.Title = "Cambios Significativos en la Línea Base del Proyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Cambios Significativos en la Línea Base del Proyecto</h2>
+
+    @if (ViewBag.CambiosSignificativos)
+    {
+        <div class="alert alert-warning">
+            <h4 class="alert-heading">Cambios Significativos Detectados</h4>
+            <p>Se han detectado cambios significativos en el proyecto. A continuación se muestran los detalles:</p>
+            <hr>
+            @Html.Raw(ViewBag.MensajeCambios)
+            <form asp-action="ActualizarLineaBase" method="post">
+                <input type="hidden" name="proyectoId" value="@Model.Proyecto.Id" />
+                <button type="submit" class="btn btn-primary">Actualizar Línea Base</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            No se han detectado cambios significativos en el proyecto.
+        </div>
+    }
+</div>

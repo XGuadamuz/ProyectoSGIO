@@ -1,0 +1,39 @@
+﻿@model ProyectoSGIOCore.ViewModels.DashboardComparacionVM
+
+@{
+    ViewBag.Title = "Medidas Correctivas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Medidas Correctivas Sugeridas</h2>
+
+    @if (ViewBag.MedidasCorrectivas.Count > 0)
+    {
+        <div class="alert alert-warning">
+            <h4 class="alert-heading">Desviaciones Significativas Detectadas</h4>
+            <p>Se han detectado desviaciones significativas en el proyecto. A continuación se muestran las medidas correctivas sugeridas:</p>
+            <hr>
+            <form asp-action="AprobarMedidasCorrectivas" method="post">
+                <ul>
+                    @foreach (var medida in ViewBag.MedidasCorrectivas)
+                    {
+                        <li>
+                            <strong>Fase:</strong> @medida.Fase <br>
+                            <strong>Medida Correctiva:</strong> @medida.Medida <br>
+                            <strong>Impacto Esperado:</strong> @medida.Impacto <br>
+                            <input type="checkbox" name="medidasAprobadas" value="@medida.Fase" /> Aprobar
+                        </li>
+                    }
+                </ul>
+                <button type="submit" class="btn btn-primary">Aprobar Medidas Correctivas</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            No se han detectado desviaciones significativas en el proyecto.
+        </div>
+    }
+</div>
