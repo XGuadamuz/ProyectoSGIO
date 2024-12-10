@@ -1,0 +1,33 @@
+﻿@model ProyectoSGIOCore.ViewModels.CronogramaViewModel
+
+@{
+    ViewBag.Title = "Cronograma del Proyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Cronograma del Proyecto</h2>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="ganttChart"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/anychart"></script>
+    <script>
+        anychart.onDocumentReady(function () {
+            var data = @Html.Raw(ViewBag.GanttData);
+
+            var chart = anychart.ganttProject();
+
+            chart.data(data, "asTable");
+
+            chart.container("ganttChart");
+
+            chart.draw();
+        });
+    </script>
+}

@@ -1,0 +1,43 @@
+﻿@model ProyectoSGIOCore.Models.Tarea
+@{
+    ViewBag.Title = "Modificar Fecha de Tarea";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Modificar Fecha de Tarea</h2>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert @(ViewBag.Success ? "alert-success" : "alert-danger")" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+
+    <form id="form-modificar-fecha-tarea" method="post" action="/Dependencias/ModificarFechaTarea">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="tareaId" class="form-label">Seleccione la Tarea a Modificar:</label>
+                <select id="tareaId" name="tareaId" class="form-select">
+                    <option value="">-- Seleccione una Tarea --</option>
+                    @if (ViewBag.Tareas != null && ViewBag.Tareas.Count > 0)
+                    {
+                        @foreach (var tarea in ViewBag.Tareas)
+                        {
+                            <option value="@tarea.Id">@tarea.Nombre</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="" disabled>No hay tareas disponibles</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="fechaFin" class="form-label">Nueva Fecha de Finalización:</label>
+                <input type="date" id="fechaFin" name="fechaFin" class="form-control" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Modificar Fecha</button>
+    </form>
+</div>

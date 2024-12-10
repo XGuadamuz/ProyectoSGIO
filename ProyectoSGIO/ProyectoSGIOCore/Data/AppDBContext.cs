@@ -48,6 +48,17 @@ namespace ProyectoSGIOCore.Data
                 .WithMany(t => t.DependenciasPredecesoras)
                 .HasForeignKey(d => d.TareaSucesoraId);
 
+            // Configuración de relaciones Proyecto-Fase-Tarea
+            modelBuilder.Entity<Proyecto>()
+                .HasMany(p => p.Fases)
+                .WithOne(f => f.Proyecto)
+                .HasForeignKey(f => f.ProyectoId);
+            
+            modelBuilder.Entity<Fase>()
+                .HasMany(f => f.Tareas)
+                .WithOne(t => t.Fase)
+                .HasForeignKey(t => t.FaseId);
+
             // Configuración de Usuario
             modelBuilder.Entity<Usuario>(tb =>
             {

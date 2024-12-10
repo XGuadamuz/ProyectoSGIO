@@ -47,4 +47,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "cronograma",
+    pattern: "{controller=Cronograma}/{action=Cronograma}/{proyectoId?}");
+
 app.Run();

@@ -41,6 +41,19 @@ namespace ProyectoSGIOCore.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Verificar si la tarea predecesora está completada
+                var tareaPredecesora = await _context.Tareas.FindAsync(DependenciaPredecesora);
+                if (tareaPredecesora == null || tareaPredecesora.Completada || model.Completada)
+                {
+                    ViewBag.Message = "No se pueden establecer dependencias en tareas completadas.";
+                    ViewBag.Success = false;
+                    var todasTareas = await _context.Tareas.ToListAsync();
+                    var todasFases = await _context.Fases.ToListAsync();
+                    ViewBag.Tareas = todasTareas;
+                    ViewBag.Fases = todasFases;
+                    return View();
+                }
+
                 var nuevaTarea = new Tarea
                 {
                     Nombre = model.Nombre,
@@ -72,7 +85,7 @@ namespace ProyectoSGIOCore.Controllers
                     await _context.SaveChangesAsync();
 
                     // Notificar cambios
-                    NotificarCambio(dependencia);
+                    NotificarCambio(dependencia, "creada");
 
                     ViewBag.Message = "Tarea creada exitosamente.";
                     ViewBag.Success = true;
@@ -89,25 +102,26 @@ namespace ProyectoSGIOCore.Controllers
                 ViewBag.Success = false;
             }
 
-            var tareas = await _context.Tareas.ToListAsync();
-            var fases = await _context.Fases.ToListAsync();
-            ViewBag.Tareas = tareas;
-            ViewBag.Fases = fases;
+            var todasTareasPost = await _context.Tareas.ToListAsync();
+            var todasFasesPost = await _context.Fases.ToListAsync();
+            ViewBag.Tareas = todasTareasPost;
+            ViewBag.Fases = todasFasesPost;
 
             return View();
         }
 
-        private void NotificarCambio(Dependencia dependencia)
+        private void NotificarCambio(Dependencia dependencia, string accion)
         {
             var usuarios = _context.Usuarios.ToList();
             foreach (var usuario in usuarios)
             {
-                var subject = "Actualización de Dependencias";
-                var message = $"Se ha actualizado la dependencia {dependencia.TipoDependencia} entre la tarea {dependencia.TareaPredecesoraId} y la tarea {dependencia.TareaSucesoraId}.";
+                var subject = $"Dependencia {accion} en el Proyecto";
+                var message = $"Se ha {accion} una dependencia {dependencia.TipoDependencia} entre la tarea {dependencia.TareaPredecesoraId} y la tarea {dependencia.TareaSucesoraId}.";
 
-                //_utilitarios.EnviarCorreo(usuario.Correo, subject, message);
+                _utilitarios.EnviarCorreo(usuario.Correo, subject, message);
             }
         }
+
 
         [HttpGet]
         public async Task<IActionResult> AñadirDatosDePrueba()
@@ -202,6 +216,103 @@ namespace ProyectoSGIOCore.Controllers
             await _context.SaveChangesAsync();
 
             return Ok("Plan inicial de prueba añadido correctamente.");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarDependencia(int dependenciaId)
+        {
+            var dependencia = await _context.Dependencias.FindAsync(dependenciaId);
+            if (dependencia == null)
+            {
+                ViewBag.Message = "Dependencia no encontrada.";
+                ViewBag.Success = false;
+                var dependencias = await _context.Dependencias.ToListAsync();
+                ViewBag.Dependencias = dependencias;
+                return View();
+            }
+
+            _context.Dependencias.Remove(dependencia);
+            await _context.SaveChangesAsync();
+
+            // Actualizar cronograma según las nuevas dependencias
+            var sucesora = await _context.Tareas.FindAsync(dependencia.TareaSucesoraId);
+            var predecesora = await _context.Tareas.FindAsync(dependencia.TareaPredecesoraId);
+
+            if (sucesora != null && predecesora != null)
+            {
+                // Ajustar la fecha de inicio de la tarea sucesora
+                sucesora.FechaInicio = predecesora.FechaFin.AddDays(1);
+                _context.Tareas.Update(sucesora);
+                await _context.SaveChangesAsync();
+
+                // Recalcular el cronograma de todas las tareas sucesoras
+                await RecalcularCronograma(sucesora);
+            }
+
+            // Notificar cambios
+            NotificarCambio(dependencia, "eliminada");
+
+            ViewBag.Message = "Dependencia eliminada exitosamente.";
+            ViewBag.Success = true;
+
+            var dependenciasActualizadas = await _context.Dependencias.ToListAsync();
+            ViewBag.Dependencias = dependenciasActualizadas;
+
+            return View();
+        }
+
+        private async Task RecalcularCronograma(Tarea tareaInicial)
+        {
+            var tareasRecalculadas = new List<Tarea> { tareaInicial };
+
+            while (tareasRecalculadas.Count > 0)
+            {
+                var tareaActual = tareasRecalculadas.First();
+                tareasRecalculadas.RemoveAt(0);
+
+                var sucesoras = await _context.Dependencias
+                    .Where(d => d.TareaPredecesoraId == tareaActual.Id)
+                    .Select(d => d.TareaSucesora)
+                    .ToListAsync();
+
+                foreach (var sucesora in sucesoras)
+                {
+                    sucesora.FechaInicio = tareaActual.FechaFin.AddDays(1);
+                    _context.Tareas.Update(sucesora);
+                    await _context.SaveChangesAsync();
+
+                    tareasRecalculadas.Add(sucesora);
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ModificarFechaTarea(int tareaId, DateTime fechaFin)
+        {
+            var tarea = await _context.Tareas.FindAsync(tareaId);
+            if (tarea == null)
+            {
+                ViewBag.Message = "Tarea no encontrada.";
+                ViewBag.Success = false;
+                var tareas = await _context.Tareas.ToListAsync();
+                ViewBag.Tareas = tareas;
+                return View();
+            }
+
+            tarea.FechaFin = fechaFin;
+            _context.Tareas.Update(tarea);
+            await _context.SaveChangesAsync();
+
+            // Recalcular las fechas de las tareas dependientes
+            await RecalcularCronograma(tarea);
+
+            ViewBag.Message = "Fecha de tarea modificada exitosamente.";
+            ViewBag.Success = true;
+
+            var tareasActualizadas = await _context.Tareas.ToListAsync();
+            ViewBag.Tareas = tareasActualizadas;
+
+            return View();
         }
     }
 }
