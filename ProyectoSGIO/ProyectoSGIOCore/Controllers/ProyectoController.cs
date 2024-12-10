@@ -667,6 +667,12 @@ namespace ProyectoSGIOCore.Controllers
                 .ThenInclude(f => f.TareasIniciales)
                 .FirstOrDefaultAsync(p => p.ProyectoId == proyectoId);
 
+            if (planInicial == null)
+            {
+                TempData["MensajeError"] = "Plan inicial no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
             var progresoActual = proyecto.Fases.Select(f => new
             {
                 f.Nombre,

@@ -1,0 +1,88 @@
+﻿@model ProyectoSGIOCore.Models.Tarea
+@{
+    ViewBag.Title = "Crear Nueva Tarea";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Crear Nueva Tarea con Dependencia</h2>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert @(ViewBag.Success ? "alert-success" : "alert-danger")" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+
+    <form id="form-nueva-tarea" method="post" action="/Dependencias/CrearDependencia">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre de la Tarea:</label>
+                <input type="text" id="nombre" name="Nombre" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
+                <input type="date" id="fechaInicio" name="FechaInicio" class="form-control" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="fechaFin" class="form-label">Fecha de Finalización:</label>
+                <input type="date" id="fechaFin" name="FechaFin" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label for="costo" class="form-label">Costo:</label>
+                <input type="number" id="costo" name="Costo" class="form-control" step="0.01">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="faseId" class="form-label">Fase:</label>
+                <select id="faseId" name="FaseId" class="form-select">
+                    <option value="">-- Seleccione una Fase --</option>
+                    @if (ViewBag.Fases != null && ViewBag.Fases.Count > 0)
+                    {
+                        @foreach (var fase in ViewBag.Fases)
+                        {
+                            <option value="@fase.Id">@fase.Nombre</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="" disabled>No hay fases disponibles</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="dependenciaPredecesora" class="form-label">Tarea Predecesora:</label>
+                <select id="dependenciaPredecesora" name="DependenciaPredecesora" class="form-select">
+                    <option value="">-- Seleccione una Tarea --</option>
+                    @if (ViewBag.Tareas != null && ViewBag.Tareas.Count > 0)
+                    {
+                        @foreach (var tarea in ViewBag.Tareas)
+                        {
+                            <option value="@tarea.Id">@tarea.Nombre</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="" disabled>No hay tareas disponibles</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="tipoDependencia" class="form-label">Tipo de Dependencia:</label>
+                <select id="tipoDependencia" name="TipoDependencia" class="form-select">
+                    <option value="FS">Fin a Inicio (FS)</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Crear Tarea</button>
+    </form>
+
+    <div class="text-end mt-3">
+        <a href="/Dependencias/IndexDependencia" class="btn btn-secondary">Volver al Inicio de Dependencias</a>
+    </div>
+</div>

@@ -30,10 +30,23 @@ namespace ProyectoSGIOCore.Data
         public DbSet<TareaControl> TareasControl { get; set; }
         public DbSet<ImpactoMedidaCorrectiva> ImpactosMedidasCorrectivas { get; set; }
         public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
+        public DbSet<Dependencia> Dependencias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configuración de Dependencias
+            modelBuilder.Entity<Dependencia>()
+                .HasOne(d => d.TareaPredecesora)
+                .WithMany(t => t.DependenciasSucesoras)
+                .HasForeignKey(d => d.TareaPredecesoraId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Dependencia>()
+                .HasOne(d => d.TareaSucesora)
+                .WithMany(t => t.DependenciasPredecesoras)
+                .HasForeignKey(d => d.TareaSucesoraId);
 
             // Configuración de Usuario
             modelBuilder.Entity<Usuario>(tb =>

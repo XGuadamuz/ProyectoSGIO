@@ -17,5 +17,9 @@ namespace ProyectoSGIOCore.Models
         // Relación con el Proyecto
         public int FaseId { get; set; }
         public Fase Fase { get; set; }
+
+        // Relación con Dependencias
+        public ICollection<Dependencia> DependenciasPredecesoras { get; set; }
+        public ICollection<Dependencia> DependenciasSucesoras { get; set; }
     }
 }
