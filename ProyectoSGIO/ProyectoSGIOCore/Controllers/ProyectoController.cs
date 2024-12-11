@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 using ProyectoSGIOCore.ViewModels;
 using Newtonsoft.Json;
+using ProyectoSGIOCore.Migrations;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -94,7 +95,10 @@ namespace ProyectoSGIOCore.Controllers
                 })
                 .ToList();
 
+            // Obtener el costo total del proyecto
+            var costoTotal = proyecto.CostoTotal;
             // Calcular el progreso total del proyecto
+
             var totalTareas = proyecto.Fases.SelectMany(f => f.Tareas).Count();
             var tareasCompletadas = proyecto.Fases.SelectMany(f => f.Tareas).Count(t => t.Completada);
             var progresoGeneral = totalTareas == 0 ? 0 : (tareasCompletadas * 100 / totalTareas);
@@ -108,6 +112,7 @@ namespace ProyectoSGIOCore.Controllers
             ViewBag.HitoDataJson = JsonConvert.SerializeObject(hitoData);
             ViewBag.TareaDataJson = JsonConvert.SerializeObject(tareaData);
             ViewBag.FaseDataJson = JsonConvert.SerializeObject(faseData);
+            ViewBag.CostoTotal = costoTotal;
             ViewBag.ProgresoGeneral = progresoGeneral; // Pasar el progreso general a la vista
 
             return View();
@@ -549,7 +554,9 @@ namespace ProyectoSGIOCore.Controllers
             var estadosHitos = new List<EstadoHitoVM>
             { new EstadoHitoVM { Id = 1, Nombre = "Completo" },
              new EstadoHitoVM { Id = 2, Nombre = "Pendiente" },
-             new EstadoHitoVM { Id = 3, Nombre = "En Progreso" } };
+             new EstadoHitoVM { Id = 3, Nombre = "En Progreso" },
+             new EstadoHitoVM { Id = 4, Nombre = "Aprobado" },
+             new EstadoHitoVM { Id = 5, Nombre = "Rechazado" }};
             ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
             ViewBag.ProyectoId = id;
             ViewBag.EstadosHito = new SelectList(estadosHitos, "Id", "Nombre");
@@ -620,6 +627,30 @@ namespace ProyectoSGIOCore.Controllers
             {
                 return BadRequest(new { error = $"Error al guardar cambios: {ex.Message}" });
             }
+        }
+
+        [HttpPost]
+        public IActionResult AprobarHito(int hitoId)
+        {
+            var hito = _dbContext.Hitos.Find(hitoId);
+            if (hito != null)
+            {
+                hito.estado = 4; // Estado "Aprobado"
+                _dbContext.SaveChanges();
+            }
+            return RedirectToAction("GestionarProyecto", new { id = hito.ProyectoId });
+        }
+
+        [HttpPost]
+        public IActionResult RechazarHito(int hitoId)
+        {
+            var hito = _dbContext.Hitos.Find(hitoId);
+            if (hito != null)
+            {
+                hito.estado = 5; // Estado "Rechazado"
+                _dbContext.SaveChanges();
+            }
+            return RedirectToAction("GestionarProyecto", new { id = hito.ProyectoId });
         }
     }
 }

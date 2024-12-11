@@ -188,10 +188,40 @@
                             En Proceso
                         </span>
                     }
+                    @if (@hito.estado == 4)
+                    {
+                        <span class="btn btn-success btn-sm" style="background-color: #28a745; color: white;">
+                            Aprobado
+                        </span>
+                    }
+                    @if (@hito.estado == 5)
+                    {
+                        <span class="btn btn-danger btn-sm" style="background-color: #dc3545; color: white;">
+                            Rechazado
+                        </span>
+                    }
                 </h4>
-                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarHito_@hito.ID">
-                    Eliminar Hito
-                </button>
+                <div>
+                    @if (hito.estado == 1)
+                    {
+                        <form asp-action="AprobarHito" asp-controller="Proyecto" method="post" style="display:inline-block;">
+                            <input type="hidden" name="hitoId" value="@hito.ID" />
+                            <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                Aprobar
+                            </button>
+                        </form>
+
+                        <form asp-action="RechazarHito" asp-controller="Proyecto" method="post" style="display:inline-block;">
+                            <input type="hidden" name="hitoId" value="@hito.ID" />
+                            <button type="submit" style="background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                Rechazar
+                            </button>
+                        </form>
+                    }
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarHito_@hito.ID">
+                        Eliminar Hito
+                    </button>
+                </div>
             </div>
         </div>
 

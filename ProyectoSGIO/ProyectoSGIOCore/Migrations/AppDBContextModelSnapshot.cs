@@ -56,7 +56,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasKey("IdCierre");
 
-                    b.ToTable("CierresFinancieros");
+                    b.ToTable("CierresFinancieros", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Empleado", b =>
@@ -118,7 +118,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProveedorIdProveedor");
 
-                    b.ToTable("Facturas");
+                    b.ToTable("Facturas", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Fase", b =>
@@ -139,7 +139,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProyectoId");
 
-                    b.ToTable("Fases");
+                    b.ToTable("Fases", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Hito", b =>
@@ -172,7 +172,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProyectoId");
 
-                    b.ToTable("Hitos");
+                    b.ToTable("Hitos", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Inventario", b =>
@@ -203,7 +203,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Inventarios");
+                    b.ToTable("Inventarios", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Proveedor", b =>
@@ -286,7 +286,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("IdUsuario");
 
-                    b.ToTable("Proyectos");
+                    b.ToTable("Proyectos", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Rol", b =>
@@ -359,7 +359,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("FaseId");
 
-                    b.ToTable("Tareas");
+                    b.ToTable("Tareas", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Usuario", b =>
