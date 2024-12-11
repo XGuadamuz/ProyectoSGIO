@@ -66,6 +66,7 @@
                         <a href="@Url.Action("GestionarProyecto", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-primary btn-sm">Gestionar</a>
                         <a href="@Url.Action("AsignarCliente", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-dark btn-sm">Asignar Cliente</a>
                         <a href="@Url.Action("AsignarHito", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-dark btn-sm">Asignar Hitos</a>
+                        <a href="@Url.Action("AsignarProblema", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-danger btn-sm">Asignar Problema</a>
                         <a href="@Url.Action("Dashboard", "Proyecto", new { id = proyecto.Id })" class="btn btn-outline-dark btn-sm">Ver Dashboard</a>
                         <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarProyecto_@proyecto.Id">Eliminar</button>
                     </td>
