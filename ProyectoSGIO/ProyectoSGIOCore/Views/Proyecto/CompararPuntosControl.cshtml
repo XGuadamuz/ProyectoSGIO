@@ -1,0 +1,43 @@
+﻿@model ProyectoSGIOCore.ViewModels.ComparacionPuntosControlVM
+
+@{
+    ViewBag.Title = "Comparación de Puntos de Control del Proyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Comparación de Puntos de Control del Proyecto</h2>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Punto de Control</th>
+                <th>Fecha de Registro</th>
+                <th>Progreso de Tareas</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var puntoControl in Model.PuntosControl)
+            {
+                <tr>
+                    <td>@puntoControl.Id</td>
+                    <td>@puntoControl.FechaRegistro.ToShortDateString()</td>
+                    <td>
+                        @foreach (var fase in puntoControl.FasesControl)
+                        {
+                            <strong>Fase: @fase.Nombre</strong>
+
+                            <br>
+                            @foreach (var tarea in fase.TareasControl)
+                            {
+                                <span>@tarea.Nombre - @tarea.Completada ? "Completada" : "Pendiente"</span>
+
+                                <br>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

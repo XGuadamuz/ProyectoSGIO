@@ -1,0 +1,58 @@
+﻿@model ProyectoSGIOCore.ViewModels.EvaluacionPeriodicaVM
+
+@{
+    ViewBag.Title = "Evaluación Periódica del Proyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Evaluación Periódica del Proyecto</h2>
+
+    <h3>Desviaciones</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Fase</th>
+                <th>Desviación</th>
+                <th>Tareas Iniciales</th>
+                <th>Tareas Completadas</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var desviacion in Model.Desviaciones)
+            {
+                <tr>
+                    <td>@desviacion.Fase</td>
+                    <td>@desviacion.Desviacion:P2</td>
+                    <td>@desviacion.TareasInicial</td>
+                    <td>@desviacion.TareasCompletadas</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Impacto de las Medidas Correctivas</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Fase</th>
+                <th>Medida Correctiva</th>
+                <th>Fecha de Implementación</th>
+                <th>Impacto Esperado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var impacto in Model.ImpactoMedidas)
+            {
+                <tr>
+                    <td>@impacto.Fase</td>
+                    <td>@impacto.Medida</td>
+                    <td>@impacto.FechaImplementacion.ToShortDateString()</td>
+                    <td>@impacto.Impacto</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="GenerarInforme" asp-route-proyectoId="@Model.Proyecto.Id" class="btn btn-primary">Generar Informe</a>
+</div>

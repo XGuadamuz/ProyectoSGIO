@@ -30,6 +30,73 @@
                         Crear Proyecto
                     </a>
                 </li>
+                <!-- Enlace a Dashboard Comparativo --> 
+                @if (ViewBag.ProyectoId != null)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2 @(ViewContext.RouteData.Values["action"].ToString() == "DashboardComparacion" ? "active" : "")"
+                           asp-controller="Proyecto" asp-action="DashboardComparacion" asp-route-proyectoId="@ViewBag.ProyectoId">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart" viewBox="0 0 16 16">
+                                <path d="M0 0h1v15h15v1H0V0z" />
+                                <path d="M12.5 10h-1v3h1v-3zm-5-4h-1v7h1V6z" />
+                                <path d="M5 8h-1v5h1V8z" />
+                            </svg>
+                            Dashboard Comparativo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2 @(ViewContext.RouteData.Values["action"].ToString() == "MedidasCorrectivas" ? "active" : "")"
+                           asp-controller="Proyecto" asp-action="MedidasCorrectivas" asp-route-proyectoId="@ViewBag.ProyectoId">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tools" viewBox="0 0 16 16">
+                                <path d="M1 0v4.293l1.5-1.5 2 2-1.5 1.5H0V16h11v-7l3.5 3.5 2-2-3.5-3.5h7V0H1z" />
+                            </svg>
+                            Medidas Correctivas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2 @(ViewContext.RouteData.Values["action"].ToString() == "SeguimientoImpacto" ? "active" : "")"
+                            asp-controller="Proyecto" asp-action="SeguimientoImpacto" asp-route-proyectoId="@ViewBag.ProyectoId">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
+                                <path d="M0 0h1v15h15v1H0V0z" />
+                                <path d="M12.5 10h-1v3h1v-3zm-5-4h-1v7h1V6z" />
+                                <path d="M5 8h-1v5h1V8z" />
+                            </svg>
+                            Seguimiento de Impacto
+                        </a>
+                    </li>
+                    <li class="nav-item"> 
+                        <a class="nav-link d-flex align-items-center gap-2 @(ViewContext.RouteData.Values["action"].ToString() == "DetectarCambiosSignificativos" ? "active" : "")"
+                            asp-controller="Proyecto" asp-action="DetectarCambiosSignificativos" asp-route-proyectoId="@ViewBag.ProyectoId">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-line" viewBox="0 0 16 16">
+                                <path d="M0 0h1v15h15v1H0V0z" />
+                                <path d="M12.5 10h-1v3h1v-3zm-5-4h-1v7h1V6z" />
+                                <path d="M5 8h-1v5h1V8z" />
+                            </svg> 
+                            Detectar Cambios Significativos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2 @(ViewContext.RouteData.Values["action"].ToString() == "CompararPuntosControl" ? "active" : "")"
+                            asp-controller="Proyecto" asp-action="CompararPuntosControl" asp-route-proyectoId="@ViewBag.ProyectoId">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-bar-graph" viewBox="0 0 16 16">
+                                <path d="M0 0h1v15h15v1H0V0z" />
+                                <path d="M12.5 10h-1v3h1v-3zm-5-4h-1v7h1V6z" />
+                                <path d="M5 8h-1v5h1V8z" />
+                            </svg>
+                            Comparar Puntos de Control 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-2 @(ViewContext.RouteData.Values["action"].ToString() == "EvaluacionPeriodica" ? "active" : "")"
+                            asp-controller="Proyecto" asp-action="EvaluacionPeriodica" asp-route-proyectoId="@ViewBag.ProyectoId">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16">
+                                <path d="M1.5 2h-1v11h11v-1H1.5V2zM4 0h5.5v1H4V0zm3 2h3V1H7v1zm0 1h-1v1h1V3zm2 0h1v1h-1V3z" />
+                                <path fill-rule="evenodd" d="M10.828 9h-3.57l-.6.97 1.536 2.035-1.52 2.073 2.436 1.498 3.994-6.075-.87-.77-.896 1.14-2.41 3.563-.837-1.07 2.256-3.28z" />
+                            </svg>
+                            Evaluación Periódica
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
     </nav>

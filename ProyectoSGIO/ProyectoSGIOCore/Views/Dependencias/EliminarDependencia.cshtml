@@ -1,0 +1,39 @@
+﻿@model ProyectoSGIOCore.Models.Dependencia
+@{
+    ViewBag.Title = "Eliminar Dependencia";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Eliminar Dependencia entre Tareas</h2>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert @(ViewBag.Success ? "alert-success" : "alert-danger")" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+
+    <form id="form-eliminar-dependencia" method="post" action="/Dependencias/EliminarDependencia">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="dependenciaId" class="form-label">Seleccione la Dependencia a Eliminar:</label>
+                <select id="dependenciaId" name="dependenciaId" class="form-select">
+                    <option value="">-- Seleccione una Dependencia --</option>
+                    @if (ViewBag.Dependencias != null && ViewBag.Dependencias.Count > 0)
+                    {
+                        @foreach (var dependencia in ViewBag.Dependencias)
+                        {
+                            <option value="@dependencia.Id">Dependencia @dependencia.Id: @dependencia.TareaPredecesoraId - @dependencia.TareaSucesoraId</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="" disabled>No hay dependencias disponibles</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-danger">Eliminar Dependencia</button>
+    </form>
+</div>

@@ -22,12 +22,42 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Hito> Hitos { get; set; }
         public DbSet<Archivo> Archivos { get; set; }
         public DbSet<Reporte> Reportes { get; set; }
-
+        public DbSet<PlanInicial> PlanesIniciales { get; set; }
+        public DbSet<FaseInicial> FasesIniciales { get; set; }
+        public DbSet<TareaInicial> TareasIniciales { get; set; }
+        public DbSet<PuntoControl> PuntosControl { get; set; }
+        public DbSet<FaseControl> FasesControl { get; set; }
+        public DbSet<TareaControl> TareasControl { get; set; }
+        public DbSet<ImpactoMedidaCorrectiva> ImpactosMedidasCorrectivas { get; set; }
         public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
+        public DbSet<Dependencia> Dependencias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configuración de Dependencias
+            modelBuilder.Entity<Dependencia>()
+                .HasOne(d => d.TareaPredecesora)
+                .WithMany(t => t.DependenciasSucesoras)
+                .HasForeignKey(d => d.TareaPredecesoraId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Dependencia>()
+                .HasOne(d => d.TareaSucesora)
+                .WithMany(t => t.DependenciasPredecesoras)
+                .HasForeignKey(d => d.TareaSucesoraId);
+
+            // Configuración de relaciones Proyecto-Fase-Tarea
+            modelBuilder.Entity<Proyecto>()
+                .HasMany(p => p.Fases)
+                .WithOne(f => f.Proyecto)
+                .HasForeignKey(f => f.ProyectoId);
+            
+            modelBuilder.Entity<Fase>()
+                .HasMany(f => f.Tareas)
+                .WithOne(t => t.Fase)
+                .HasForeignKey(t => t.FaseId);
 
             // Configuración de Usuario
             modelBuilder.Entity<Usuario>(tb =>

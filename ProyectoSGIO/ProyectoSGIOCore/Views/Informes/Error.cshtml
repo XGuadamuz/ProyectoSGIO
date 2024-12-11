@@ -1,0 +1,16 @@
+﻿@model ProyectoSGIOCore.Models.Reporte
+@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Error</h2>
+    <div class="alert alert-danger mt-3">
+        @ViewData["Mensaje"]
+    </div>
+    <div class="text-center">
+        <a href="~/Informes/GenerarInforme" class="btn btn-secondary mt-3">Volver a Intentar</a>
+    </div>
+</div>
+
