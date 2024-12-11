@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoSGIOCore.Data;
 
@@ -11,9 +12,11 @@ using ProyectoSGIOCore.Data;
 namespace ProyectoSGIOCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241211035016_ablaProblemas")]
+    partial class ablaProblemas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +59,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasKey("IdCierre");
 
-                    b.ToTable("CierresFinancieros", (string)null);
+                    b.ToTable("CierresFinancieros");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Empleado", b =>
@@ -118,7 +121,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProveedorIdProveedor");
 
-                    b.ToTable("Facturas", (string)null);
+                    b.ToTable("Facturas");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Fase", b =>
@@ -139,7 +142,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProyectoId");
 
-                    b.ToTable("Fases", (string)null);
+                    b.ToTable("Fases");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Hito", b =>
@@ -172,7 +175,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProyectoId");
 
-                    b.ToTable("Hitos", (string)null);
+                    b.ToTable("Hitos");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Inventario", b =>
@@ -203,7 +206,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Inventarios", (string)null);
+                    b.ToTable("Inventarios");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Problema", b =>
@@ -324,7 +327,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("IdUsuario");
 
-                    b.ToTable("Proyectos", (string)null);
+                    b.ToTable("Proyectos");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Rol", b =>
@@ -397,7 +400,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("FaseId");
 
-                    b.ToTable("Tareas", (string)null);
+                    b.ToTable("Tareas");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Usuario", b =>

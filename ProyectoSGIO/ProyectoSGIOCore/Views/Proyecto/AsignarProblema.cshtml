@@ -1,6 +1,6 @@
 ﻿@model ProyectoSGIOCore.Models.Proyecto
 @{
-    ViewData["Title"] = "Asignar Hito";
+    ViewData["Title"] = "Asignar Problema";
     Layout = "~/Views/Proyecto/MenuProyecto.cshtml";
 }
 
@@ -13,15 +13,15 @@
 }
 
 <!-- Sección: Encabezado del Proyecto -->
-<h2 class="section-title">Asignar Hito</h2>
+<h2 class="section-title">Asignar Problema</h2>
 
 
-<form asp-action="AsignarHito" method="post">
+<form asp-action="AsignarProblema" method="post">
     <input type="hidden" name="id" value="@ViewBag.ProyectoId" />
     <div class="mb-12" style="display:flex; flex-direction:column;">
     <div class="mb-3">
-        <label>Ingrese una descripción para este Hito</label>
-            <textarea style="width:100%" name="Descripcion" placeholder="Descripción del Hito">
+        <label>Ingrese una descripción para este Problema</label>
+            <textarea style="width:100%" name="Descripcion" placeholder="Descripción del Problema">
             </textarea>
         <span class="text-danger"
         ></span>
@@ -29,16 +29,22 @@
    
         <div style="display:flex; flex-direction:row; justify-content:space-between;">
             <div class="mb-3" style="display:flex; flex-direction:column;">
-                <label class="form-label">Empleado</label>
+                <label class="form-label">Responsable</label>
                 <select name="usuarioId" asp-items="ViewBag.Usuarios" class="form-select">
                     <option value="">Seleccione un empleado</option>
                 </select>
                 <span class="text-danger"></span>
             </div>
             <div class="mb-3" style="display:flex; flex-direction:column;">
-                <label>Estado</label>
-                <select name="estadoId" asp-items="ViewBag.EstadosHito" class="form-select">
-                    <option value="">Seleccione un estado</option>
+                <label>Categoria</label>
+                <select name="categoriaId" asp-items="ViewBag.CategoriaProblema" class="form-select">
+                    <option value="">Seleccione una categoria</option>
+                </select>
+            </div>
+            <div class="mb-3" style="display:flex; flex-direction:column;">
+                <label>Prioridad</label>
+                <select name="prioridadId" asp-items="ViewBag.PrioridadProblema" class="form-select">
+                    <option value="">Seleccione una categoria</option>
                 </select>
             </div>
             <div class="mb-3" style="display:flex; flex-direction:column;">
@@ -48,5 +54,5 @@
        </div>
        
     </div>
-    <button type="submit" class="btn btn-success mt-3">Asignar Hito</button>
+    <button type="submit" class="btn btn-success mt-3">Asignar Problema</button>
 </form>

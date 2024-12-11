@@ -13,6 +13,8 @@ namespace ProyectoSGIOCore.Models
 
         public ICollection<Hito> Hitos { get; set; } = new List<Hito>();
 
+        public ICollection<Problema> Problemas { get; set; } = new List<Problema>();
+
         // Propiedad calculada para el costo total del proyecto
         public decimal CostoTotal => Fases?.Sum(f => f.CostoTotal) ?? 0;
 

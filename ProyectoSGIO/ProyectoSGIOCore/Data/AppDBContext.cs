@@ -21,6 +21,8 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<Hito> Hitos { get; set; }
 
+        public DbSet<Problema> Problemas { get; set; }
+
         public DbSet<CierreFinanciero> CierresFinancieros { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
