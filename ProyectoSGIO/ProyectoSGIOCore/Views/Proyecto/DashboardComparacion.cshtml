@@ -1,0 +1,118 @@
+﻿@model ProyectoSGIOCore.ViewModels.DashboardComparacionVM
+
+@{
+    ViewBag.Title = "Comparación del Plan Inicial y Progreso Actual";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var desviaciones = ViewBag.Desviaciones as List<dynamic>;
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Comparación del Plan Inicial y Progreso Actual</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Plan Inicial</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Fase</th>
+                        <th>Tarea</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var fase in Model.PlanInicial.FasesIniciales)
+                    {
+                        foreach (var tarea in fase.TareasIniciales)
+                        {
+                            <tr>
+                                <td>@fase.Nombre</td>
+                                <td>@tarea.Nombre</td>
+                                <td>@tarea.FechaInicio.ToShortDateString()</td>
+                                <td>@tarea.FechaFin.ToShortDateString()</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3>Progreso Actual</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Fase</th>
+                        <th>Tarea</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var fase in Model.ProgresoActual)
+                    {
+                        var faseDesviacion = desviaciones?.FirstOrDefault(d => d.Fase == fase.Nombre);
+                        var rowClass = faseDesviacion != null && Math.Abs(faseDesviacion.Desviacion) >= 0.5 ? "table-danger" : "";
+
+                        foreach (var tarea in fase.Tareas)
+                        {
+                            <tr class="@rowClass">
+                                <td>@fase.Nombre</td>
+                                <td>@tarea.Nombre</td>
+                                <td>@tarea.FechaInicio.ToShortDateString()</td>
+                                <td>@tarea.FechaFin.ToShortDateString()</td>
+                                <td>@(tarea.Completada ? "Completada" : "Pendiente")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <canvas id="chartComparacion"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('chartComparacion').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(ViewBag.FaseNombres),
+                datasets: [
+                    {
+                        label: 'Progreso Inicial',
+                        data: @Html.Raw(ViewBag.ProgresoInicial),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Progreso Actual',
+                        data: @Html.Raw(ViewBag.ProgresoActual),
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

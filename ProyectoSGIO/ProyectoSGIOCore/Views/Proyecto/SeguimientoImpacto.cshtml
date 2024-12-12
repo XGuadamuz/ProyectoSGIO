@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ProyectoSGIOCore.Models.ImpactoMedidaCorrectiva>
+
+@{
+    ViewBag.Title = "Seguimiento de Impacto de Medidas Correctivas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Seguimiento de Impacto de Medidas Correctivas</h2>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Fase</th>
+                <th>Medida Correctiva</th>
+                <th>Fecha de Implementación</th>
+                <th>Impacto Esperado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var impacto in Model)
+            {
+                <tr>
+                    <td>@impacto.Fase</td>
+                    <td>@impacto.Medida</td>
+                    <td>@impacto.FechaImplementacion.ToShortDateString()</td>
+                    <td>@impacto.Impacto</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

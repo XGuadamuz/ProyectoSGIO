@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ProyectoSGIOCore.Models.Archivo>
+@{
+    ViewBag.Title = "Visualizar Archivos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Lista de Archivos</h2>
+    <div class="text-end mb-3">
+        <a asp-action="SubirArchivo" class="btn btn-primary">Subir Nuevo Archivo</a>
+    </div>
+    <table class="table table-bordered table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Fecha de Subida</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var archivo in Model)
+            {
+                <tr>
+                    <td>@archivo.IdArchivo</td>
+                    <td>@archivo.Nombre</td>
+                    <td>@archivo.FechaSubida.ToShortDateString()</td>
+                    <td>
+                        <a asp-action="DescargarArchivo" asp-route-id="@archivo.IdArchivo" class="btn btn-success">Descargar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

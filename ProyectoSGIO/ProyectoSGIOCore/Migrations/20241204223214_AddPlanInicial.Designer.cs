@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoSGIOCore.Data;
 
@@ -11,9 +12,11 @@ using ProyectoSGIOCore.Data;
 namespace ProyectoSGIOCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241204223214_AddPlanInicial")]
+    partial class AddPlanInicial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,33 +88,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasKey("IdCierre");
 
-                    b.ToTable("CierresFinancieros", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.Dependencia", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("TareaPredecesoraId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TareaSucesoraId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TipoDependencia")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TareaPredecesoraId");
-
-                    b.HasIndex("TareaSucesoraId");
-
-                    b.ToTable("Dependencias");
+                    b.ToTable("CierresFinancieros");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Empleado", b =>
@@ -173,7 +150,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProveedorIdProveedor");
 
-                    b.ToTable("Facturas", (string)null);
+                    b.ToTable("Facturas");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Fase", b =>
@@ -194,28 +171,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProyectoId");
 
-                    b.ToTable("Fases", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.FaseControl", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PuntoControlId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PuntoControlId");
-
-                    b.ToTable("FasesControl");
+                    b.ToTable("Fases");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.FaseInicial", b =>
@@ -269,37 +225,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("ProyectoId");
 
-                    b.ToTable("Hitos", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.ImpactoMedidaCorrectiva", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Fase")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaImplementacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Impacto")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Medida")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProyectoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProyectoId");
-
-                    b.ToTable("ImpactosMedidasCorrectivas");
+                    b.ToTable("Hitos");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Inventario", b =>
@@ -330,45 +256,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Inventarios", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.Problema", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("IdUsuario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProyectoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("categoria")
-                        .HasColumnType("int");
-
-                    b.Property<int>("estado")
-                        .HasColumnType("int");
-
-                    b.Property<int>("prioridad")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("IdUsuario");
-
-                    b.HasIndex("ProyectoId");
-
-                    b.ToTable("Problemas");
+                    b.ToTable("Inventarios");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.PlanInicial", b =>
@@ -469,28 +357,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("IdUsuario");
 
-                    b.ToTable("Proyectos", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.PuntoControl", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("FechaRegistro")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProyectoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProyectoId");
-
-                    b.ToTable("PuntosControl");
+                    b.ToTable("Proyectos");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Reporte", b =>
@@ -592,37 +459,7 @@ namespace ProyectoSGIOCore.Migrations
 
                     b.HasIndex("FaseId");
 
-                    b.ToTable("Tareas", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.TareaControl", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Completada")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("FaseControlId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaFin")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaInicio")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FaseControlId");
-
-                    b.ToTable("TareasControl");
+                    b.ToTable("Tareas");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.TareaInicial", b =>
@@ -751,25 +588,6 @@ namespace ProyectoSGIOCore.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ProyectoSGIOCore.Models.Dependencia", b =>
-                {
-                    b.HasOne("ProyectoSGIOCore.Models.Tarea", "TareaPredecesora")
-                        .WithMany("DependenciasSucesoras")
-                        .HasForeignKey("TareaPredecesoraId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProyectoSGIOCore.Models.Tarea", "TareaSucesora")
-                        .WithMany("DependenciasPredecesoras")
-                        .HasForeignKey("TareaSucesoraId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TareaPredecesora");
-
-                    b.Navigation("TareaSucesora");
-                });
-
             modelBuilder.Entity("ProyectoSGIOCore.Models.FacturaProveedor", b =>
                 {
                     b.HasOne("ProyectoSGIOCore.Models.Proveedor", "Proveedor")
@@ -788,17 +606,6 @@ namespace ProyectoSGIOCore.Migrations
                         .IsRequired();
 
                     b.Navigation("Proyecto");
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.FaseControl", b =>
-                {
-                    b.HasOne("ProyectoSGIOCore.Models.PuntoControl", "PuntoControl")
-                        .WithMany("FasesControl")
-                        .HasForeignKey("PuntoControlId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PuntoControl");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.FaseInicial", b =>
@@ -829,23 +636,6 @@ namespace ProyectoSGIOCore.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ProyectoSGIOCore.Models.Problema", b =>
-                {
-                    b.HasOne("ProyectoSGIOCore.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("IdUsuario");
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.ImpactoMedidaCorrectiva", b =>
-                {
-                    b.HasOne("ProyectoSGIOCore.Models.Proyecto", "Proyecto")
-                        .WithMany()
-                        .HasForeignKey("ProyectoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Proyecto");
-                });
-
             modelBuilder.Entity("ProyectoSGIOCore.Models.PlanInicial", b =>
                 {
                     b.HasOne("ProyectoSGIOCore.Models.Proyecto", "Proyecto")
@@ -855,8 +645,6 @@ namespace ProyectoSGIOCore.Migrations
                         .IsRequired();
 
                     b.Navigation("Proyecto");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Proyecto", b =>
@@ -866,17 +654,6 @@ namespace ProyectoSGIOCore.Migrations
                         .HasForeignKey("IdUsuario");
 
                     b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.PuntoControl", b =>
-                {
-                    b.HasOne("ProyectoSGIOCore.Models.Proyecto", "Proyecto")
-                        .WithMany()
-                        .HasForeignKey("ProyectoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Proyecto");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Reporte", b =>
@@ -899,17 +676,6 @@ namespace ProyectoSGIOCore.Migrations
                         .IsRequired();
 
                     b.Navigation("Fase");
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.TareaControl", b =>
-                {
-                    b.HasOne("ProyectoSGIOCore.Models.FaseControl", "FaseControl")
-                        .WithMany("TareasControl")
-                        .HasForeignKey("FaseControlId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FaseControl");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.TareaInicial", b =>
@@ -939,11 +705,6 @@ namespace ProyectoSGIOCore.Migrations
                     b.Navigation("Tareas");
                 });
 
-            modelBuilder.Entity("ProyectoSGIOCore.Models.FaseControl", b =>
-                {
-                    b.Navigation("TareasControl");
-                });
-
             modelBuilder.Entity("ProyectoSGIOCore.Models.FaseInicial", b =>
                 {
                     b.Navigation("TareasIniciales");
@@ -961,21 +722,9 @@ namespace ProyectoSGIOCore.Migrations
                     b.Navigation("Hitos");
                 });
 
-            modelBuilder.Entity("ProyectoSGIOCore.Models.PuntoControl", b =>
-                {
-                    b.Navigation("FasesControl");
-                });
-
             modelBuilder.Entity("ProyectoSGIOCore.Models.Rol", b =>
                 {
                     b.Navigation("Usuarios");
-                });
-
-            modelBuilder.Entity("ProyectoSGIOCore.Models.Tarea", b =>
-                {
-                    b.Navigation("DependenciasPredecesoras");
-
-                    b.Navigation("DependenciasSucesoras");
                 });
 
             modelBuilder.Entity("ProyectoSGIOCore.Models.Usuario", b =>

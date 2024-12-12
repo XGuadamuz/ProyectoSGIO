@@ -8,6 +8,9 @@ using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 using ProyectoSGIOCore.ViewModels;
 using Newtonsoft.Json;
 using ProyectoSGIOCore.Migrations;
+using System.Security.Claims;
+using ProyectoSGIOCore.Services;
+using System.Text;
 
 namespace ProyectoSGIOCore.Controllers
 {
@@ -15,10 +18,12 @@ namespace ProyectoSGIOCore.Controllers
     public class ProyectoController : Controller
     {
         private readonly AppDBContext _dbContext;
+        private readonly IUtilitariosModel _utilitarios;
 
-        public ProyectoController(AppDBContext context)
+        public ProyectoController(AppDBContext context, IUtilitariosModel utilitarios)
         {
             _dbContext = context;
+            _utilitarios = utilitarios;
         }
 
         [HttpGet]
@@ -247,6 +252,25 @@ namespace ProyectoSGIOCore.Controllers
                         }
                     }
 
+                    await _dbContext.SaveChangesAsync();
+
+                    // Guardar el plan inicial
+                    var planInicial = new PlanInicial 
+                    {
+                        ProyectoId = proyecto.Id,
+                        FasesIniciales = fases.Select(f => new FaseInicial 
+                        {
+                            Nombre = f.Nombre,
+                            TareasIniciales = f.Tareas.Select(t => new TareaInicial 
+                            {
+                                Nombre = t.Nombre,
+                                FechaInicio = t.FechaInicio,
+                                FechaFin = t.FechaFin 
+                            }).ToList()
+                        }).ToList()
+                    };
+
+                    _dbContext.PlanesIniciales.Add(planInicial);
                     await _dbContext.SaveChangesAsync();
 
                     TempData["MensajeExito"] = $"Proyecto creado correctamente. Costo total: {proyecto.CostoTotal:C}";
@@ -753,6 +777,541 @@ namespace ProyectoSGIOCore.Controllers
                 _dbContext.SaveChanges();
             }
             return RedirectToAction("GestionarProyecto", new { id = hito.ProyectoId });
+         }
+        [HttpGet]
+        public async Task<IActionResult> DashboardComparacion(int proyectoId)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .Include(p => p.Hitos)
+                .ThenInclude(h => h.Usuario)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var planInicial = await _dbContext.PlanesIniciales
+                .Include(p => p.FasesIniciales)
+                .ThenInclude(f => f.TareasIniciales)
+                .FirstOrDefaultAsync(p => p.ProyectoId == proyectoId);
+
+            if (planInicial == null)
+            {
+                TempData["MensajeError"] = "Plan inicial no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var progresoActual = proyecto.Fases.Select(f => new
+            {
+                f.Nombre,
+                Tareas = f.Tareas.Select(t => new
+                {
+                    t.Nombre,
+                    t.FechaInicio,
+                    t.FechaFin,
+                    t.Completada
+                }).ToList()
+            }).ToList();
+
+            var desviaciones = new List<dynamic>();
+            var notificacionRequerida = false;
+            var mensajeDesviaciones = "<h3>Desviaciones Significativas Detectadas:</h3><ul>";
+
+            foreach (var fase in planInicial.FasesIniciales)
+            {
+                var faseActual = progresoActual.FirstOrDefault(f => f.Nombre == fase.Nombre);
+                if (faseActual != null)
+                {
+                    var tareasInicial = fase.TareasIniciales.Count;
+                    var tareasCompletadas = faseActual.Tareas.Count(t => t.Completada);
+                    var desviacion = (double)tareasCompletadas / tareasInicial - 1;
+
+                    if (Math.Abs(desviacion) >= 0.5)
+                    {
+                        desviaciones.Add(new
+                        {
+                            Fase = fase.Nombre,
+                            Desviacion = desviacion
+                        });
+
+                        notificacionRequerida = true;
+                        mensajeDesviaciones += $"<li>Fase: {fase.Nombre}, Desviación: {desviacion:P2}</li>";
+                    }
+                }
+            }
+
+            mensajeDesviaciones += "</ul>";
+
+            if (notificacionRequerida)
+            {
+                var correoSupervisor = User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
+                _utilitarios.EnviarCorreo(correoSupervisor, "Desviaciones Significativas Detectadas", mensajeDesviaciones);
+            }
+
+            ViewBag.FaseNombres = JsonConvert.SerializeObject(planInicial.FasesIniciales.Select(f => f.Nombre).ToList());
+            ViewBag.ProgresoInicial = JsonConvert.SerializeObject(planInicial.FasesIniciales.Select(f => f.TareasIniciales.Count).ToList());
+            ViewBag.ProgresoActual = JsonConvert.SerializeObject(progresoActual.Select(f => f.Tareas.Count(t => t.Completada)).ToList());
+            ViewBag.Desviaciones = desviaciones.ToList();
+
+            var model = new DashboardComparacionVM
+            {
+                Proyecto = proyecto,
+                PlanInicial = planInicial,
+                ProgresoActual = progresoActual
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MedidasCorrectivas(int proyectoId)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .Include(p => p.Hitos)
+                .ThenInclude(h => h.Usuario)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var planInicial = await _dbContext.PlanesIniciales
+                .Include(p => p.FasesIniciales)
+                .ThenInclude(f => f.TareasIniciales)
+                .FirstOrDefaultAsync(p => p.ProyectoId == proyectoId);
+
+            var progresoActual = proyecto.Fases.Select(f => new
+            {
+                f.Nombre,
+                Tareas = f.Tareas.Select(t => new
+                {
+                    t.Nombre,
+                    t.FechaInicio,
+                    t.FechaFin,
+                    t.Completada
+                }).ToList()
+            }).ToList();
+
+            var medidasCorrectivas = new List<dynamic>();
+
+            foreach (var fase in planInicial.FasesIniciales)
+            {
+                var faseActual = progresoActual.FirstOrDefault(f => f.Nombre == fase.Nombre);
+                if (faseActual != null)
+                {
+                    var tareasInicial = fase.TareasIniciales.Count;
+                    var tareasCompletadas = faseActual.Tareas.Count(t => t.Completada);
+                    var desviacion = (double)tareasCompletadas / tareasInicial - 1;
+
+                    if (Math.Abs(desviacion) >= 0.5)
+                    {
+                        medidasCorrectivas.Add(new
+                        {
+                            Fase = fase.Nombre,
+                            Medida = "Aumentar recursos para completar tareas pendientes.",
+                            Impacto = "Se espera reducir la desviación y completar el 100% de las tareas planificadas."
+                        });
+                    }
+                }
+            }
+
+            ViewBag.MedidasCorrectivas = medidasCorrectivas;
+
+            var model = new DashboardComparacionVM
+            {
+                Proyecto = proyecto,
+                PlanInicial = planInicial,
+                ProgresoActual = progresoActual
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AprobarMedidasCorrectivas(int proyectoId, string[] medidasAprobadas)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            foreach (var faseNombre in medidasAprobadas)
+            {
+                var fase = proyecto.Fases.FirstOrDefault(f => f.Nombre == faseNombre);
+                if (fase != null)
+                {
+                    // Implementar la medida correctiva
+                    // Ejemplo: Añadir un recurso adicional a las tareas pendientes
+                    foreach (var tarea in fase.Tareas.Where(t => !t.Completada))
+                    {
+                        // Añadir lógica específica para implementar la medida correctiva
+                        // Ejemplo: Aumentar recursos, ajustar fechas, etc.
+                        tarea.FechaFin = tarea.FechaFin.AddDays(-7); // Acortar la fecha de finalización como medida correctiva
+                    }
+
+                    // Registrar el impacto de la medida correctiva
+                    var impacto = new ImpactoMedidaCorrectiva
+                    {
+                        ProyectoId = proyecto.Id,
+                        Fase = fase.Nombre,
+                        Medida = "Aumentar recursos para completar tareas pendientes.",
+                        FechaImplementacion = DateTime.Now,
+                        Impacto = "Se espera reducir la desviación y completar el 100% de las tareas planificadas."
+                    };
+
+                    _dbContext.ImpactosMedidasCorrectivas.Add(impacto);
+                }
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            TempData["MensajeExito"] = "Medidas correctivas aprobadas e implementadas correctamente.";
+            return RedirectToAction("DashboardComparacion", new { proyectoId = proyecto.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SeguimientoImpacto(int proyectoId)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var impactos = await _dbContext.ImpactosMedidasCorrectivas
+                .Where(i => i.ProyectoId == proyectoId)
+                .ToListAsync();
+
+            ViewBag.ProyectoId = proyectoId;
+            return View(impactos);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DetectarCambiosSignificativos(int proyectoId)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var planInicial = await _dbContext.PlanesIniciales
+                .Include(p => p.FasesIniciales)
+                .ThenInclude(f => f.TareasIniciales)
+                .FirstOrDefaultAsync(p => p.ProyectoId == proyectoId);
+
+            var cambiosSignificativos = false;
+            var mensajeCambios = "<h3>Cambios Significativos Detectados:</h3><ul>";
+
+            foreach (var fase in planInicial.FasesIniciales)
+            {
+                var faseActual = proyecto.Fases.FirstOrDefault(f => f.Nombre == fase.Nombre);
+                if (faseActual != null)
+                {
+                    var tareasInicial = fase.TareasIniciales.Count;
+                    var tareasActuales = faseActual.Tareas.Count;
+                    var cambio = Math.Abs(tareasActuales - tareasInicial) > 0.5 * tareasInicial;
+
+                    if (cambio)
+                    {
+                        cambiosSignificativos = true;
+                        mensajeCambios += $"<li>Fase: {fase.Nombre}, Cambio en Número de Tareas: de {tareasInicial} a {tareasActuales}</li>";
+                    }
+                }
+            }
+
+            mensajeCambios += "</ul>";
+
+            ViewBag.CambiosSignificativos = cambiosSignificativos;
+            ViewBag.MensajeCambios = mensajeCambios;
+
+            var model = new DashboardComparacionVM
+            {
+                Proyecto = proyecto,
+                PlanInicial = planInicial,
+                ProgresoActual = proyecto.Fases.Select(f => new
+                {
+                    f.Nombre,
+                    Tareas = f.Tareas.Select(t => new
+                    {
+                        t.Nombre,
+                        t.FechaInicio,
+                        t.FechaFin,
+                        t.Completada
+                    }).ToList()
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ActualizarLineaBase(int proyectoId)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            // Actualizar la línea base
+            var planInicial = await _dbContext.PlanesIniciales
+                .Include(p => p.FasesIniciales)
+                .ThenInclude(f => f.TareasIniciales)
+                .FirstOrDefaultAsync(p => p.ProyectoId == proyectoId);
+
+            planInicial.FasesIniciales.Clear();
+
+            foreach (var fase in proyecto.Fases)
+            {
+                var faseInicial = new FaseInicial
+                {
+                    Nombre = fase.Nombre,
+                    TareasIniciales = fase.Tareas.Select(t => new TareaInicial
+                    {
+                        Nombre = t.Nombre,
+                        FechaInicio = t.FechaInicio,
+                        FechaFin = t.FechaFin
+                    }).ToList()
+                };
+
+                planInicial.FasesIniciales.Add(faseInicial);
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            TempData["MensajeExito"] = "Línea base del proyecto actualizada correctamente.";
+            return RedirectToAction("DashboardComparacion", new { proyectoId = proyecto.Id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegistrarPuntoControl(int proyectoId)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var puntoControl = new PuntoControl
+            {
+                ProyectoId = proyecto.Id,
+                FechaRegistro = DateTime.Now,
+                FasesControl = proyecto.Fases.Select(f => new FaseControl
+                {
+                    Nombre = f.Nombre,
+                    TareasControl = f.Tareas.Select(t => new TareaControl
+                    {
+                        Nombre = t.Nombre,
+                        FechaInicio = t.FechaInicio,
+                        FechaFin = t.FechaFin,
+                        Completada = t.Completada
+                    }).ToList()
+                }).ToList()
+            };
+
+            _dbContext.PuntosControl.Add(puntoControl);
+            await _dbContext.SaveChangesAsync();
+
+            TempData["MensajeExito"] = "Punto de control registrado correctamente.";
+            return RedirectToAction("DashboardComparacion", new { proyectoId = proyecto.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CompararPuntosControl(int proyectoId)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var puntosControl = await _dbContext.PuntosControl
+                .Where(pc => pc.ProyectoId == proyectoId)
+                .Include(pc => pc.FasesControl)
+                .ThenInclude(fc => fc.TareasControl)
+                .ToListAsync();
+
+            var model = new ComparacionPuntosControlVM
+            {
+                Proyecto = proyecto,
+                PuntosControl = puntosControl
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EvaluacionPeriodica(int proyectoId)
+        {
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .Include(p => p.Hitos)
+                .ThenInclude(h => h.Usuario)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var planInicial = await _dbContext.PlanesIniciales
+                .Include(p => p.FasesIniciales)
+                .ThenInclude(f => f.TareasIniciales)
+                .FirstOrDefaultAsync(p => p.ProyectoId == proyectoId);
+
+            var impactoMedidas = await _dbContext.ImpactosMedidasCorrectivas
+                .Where(im => im.ProyectoId == proyectoId)
+                .ToListAsync();
+
+            var desviaciones = new List<dynamic>();
+
+            foreach (var fase in planInicial.FasesIniciales)
+            {
+                var faseActual = proyecto.Fases.FirstOrDefault(f => f.Nombre == fase.Nombre);
+                if (faseActual != null)
+                {
+                    var tareasInicial = fase.TareasIniciales.Count;
+                    var tareasCompletadas = faseActual.Tareas.Count(t => t.Completada);
+                    var desviacion = (double)tareasCompletadas / tareasInicial - 1;
+
+                    desviaciones.Add(new
+                    {
+                        Fase = fase.Nombre,
+                        Desviacion = desviacion,
+                        TareasInicial = tareasInicial,
+                        TareasCompletadas = tareasCompletadas
+                    });
+                }
+            }
+
+            var model = new EvaluacionPeriodicaVM
+            {
+                Proyecto = proyecto,
+                PlanInicial = planInicial,
+                Desviaciones = desviaciones,
+                ImpactoMedidas = impactoMedidas
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GenerarInforme(int proyectoId)
+        {
+            // Obtener los datos necesarios para la evaluación periódica
+            var proyecto = await _dbContext.Proyectos
+                .Include(p => p.Fases)
+                .ThenInclude(f => f.Tareas)
+                .Include(p => p.Hitos)
+                .ThenInclude(h => h.Usuario)
+                .FirstOrDefaultAsync(p => p.Id == proyectoId);
+
+            if (proyecto == null)
+            {
+                TempData["MensajeError"] = "Proyecto no encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            var planInicial = await _dbContext.PlanesIniciales
+                .Include(p => p.FasesIniciales)
+                .ThenInclude(f => f.TareasIniciales)
+                .FirstOrDefaultAsync(p => p.ProyectoId == proyectoId);
+
+            var impactoMedidas = await _dbContext.ImpactosMedidasCorrectivas
+                .Where(im => im.ProyectoId == proyectoId)
+                .ToListAsync();
+
+            var desviaciones = new List<dynamic>();
+
+            foreach (var fase in planInicial.FasesIniciales)
+            {
+                var faseActual = proyecto.Fases.FirstOrDefault(f => f.Nombre == fase.Nombre);
+                if (faseActual != null)
+                {
+                    var tareasInicial = fase.TareasIniciales.Count;
+                    var tareasCompletadas = faseActual.Tareas.Count(t => t.Completada);
+                    var desviacion = (double)tareasCompletadas / tareasInicial - 1;
+
+                    desviaciones.Add(new
+                    {
+                        Fase = fase.Nombre,
+                        Desviacion = desviacion,
+                        TareasInicial = tareasInicial,
+                        TareasCompletadas = tareasCompletadas
+                    });
+                }
+            }
+
+            var model = new EvaluacionPeriodicaVM
+            {
+                Proyecto = proyecto,
+                PlanInicial = planInicial,
+                Desviaciones = desviaciones,
+                ImpactoMedidas = impactoMedidas
+            };
+
+            // Generar el informe (esto puede ser en HTML, PDF, etc.)
+            var informeHtml = new StringBuilder();
+            informeHtml.Append("<h1>Informe de Evaluación Periódica</h1>");
+            informeHtml.Append($"<h2>Proyecto: {model.Proyecto.Nombre}</h2>");
+            informeHtml.Append("<h3>Desviaciones</h3>");
+            informeHtml.Append("<ul>");
+            foreach (var desviacion in model.Desviaciones)
+            {
+                informeHtml.Append($"<li>Fase: {desviacion.Fase}, Desviación: {desviacion.Desviacion:P2}, Tareas Iniciales: {desviacion.TareasInicial}, Tareas Completadas: {desviacion.TareasCompletadas}</li>");
+            }
+            informeHtml.Append("</ul>");
+            informeHtml.Append("<h3>Impacto de las Medidas Correctivas</h3>");
+            informeHtml.Append("<ul>");
+            foreach (var impacto in model.ImpactoMedidas)
+            {
+                informeHtml.Append($"<li>Fase: {impacto.Fase}, Medida: {impacto.Medida}, Fecha de Implementación: {impacto.FechaImplementacion.ToShortDateString()}, Impacto: {impacto.Impacto}</li>");
+            }
+            informeHtml.Append("</ul>");
+
+            return Content(informeHtml.ToString(), "text/html");
         }
     }
 }

@@ -1,0 +1,81 @@
+﻿@model ProyectoSGIOCore.Models.Dependencia
+@{
+    ViewBag.Title = "Asignar Dependencias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Asignar Dependencias entre Tareas</h2>
+
+    <div class="text-end mb-3">
+        <a href="~/Dependencias/CrearDependencia" class="btn btn-primary">Crear Nueva Tarea</a>
+    </div>
+
+    <form id="form-dependencias" onsubmit="return validarFormulario()">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="tareaPredecesora" class="form-label">Tarea Predecesora:</label>
+                <select id="tareaPredecesora" name="tareaPredecesora" class="form-select">
+                    <option value="">-- Seleccione una Tarea --</option>
+                    @foreach (var tarea in ViewBag.Tareas)
+                    {
+                        <option value="@tarea.Id">@tarea.Nombre</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="tareaSucesora" class="form-label">Tarea Sucesora:</label>
+                <select id="tareaSucesora" name="tareaSucesora" class="form-select">
+                    <option value="">-- Seleccione una Tarea --</option>
+                    @foreach (var tarea in ViewBag.Tareas)
+                    {
+                        <option value="@tarea.Id">@tarea.Nombre</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="tipoDependencia" class="form-label">Tipo de Dependencia:</label>
+                <select id="tipoDependencia" name="tipoDependencia" class="form-select">
+                    <option value="FS">Fin a Inicio (FS)</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Asignar Dependencia</button>
+    </form>
+</div>
+
+@section scripts {
+    <script>
+        function validarFormulario() {
+            const tareaPredecesora = document.getElementById('tareaPredecesora').value;
+            const tareaSucesora = document.getElementById('tareaSucesora').value;
+
+            if (!tareaPredecesora || !tareaSucesora) {
+                alert('Por favor seleccione ambas tareas.');
+                return false;
+            }
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const tareaPredecesora = document.getElementById('tareaPredecesora');
+            const tareaSucesora = document.getElementById('tareaSucesora');
+
+            if (tareaPredecesora.options.length <= 1) {
+                const option = document.createElement('option');
+                option.text = 'No hay tareas disponibles';
+                option.disabled = true;
+                tareaPredecesora.add(option);
+            }
+
+            if (tareaSucesora.options.length <= 1) {
+                const option = document.createElement('option');
+                option.text = 'No hay tareas disponibles';
+                option.disabled = true;
+                tareaSucesora.add(option);
+            }
+        });
+    </script>
+}

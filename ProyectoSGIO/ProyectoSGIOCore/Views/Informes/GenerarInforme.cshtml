@@ -1,0 +1,49 @@
+﻿@model ProyectoSGIOCore.Models.InformeProgreso
+
+@{
+    ViewBag.Title = "Generar Informe de Progreso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Generar Informe de Progreso</h2>
+
+    <form method="get" asp-action="GenerarInforme">
+        <div class="mb-3">
+            <label for="proyectoId" class="form-label">Seleccione el Proyecto:</label>
+            <select class="form-control" id="proyectoId" name="proyectoId" required>
+                @if (Model.Proyectos != null && Model.Proyectos.Any())
+                {
+                    @foreach (var proyecto in Model.Proyectos)
+                    {
+                        <option value="@proyecto.Id">@proyecto.Nombre</option>
+                    }
+                }
+                else
+                {
+                    <option value="">No hay proyectos disponibles</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="formato" class="form-label">Seleccione el Formato:</label>
+            <select class="form-control" id="formato" name="formato" required>
+                <option value="pdf">PDF</option>
+                <option value="csv">CSV</option>
+                <option value="xlsx">XLSX</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" @(Model.Proyectos != null && Model.Proyectos.Any() ? "" : "disabled")>Generar Informe</button>
+    </form>
+
+    @if (ViewData["Mensaje"] != null)
+    {
+        <div class="alert alert-info mt-3">
+            @ViewData["Mensaje"]
+        </div>
+    }
+</div>
+
+
+
+

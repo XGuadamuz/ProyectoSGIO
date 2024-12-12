@@ -1,0 +1,34 @@
+﻿@model ProyectoSGIOCore.Models.Archivo
+@{
+    ViewBag.Title = "Subir Archivo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Subir Archivo</h2>
+
+    <div class="text-end mb-3">
+        <a href="~/Archivos/VerArchivosRecientes" class="btn btn-secondary">Ver archivos recientes</a>
+        <a href="~/Archivos/BuscarArchivos" class="btn btn-secondary">Buscar archivos</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" asp-action="SubirArchivo">
+        <div class="mb-3">
+            <label for="archivo" class="form-label">Seleccione un archivo:</label>
+            <input type="file" class="form-control" id="archivo" name="archivo" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Subir</button>
+    </form>
+
+    @if (ViewData["Mensaje"] != null)
+    {
+        <div class="alert alert-info mt-3">
+            @ViewData["Mensaje"]
+        </div>
+
+        <script>
+            alert('@ViewData["Mensaje"]');
+        </script>
+    }
+</div>
+
