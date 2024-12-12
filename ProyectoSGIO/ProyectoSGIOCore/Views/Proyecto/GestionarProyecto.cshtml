@@ -188,10 +188,40 @@
                             En Proceso
                         </span>
                     }
+                    @if (@hito.estado == 4)
+                    {
+                        <span class="btn btn-success btn-sm" style="background-color: #28a745; color: white;">
+                            Aprobado
+                        </span>
+                    }
+                    @if (@hito.estado == 5)
+                    {
+                        <span class="btn btn-danger btn-sm" style="background-color: #dc3545; color: white;">
+                            Rechazado
+                        </span>
+                    }
                 </h4>
-                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarHito_@hito.ID">
-                    Eliminar Hito
-                </button>
+                <div>
+                    @if (hito.estado == 1)
+                    {
+                        <form asp-action="AprobarHito" asp-controller="Proyecto" method="post" style="display:inline-block;">
+                            <input type="hidden" name="hitoId" value="@hito.ID" />
+                            <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                Aprobar
+                            </button>
+                        </form>
+
+                        <form asp-action="RechazarHito" asp-controller="Proyecto" method="post" style="display:inline-block;">
+                            <input type="hidden" name="hitoId" value="@hito.ID" />
+                            <button type="submit" style="background-color: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                Rechazar
+                            </button>
+                        </form>
+                    }
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarHito_@hito.ID">
+                        Eliminar Hito
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -218,27 +248,94 @@
         </div>
     }
 
-    <!-- Modal único reutilizable para eliminar tareas -->
-    <div class="modal fade" id="modalEliminarTarea" tabindex="-1" aria-labelledby="modalEliminarTareaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalEliminarTareaLabel">Eliminar Tarea</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar la tarea "<strong id="tareaNombre"></strong>"?
-                </div>
-                <div class="modal-footer">
-                    <form method="post" action="@Url.Action("EliminarTarea", "Proyecto")">
-                        <input type="hidden" name="tareaId" id="tareaId" value="" />
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
+   
+</div>
+
+<div class="content-scroll-container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Problemas</h3>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProblema">
+            Agregar Problema
+        </button>
+    </div>
+
+    @foreach (var problema in Model.Problemas)
+    {
+        <div class="fase-card">
+            <!-- Encabezado de la Fase -->
+            <div class="fase-header d-flex justify-content-between align-items-center">
+                <h4>Descripción: </h4><h5>@problema.Descripcion</h5>
+                <h4>Responsable: </h4> <h5>@problema.Usuario.Nombre @problema.Usuario.Apellido</h5>
+                <h4>Fecha: </h4> <h5>@problema.Fecha.ToShortDateString()</h5>
+                <h4>Categoría: @if (@problema.categoria == 1)
+                    {
+                        <span class="btn btn-success btn-sm">
+                            Bug
+                        </span>
+                    }
+                    @if (@problema.categoria == 2)
+                    {
+                        <span class=" btn btn-danger btn-sm">
+                            Fallo
+                        </span>
+                    }
+                    @if (@problema.categoria == 3)
+                    {
+                        <span class="btn btn-warning btn-sm">
+                            Critico
+                        </span>
+                    }
+                </h4>
+                <h4>
+                    Prioridad: @if (@problema.prioridad == 3)
+                    {
+                        <span class="btn btn-success btn-sm">
+                            Baja
+                        </span>
+                    }
+                    @if (@problema.prioridad == 1)
+                    {
+                        <span class=" btn btn-danger btn-sm">
+                            Alta
+                        </span>
+                    }
+                    @if (@problema.prioridad == 2)
+                    {
+                        <span class="btn btn-warning btn-sm">
+                            Media
+                        </span>
+                    }
+                </h4>
+
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminarProblema_@problema.ID">
+                    Eliminar Problema
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmación para Eliminar Problema -->
+        <div class="modal fade" id="modalEliminarProblema_@problema.ID" tabindex="-1" aria-labelledby="modalEliminarProblemaLabel_@problema.ID" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEliminarProblemaLabel_@problema.ID">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Está seguro de eliminar el problema <strong>@problema.Descripcion</strong>? Esta acción no se puede deshacer.
+                    </div>
+                    <div class="modal-footer">
+                        <form asp-action="EliminarProblema" asp-controller="Proyecto" method="post">
+                            <input type="hidden" name="problemaId" value="@problema.ID" />
+                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                        </form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
+
 </div>
 
 <!-- Sección: Modales -->
@@ -256,6 +353,59 @@
                     <div class="mb-3">
                         <label for="NombreFase" class="form-label">Nombre de la Fase</label>
                         <input type="text" class="form-control" id="NombreFase" name="Nombre" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Agregar Problemas -->
+<div class="modal fade" id="modalAgregarProblema" tabindex="-1" aria-labelledby="modalAgregarProblemaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarProblemaLabel">Agregar Nuevo Problema</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form asp-action="AsignarProblema" method="post">
+                <input type="hidden" name="id" value="@ViewBag.ProyectoId" />
+                <div class="modal-body">
+                    <div style="display:flex; flex-direction:column; justify-content:space-between;">
+                        <div class="mb-3">
+                            <label>Ingrese una descripción para este Problema</label>
+                            <textarea style="width:100%" name="Descripcion" placeholder="Descripción del Problema">
+                            </textarea>
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:flex; flex-direction:column;">
+                            <label class="form-label">Empleado</label>
+                            <select name="usuarioId" asp-items="ViewBag.Usuarios" class="form-select">
+                                <option value="">Seleccione un empleado</option>
+                            </select>
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:flex; flex-direction:column;">
+                            <label>Categoria</label>
+                            <select name="categoriaId" asp-items="ViewBag.CategoriaProblema" class="form-select">
+                                <option value="">Seleccione una categoria</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" style="display:flex; flex-direction:column;">
+                            <label>Prioridad</label>
+                            <select name="prioridadId" asp-items="ViewBag.PrioridadProblema" class="form-select">
+                                <option value="">Seleccione una categoria</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" style="display:flex; flex-direction:column;">
+                            <label>Fecha de Inicio</label>
+                            <input type="date" name="Fecha" />
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

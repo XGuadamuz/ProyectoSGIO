@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 using ProyectoSGIOCore.ViewModels;
 using Newtonsoft.Json;
+using ProyectoSGIOCore.Migrations;
 using System.Security.Claims;
 using ProyectoSGIOCore.Services;
 using System.Text;
@@ -99,7 +100,10 @@ namespace ProyectoSGIOCore.Controllers
                 })
                 .ToList();
 
+            // Obtener el costo total del proyecto
+            var costoTotal = proyecto.CostoTotal;
             // Calcular el progreso total del proyecto
+
             var totalTareas = proyecto.Fases.SelectMany(f => f.Tareas).Count();
             var tareasCompletadas = proyecto.Fases.SelectMany(f => f.Tareas).Count(t => t.Completada);
             var progresoGeneral = totalTareas == 0 ? 0 : (tareasCompletadas * 100 / totalTareas);
@@ -113,11 +117,37 @@ namespace ProyectoSGIOCore.Controllers
             ViewBag.HitoDataJson = JsonConvert.SerializeObject(hitoData);
             ViewBag.TareaDataJson = JsonConvert.SerializeObject(tareaData);
             ViewBag.FaseDataJson = JsonConvert.SerializeObject(faseData);
+            ViewBag.CostoTotal = costoTotal;
             ViewBag.ProgresoGeneral = progresoGeneral; // Pasar el progreso general a la vista
 
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AsignarProblema(int id)
+        {
+            var proyecto = await _dbContext.Proyectos.FindAsync(id);
+            if (proyecto == null) return NotFound();
+
+            var usuarios = await _dbContext.Usuarios
+                .Where(u => u.Rol.Nombre == "Empleado")
+                .ToListAsync();
+            var categoriaProblema = new List<CategoriaProblemaVM>
+            { new CategoriaProblemaVM { Id = 1, Nombre = "Bug" },
+             new CategoriaProblemaVM { Id = 2, Nombre = "Fallo" },
+             new CategoriaProblemaVM { Id = 3, Nombre = "Critico" } };
+
+            var prioridadProblema = new List<PrioridadProblemaVM>
+            { new PrioridadProblemaVM { Id = 1, Nombre = "Alta" },
+             new PrioridadProblemaVM { Id = 2, Nombre = "Media" },
+             new PrioridadProblemaVM { Id = 3, Nombre = "Baja" } };
+            ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
+            ViewBag.ProyectoId = id;
+            ViewBag.CategoriaProblema = new SelectList(categoriaProblema, "Id", "Nombre");
+            ViewBag.PrioridadProblema = new SelectList(prioridadProblema, "Id", "Nombre");
+
+            return View();
+        }
 
         [HttpGet]
         public async Task<IActionResult> AsignarHito(int id)
@@ -379,6 +409,42 @@ namespace ProyectoSGIOCore.Controllers
             TempData["MensajeExito"] = "Hito asignado correctamente.";
             return RedirectToAction("Proyectos");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AsignarProblema(int id, int usuarioId, int prioridadId, int categoriaId, string Descripcion, DateTime Fecha)
+        {
+            var proyecto = await _dbContext.Proyectos.FindAsync(id);
+            if (proyecto == null) return NotFound();
+
+            // Verificar si se seleccionó un usuario
+            if (usuarioId == 0)
+            {
+                TempData["MensajeError"] = "Debe seleccionar un empleado para asignar al proyecto.";
+                ViewBag.ProyectoId = id;
+
+                // Volver a cargar los usuarios para que se muestren en el dropdown
+                var usuarios = await _dbContext.Usuarios
+                    .Where(u => u.Rol.Nombre == "Usuario")
+                    .ToListAsync();
+                ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
+
+                return View(proyecto);
+            }
+
+            var problema = new Problema();
+            problema.Fecha = Fecha;
+            problema.IdUsuario = usuarioId;
+            problema.Descripcion = Descripcion;
+            problema.ProyectoId = id;
+            problema.categoria = categoriaId;
+            problema.prioridad = prioridadId;
+
+            _dbContext.Problemas.Add(problema);
+            _dbContext.SaveChanges();
+
+            TempData["MensajeExito"] = "Problema asignado correctamente.";
+            return RedirectToAction("Proyectos");
+        }
         [HttpPost]
         public IActionResult AgregarFase(int proyectoId, string Nombre)
         {
@@ -478,6 +544,32 @@ namespace ProyectoSGIOCore.Controllers
             return RedirectToAction("GestionarProyecto", new { id = hito.ProyectoId });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EliminarProblema(int problemaId)
+        {
+            var problema = await _dbContext.Problemas
+                .FirstOrDefaultAsync(h => h.ID == problemaId);
+
+            if (problema == null)
+            {
+                TempData["MensajeError"] = "El Problema no fue encontrado.";
+                return RedirectToAction("Proyectos");
+            }
+
+            try
+            {
+                _dbContext.Problemas.Remove(problema);
+
+                await _dbContext.SaveChangesAsync();
+                TempData["MensajeExito"] = "Problema eliminado correctamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = $"Error al eliminar el problema: {ex.Message}";
+            }
+
+            return RedirectToAction("GestionarProyecto", new { id = problema.ProyectoId });
+        }
         [HttpGet]
         public async Task<IActionResult> ObtenerFase(int faseId)
         {
@@ -565,18 +657,35 @@ namespace ProyectoSGIOCore.Controllers
                 .Include(p => p.Fases)
                 .ThenInclude(f => f.Tareas)
                 .Include(h => h.Hitos)
+                .Include(p => p.Problemas)
                 .ThenInclude(u=>u.Usuario)
+
                 .FirstOrDefaultAsync(p => p.Id == id);
             var usuarios = await _dbContext.Usuarios
                 .Where(u => u.Rol.Nombre == "Empleado")
                 .ToListAsync();
+
+            var categoriaProblema = new List<CategoriaProblemaVM>
+            { new CategoriaProblemaVM { Id = 1, Nombre = "Bug" },
+             new CategoriaProblemaVM { Id = 2, Nombre = "Fallo" },
+             new CategoriaProblemaVM { Id = 3, Nombre = "Critico" } };
+
+            var prioridadProblema = new List<PrioridadProblemaVM>
+            { new PrioridadProblemaVM { Id = 1, Nombre = "Alta" },
+             new PrioridadProblemaVM { Id = 2, Nombre = "Media" },
+             new PrioridadProblemaVM { Id = 3, Nombre = "Baja" } };
+
             var estadosHitos = new List<EstadoHitoVM>
             { new EstadoHitoVM { Id = 1, Nombre = "Completo" },
              new EstadoHitoVM { Id = 2, Nombre = "Pendiente" },
-             new EstadoHitoVM { Id = 3, Nombre = "En Progreso" } };
+             new EstadoHitoVM { Id = 3, Nombre = "En Progreso" },
+             new EstadoHitoVM { Id = 4, Nombre = "Aprobado" },
+             new EstadoHitoVM { Id = 5, Nombre = "Rechazado" }};
             ViewBag.Usuarios = new SelectList(usuarios, "IdUsuario", "Correo");
             ViewBag.ProyectoId = id;
             ViewBag.EstadosHito = new SelectList(estadosHitos, "Id", "Nombre");
+            ViewBag.CategoriaProblema = new SelectList(categoriaProblema, "Id", "Nombre");
+            ViewBag.PrioridadProblema = new SelectList(prioridadProblema, "Id", "Nombre");
 
             if (proyecto == null)
             {
@@ -646,6 +755,29 @@ namespace ProyectoSGIOCore.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult AprobarHito(int hitoId)
+        {
+            var hito = _dbContext.Hitos.Find(hitoId);
+            if (hito != null)
+            {
+                hito.estado = 4; // Estado "Aprobado"
+                _dbContext.SaveChanges();
+            }
+            return RedirectToAction("GestionarProyecto", new { id = hito.ProyectoId });
+        }
+
+        [HttpPost]
+        public IActionResult RechazarHito(int hitoId)
+        {
+            var hito = _dbContext.Hitos.Find(hitoId);
+            if (hito != null)
+            {
+                hito.estado = 5; // Estado "Rechazado"
+                _dbContext.SaveChanges();
+            }
+            return RedirectToAction("GestionarProyecto", new { id = hito.ProyectoId });
+         }
         [HttpGet]
         public async Task<IActionResult> DashboardComparacion(int proyectoId)
         {

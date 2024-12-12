@@ -20,6 +20,7 @@ namespace ProyectoSGIOCore.Data
         public DbSet<Fase> Fases { get; set; }
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<Hito> Hitos { get; set; }
+        public DbSet<Problema> Problemas { get; set; }
         public DbSet<Archivo> Archivos { get; set; }
         public DbSet<Reporte> Reportes { get; set; }
         public DbSet<PlanInicial> PlanesIniciales { get; set; }
