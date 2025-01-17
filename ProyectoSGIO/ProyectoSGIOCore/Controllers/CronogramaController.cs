@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using ProyectoSGIOCore.Models;
 using ProyectoSGIOCore.ViewModels;
 using System.Linq;
-using System.Threading.Tasks;
 using ProyectoSGIOCore.Data;
 
 namespace ProyectoSGIOCore.Controllers
